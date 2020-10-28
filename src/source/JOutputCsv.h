@@ -45,25 +45,25 @@
 
 class JOutputCsv : protected JObject
 {
-public:
-  //-Output configuration.
-  bool CreatPath;   ///<Creates full path for output files (true by default).
-  bool CsvSepComa;  ///<Separator character in CSV files (0=semicolon, 1=coma).
+	public:
+		//-Output configuration.
+		bool CreatPath;   ///<Creates full path for output files (true by default).
+		bool CsvSepComa;  ///<Separator character in CSV files (0=semicolon, 1=coma).
 
-protected:
-  std::string FileName; ///<Last file generated.
-  template<typename T> void CalculateStatsArray1(unsigned ndata,T *data
-    ,double &valmin,double &valmax,double &valmean)const;
-  template<typename T> void CalculateStatsArray3(unsigned ndata,T *data
-    ,tdouble4 &valmin,tdouble4 &valmax,tdouble4 &valmean)const;
+	protected:
+		std::string FileName; ///<Last file generated.
+		template<typename T>
+		void CalculateStatsArray1(unsigned ndata, T *data, double &valmin, double &valmax, double &valmean)const;
+		template<typename T>
+		void CalculateStatsArray3(unsigned ndata, T *data, tdouble4 &valmin, tdouble4 &valmax, tdouble4 &valmean)const;
 
-public:
-  JOutputCsv(bool csvsepcoma=false,bool createpath=true);
-  ~JOutputCsv();
-  void Reset();
+	public:
+		JOutputCsv(bool csvsepcoma=false, bool createpath=true);
+		~JOutputCsv();
+		void Reset();
 
-  void SaveCsv(std::string fname,const JDataArrays &arrays,std::string head="");
-  //void SaveStatsCsv(std::string fname,bool create,int part,double timestep,const JDataArrays &arrays,std::string head="");
+		void SaveCsv(std::string fname, const JDataArrays &arrays, std::string head="");
+		//void SaveStatsCsv(std::string fname,bool create,int part,double timestep,const JDataArrays &arrays,std::string head="");
 
 };
 

@@ -51,22 +51,21 @@
 /// \brief Defines objects with methods that throw exceptions for tasks on the GPU.
 class JObjectGpu : protected JObject
 {
-protected:
-  //static void RunExceptioonCudaStatic(const std::string &srcfile,int srcline
-  //  ,const std::string &method
-  //  ,cudaError_t cuerr,std::string msg);
-  //static void CheckCudaErroorStatic(const std::string &srcfile,int srcline
-  //  ,const std::string &method
-  //  ,std::string msg);
+	protected:
+		//static void RunExceptioonCudaStatic(const std::string &srcfile,int srcline
+		//  ,const std::string &method
+		//  ,cudaError_t cuerr,std::string msg);
+		//static void CheckCudaErroorStatic(const std::string &srcfile,int srcline
+		//  ,const std::string &method
+		//  ,std::string msg);
 
-  void RunExceptioonCuda(const std::string &srcfile,int srcline
-    ,const std::string &classname,const std::string &method
-    ,cudaError_t cuerr,std::string msg)const;
-  void CheckCudaErroor(const std::string &srcfile,int srcline
-    ,const std::string &classname,const std::string &method
-    ,std::string msg)const;
-public:  
-  JObjectGpu(){ ClassName="JObjectGpu"; } ///<Constructor.
+		void RunExceptioonCuda(const std::string &srcfile, int srcline, const std::string &classname, const std::string &method,
+			cudaError_t cuerr, std::string msg)const;
+		void CheckCudaErroor(const std::string &srcfile, int srcline, const std::string &classname, const std::string &method, std::string msg)const;
+	public:
+		JObjectGpu(){
+			ClassName="JObjectGpu";
+		} ///<Constructor.
 };
 
 #endif

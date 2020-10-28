@@ -38,24 +38,38 @@
 
 class JMeanValue
 {
-public:
-  double Max;
-  double Min;
-  double Mean;
-  ullong Values;
+	public:
+		double Max;
+		double Min;
+		double Mean;
+		ullong Values;
 
-public:
-  JMeanValue():Max(-DBL_MAX),Min(DBL_MAX),Mean(0),Values(0){ }
-  void Reset(){ Max=-DBL_MAX; Min=DBL_MAX; Mean=0; Values=0; }
-  void AddValue(double v){ 
-    Max=(Max<v? v: Max);
-    Min=(Min>v? v: Min);
-    Mean=(Mean*Values+v)/(Values+1); Values++; 
-  }
-  double GetMax()const{ return(Max); }
-  double GetMin()const{ return(Min); }
-  double GetMean()const{ return(Mean); }
-  ullong GetValues()const{ return(Values); }
+	public:
+		JMeanValue():Max(-DBL_MAX), Min(DBL_MAX), Mean(0), Values(0){ }
+		void Reset(){
+			Max=-DBL_MAX;
+			Min=DBL_MAX;
+			Mean=0;
+			Values=0;
+		}
+		void AddValue(double v){
+			Max=(Max<v? v: Max);
+			Min=(Min>v? v: Min);
+			Mean=(Mean*Values+v)/(Values+1);
+			Values++;
+		}
+		double GetMax()const{
+			return(Max);
+		}
+		double GetMin()const{
+			return(Min);
+		}
+		double GetMean()const{
+			return(Mean);
+		}
+		ullong GetValues()const{
+			return(Values);
+		}
 };
 
 
@@ -66,27 +80,27 @@ public:
 
 class JMeanMoving : protected JObject
 {
-public:
-protected:
-  unsigned SizeValues;
-  double *Values;
-  double *Weights;
-  unsigned NextValue;
-  bool ValuesFull;      ///< Array of values is full.
+	public:
+	protected:
+		unsigned SizeValues;
+		double *Values;
+		double *Weights;
+		unsigned NextValue;
+		bool ValuesFull;      ///< Array of values is full.
 
-  void Init(unsigned size,bool weighted);
+		void Init(unsigned size,bool weighted);
 
-public:
-  JMeanMoving(unsigned size=10);
-  ~JMeanMoving();
-  void Reset();
-  void InitSimple(unsigned size);
-  void InitWeightedLinear(unsigned size);
-  void InitWeightedExponential(unsigned size,float fac=1);
+	public:
+		JMeanMoving(unsigned size=10);
+		~JMeanMoving();
+		void Reset();
+		void InitSimple(unsigned size);
+		void InitWeightedLinear(unsigned size);
+		void InitWeightedExponential(unsigned size, float fac=1);
 
-  void AddValue(double v);
-  double GetSimpleMean()const;
-  double GetWeightedMean()const;
+		void AddValue(double v);
+		double GetSimpleMean()const;
+		double GetWeightedMean()const;
 
 };
 

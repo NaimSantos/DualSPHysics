@@ -50,29 +50,31 @@
 
 class JDsViscoInput : protected JObject
 {
-protected:
-  static const unsigned FILESIZEMAX=104857600; ///<Maximum file size (100mb).
+	protected:
+		static const unsigned FILESIZEMAX=104857600; ///<Maximum file size (100mb).
 
-  std::string File;
-  unsigned Size;
-  unsigned Count;
-  unsigned Position;
-  float *Times;
-  float *Values;
+		std::string File;
+		unsigned Size;
+		unsigned Count;
+		unsigned Position;
+		float *Times;
+		float *Values;
 
-  float LastTimestepInput;  ///<Saves the last value used with GetVisco().
-  float LastViscoOutput;    ///<Saves the last value returned by GetVisco().
+		float LastTimestepInput;  ///<Saves the last value used with GetVisco().
+		float LastViscoOutput;    ///<Saves the last value returned by GetVisco().
 
-  void Resize(unsigned size);
+		void Resize(unsigned size);
 
-public:
-  JDsViscoInput();
-  ~JDsViscoInput();
-  void Reset();
-  unsigned GetAllocMemory()const;
-  void LoadFile(std::string file);
-  float GetVisco(float timestep);
-  std::string GetFile()const{ return(File); };
+	public:
+		JDsViscoInput();
+		~JDsViscoInput();
+		void Reset();
+		unsigned GetAllocMemory()const;
+		void LoadFile(std::string file);
+		float GetVisco(float timestep);
+		std::string GetFile()const{
+			return(File);
+		};
 };
 
 #endif

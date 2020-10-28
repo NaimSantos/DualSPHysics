@@ -36,26 +36,28 @@
 /// \brief Defines exceptions with the information of the class and method.
 
 class JException : public std::exception{
- protected:
-  std::string ExName;    ///<Name of the exception. 
-  std::string SrcFile;   ///<Name of the file that generated an exception. 
-  int SrcLine;           ///<Number of the line that generated an exception. 
-  std::string ClassName; ///<Name of the class that generated an exception. 
-  std::string Method;    ///<Name of the method that generated an exception. 
-  std::string Text;      ///<Text of the exception.
-  std::string File;      ///<File related to the exception.
- public:
-  JException(const std::string &classname,const std::string &method,const std::string &text,const std::string &file);
-  JException(const std::string &srcfile,int srcline,const std::string &classname,const std::string &method,const std::string &text,const std::string &file);
-  ~JException() throw(){}  ///<Destructor of objects.
-  std::string ToStr()const;
-  void Print()const;
-  virtual const char* what() const throw(){ 
-    static char tx[2048];
-    std::string tex=ToStr();
-    for(unsigned c=0;c<=tex.size() && c<2047;c++)tx[c]=tex[c]; tx[2047]='\0';
-    return(tx);
-  } 
+	protected:
+		std::string ExName;    ///<Name of the exception. 
+		std::string SrcFile;   ///<Name of the file that generated an exception. 
+		int SrcLine;           ///<Number of the line that generated an exception. 
+		std::string ClassName; ///<Name of the class that generated an exception. 
+		std::string Method;    ///<Name of the method that generated an exception. 
+		std::string Text;      ///<Text of the exception.
+		std::string File;      ///<File related to the exception.
+	public:
+		JException(const std::string &classname, const std::string &method, const std::string &text, const std::string &file);
+		JException(const std::string &srcfile, int srcline, const std::string &classname, const std::string &method, const std::string &text, const std::string &file);
+		~JException() throw(){}  ///<Destructor of objects.
+		std::string ToStr()const;
+		void Print()const;
+		virtual const char* what() const throw(){
+			static char tx[2048];
+			std::string tex=ToStr();
+			for(unsigned c=0;c<=tex.size() && c<2047;c++)
+				tx[c]=tex[c];
+			tx[2047]='\0';
+			return(tx);
+		}
 };
 
 #endif

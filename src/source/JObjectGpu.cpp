@@ -51,24 +51,21 @@
 //==============================================================================
 /// Throws exception related to a CUDA error.
 //==============================================================================
-void JObjectGpu::RunExceptioonCuda(const std::string &srcfile,int srcline
-  ,const std::string &classname,const std::string &method
-  ,cudaError_t cuerr,std::string msg)const
+void JObjectGpu::RunExceptioonCuda(const std::string &srcfile, int srcline, const std::string &classname, const std::string &method, cudaError_t cuerr, std::string msg)const
 {
-  msg=msg+fun::PrintStr(" (CUDA error %d (%s)).\n",cuerr,cudaGetErrorString(cuerr));
-  throw JException(srcfile,srcline,classname,method,msg,"");
+	msg=msg+fun::PrintStr(" (CUDA error %d (%s)).\n", cuerr, cudaGetErrorString(cuerr));
+	throw JException(srcfile, srcline, classname, method, msg, "");
 }
 
 //==============================================================================
 /// Checks CUDA error and throws exception.
 /// Comprueba error de CUDA y lanza excepcion si lo hubiera.
 //==============================================================================
-void JObjectGpu::CheckCudaErroor(const std::string &srcfile,int srcline
-  ,const std::string &classname,const std::string &method
-  ,std::string msg)const
+void JObjectGpu::CheckCudaErroor(const std::string &srcfile, int srcline, const std::string &classname, const std::string &method, std::string msg)const
 {
-  cudaError_t cuerr=cudaGetLastError();
-  if(cuerr!=cudaSuccess)RunExceptioonCuda(srcfile,srcline,classname,method,cuerr,msg);
+	cudaError_t cuerr=cudaGetLastError();
+	if(cuerr!=cudaSuccess)
+		RunExceptioonCuda(srcfile, srcline, classname, method, cuerr, msg);
 }
 
 

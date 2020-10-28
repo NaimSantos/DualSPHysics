@@ -46,33 +46,38 @@
 
 class JRangeFilter : protected JObject
 {
-private:
-  unsigned* Ranges;          ///<Stores intervals
-  unsigned Count;            ///<Number of intervals stored in \ref Ranges.
-  unsigned Size;             ///<Number of intervals allocated in \ref Ranges.
+	private:
+		unsigned* Ranges;          ///<Stores intervals
+		unsigned Count;            ///<Number of intervals stored in \ref Ranges.
+		unsigned Size;             ///<Number of intervals allocated in \ref Ranges.
 
-  unsigned ValueMin,ValueMax;
-  byte *FastValue;           ///<Array to optimise the values search.
+		unsigned ValueMin,ValueMax;
+		byte *FastValue;           ///<Array to optimise the values search.
 
-  void ResizeRanges(unsigned size);
-  void AddValue(unsigned v);
-  void AddRange(unsigned v,unsigned v2);
-  void AddRangeStep(unsigned v,unsigned v2,unsigned step);
-  void SortRanges();
-  void JoinRanges();
-  bool CheckNewValue(unsigned v)const;
+		void ResizeRanges(unsigned size);
+		void AddValue(unsigned v);
+		void AddRange(unsigned v, unsigned v2);
+		void AddRangeStep(unsigned v, unsigned v2, unsigned step);
+		void SortRanges();
+		void JoinRanges();
+		bool CheckNewValue(unsigned v)const;
 
-public:
-  JRangeFilter(std::string filter="");
-  ~JRangeFilter(){ DestructorActive=true; Reset(); }
-  void Reset();
-  void Config(std::string filter);
-  bool CheckValue(unsigned v)const;
-  unsigned GetFirstValue()const;
-  unsigned GetNextValue(unsigned v)const;
-  bool Empty()const{ return(!Count); }
-  std::string ToString()const;
-  void GetValues(std::vector<unsigned> &values)const;
+	public:
+		JRangeFilter(std::string filter="");
+		~JRangeFilter(){
+			DestructorActive=true;
+			Reset();
+		}
+		void Reset();
+		void Config(std::string filter);
+		bool CheckValue(unsigned v)const;
+		unsigned GetFirstValue()const;
+		unsigned GetNextValue(unsigned v)const;
+		bool Empty()const{
+			return(!Count);
+		}
+		std::string ToString()const;
+		void GetValues(std::vector<unsigned> &values)const;
 };
 
 #endif

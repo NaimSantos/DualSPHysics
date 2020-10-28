@@ -52,23 +52,21 @@
 
 class JObject
 {
-protected:
-  std::string ClassName;   ///<Name of the class.
-  bool DestructorActive;   ///<Destructor of object in execution.
+	protected:
+		std::string ClassName;   ///<Name of the class.
+		bool DestructorActive;   ///<Destructor of object in execution.
 
-  //static void RunExceptioonStatic(const std::string &srcfile,int srcline
-  //  ,const std::string &method
-  //  ,const std::string &msg,const std::string &file="");
+		//static void RunExceptioonStatic(const std::string &srcfile,int srcline
+		//  ,const std::string &method
+		//  ,const std::string &msg,const std::string &file="");
 
-  void RunExceptioon(const std::string &srcfile,int srcline
-    ,const std::string &classname,const std::string &method
-    ,const std::string &msg,const std::string &file="")const;
+		void RunExceptioon(const std::string &srcfile, int srcline, const std::string &classname, const std::string &method,
+			const std::string &msg, const std::string &file="")const;
 
-  void RunException(const std::string &method,const std::string &msg
-    ,const std::string &file="")const;
+		void RunException(const std::string &method, const std::string &msg, const std::string &file="")const;
 
-public:  
-  JObject():ClassName("JObject"),DestructorActive(false){} ///<Constructor of objects.
+	public:
+		JObject():ClassName("JObject"), DestructorActive(false){} ///<Constructor of objects.
 
 
 };

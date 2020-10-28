@@ -53,36 +53,40 @@ class JLog2;
 
 class JDsOutputTime : protected JObject
 {
-protected:
-  ///Structure used to store information about timeout.
-  typedef struct {
-    double time;
-    double tout;
-  }StTimeOut;
+	protected:
+		///Structure used to store information about timeout.
+		typedef struct {
+			double time;
+			double tout;
+		}StTimeOut;
 
-  std::vector<StTimeOut> Times;  ///<List values for timeout.
-  unsigned TimeBase;
+		std::vector<StTimeOut> Times;  ///<List values for timeout.
+		unsigned TimeBase;
 
-  bool SpecialConfig; ///<Configuration loaded from XML file in special section.
+		bool SpecialConfig; ///<Configuration loaded from XML file in special section.
 
-  void ReadXml(const JXml *sxml,TiXmlElement* ele);
-  void LoadXml(const JXml *sxml,const std::string &place);
-  unsigned GetCount()const{ return(unsigned(Times.size())); }
-  bool AddTimeOut(double t,double tout);
-  void CopyFrom(const JDsOutputTime* tout);
+		void ReadXml(const JXml *sxml, TiXmlElement* ele);
+		void LoadXml(const JXml *sxml, const std::string &place);
+		unsigned GetCount()const{
+			return(unsigned(Times.size()));
+		}
+		bool AddTimeOut(double t, double tout);
+		void CopyFrom(const JDsOutputTime* tout);
 
-  double LastTimeInput;   ///<Saves the last value used with GetNextTime().
-  double LastTimeOutput;  ///<Saves the last value returned by GetNextTime().
+		double LastTimeInput;   ///<Saves the last value used with GetNextTime().
+		double LastTimeOutput;  ///<Saves the last value returned by GetNextTime().
 
-public:
-  JDsOutputTime(const JDsOutputTime* tout=NULL);
-  ~JDsOutputTime();
-  void Reset();
-  void Config(double timeoutdef);
-  void Config(std::string filexml,const std::string &place,double timeoutdef);
-  bool UseSpecialConfig()const{ return(SpecialConfig); }
-  void VisuConfig(JLog2 *log,std::string txhead,std::string txfoot);
-  double GetNextTime(double t);
+		public:
+		JDsOutputTime(const JDsOutputTime* tout=NULL);
+		~JDsOutputTime();
+		void Reset();
+		void Config(double timeoutdef);
+		void Config(std::string filexml, const std::string &place, double timeoutdef);
+		bool UseSpecialConfig()const{
+			return(SpecialConfig);
+		}
+		void VisuConfig(JLog2 *log, std::string txhead, std::string txfoot);
+		double GetNextTime(double t);
 };
 
 #endif

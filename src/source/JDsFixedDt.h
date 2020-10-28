@@ -50,34 +50,38 @@
 
 class JDsFixedDt : protected JObject
 {
-protected:
-  static const unsigned FILESIZEMAX=104857600; ///<Maximum file size (100mb).
-  double FixedValue;
+	protected:
+		static const unsigned FILESIZEMAX=104857600; ///<Maximum file size (100mb).
+		double FixedValue;
 
-  std::string File;
-  unsigned Size;
-  unsigned Count;
-  unsigned Position;
-  double *Times;
-  double *Values;
-  double DtError; //- max(FixedDt-DtVariable)
+		std::string File;
+		unsigned Size;
+		unsigned Count;
+		unsigned Position;
+		double *Times;
+		double *Values;
+		double DtError; //- max(FixedDt-DtVariable)
 
-  double LastTimestepInput;  ///<Saves the last value used with GetDt().
-  double LastDtInput;        ///<Saves the last value used with GetDt().
-  double LastDtOutput;       ///<Saves the last value returned by GetDt().
+		double LastTimestepInput;  ///<Saves the last value used with GetDt().
+		double LastDtInput;        ///<Saves the last value used with GetDt().
+		double LastDtOutput;       ///<Saves the last value returned by GetDt().
 
-  void Resize(unsigned size);
+		void Resize(unsigned size);
 
-public:
-  JDsFixedDt(double fixedvalue=0);
-  ~JDsFixedDt();
-  void Reset();
-  unsigned GetAllocMemory()const;
-  void LoadFile(std::string file);
-  double GetDt(double timestep,double dtvar);
-  double GetDtError(bool reset);
-  std::string GetFile()const{ return(File); };
-  double GetFixedValue()const{ return(FixedValue); };
+	public:
+		JDsFixedDt(double fixedvalue=0);
+		~JDsFixedDt();
+		void Reset();
+		unsigned GetAllocMemory()const;
+		void LoadFile(std::string file);
+		double GetDt(double timestep, double dtvar);
+		double GetDtError(bool reset);
+		std::string GetFile()const{
+			return(File);
+		};
+		double GetFixedValue()const{
+			return(FixedValue);
+		};
 };
 
 #endif
