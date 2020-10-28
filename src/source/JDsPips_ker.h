@@ -29,16 +29,15 @@
 /// Implements a set of functions and CUDA kernels for PIPS calculation.
 namespace cupips{
 
-unsigned InteractionNgSize_1st(unsigned n);
-void InteractionNg_1st(unsigned nb,unsigned pinitb,unsigned nf,unsigned pinitf
-  ,const StDivDataGpu &dvd,const unsigned *dcell,const float4 *poscell,uint4 *res
-  ,cudaStream_t stm=NULL);
+	unsigned InteractionNgSize_1st(unsigned n);
+	void InteractionNg_1st(unsigned nb, unsigned pinitb, unsigned nf, unsigned pinitf, const StDivDataGpu &dvd,
+		const unsigned *dcell, const float4 *poscell, uint4 *res, cudaStream_t stm=NULL);
 
-unsigned InteractionNgSize_2nd(unsigned n);
-void InteractionNg_2nd(unsigned n,const uint4 *data,uint4 *res,cudaStream_t stm=NULL);
+	unsigned InteractionNgSize_2nd(unsigned n);
+	void InteractionNg_2nd(unsigned n, const uint4 *data, uint4 *res, cudaStream_t stm=NULL);
 
-unsigned InteractionNgSize_3th(unsigned n);
-void InteractionNg_3th(unsigned n,const uint4 *data,ullong *res,cudaStream_t stm=NULL);
+	unsigned InteractionNgSize_3th(unsigned n);
+	void InteractionNg_3th(unsigned n, const uint4 *data, ullong *res, cudaStream_t stm=NULL);
 
 }
 

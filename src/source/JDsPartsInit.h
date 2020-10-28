@@ -42,30 +42,37 @@ class JSphMk;
 /// \brief Stores initial particle information for automatic configurations.
 class JDsPartsInit : protected JObject
 {
-private:
-  const JSphMk* MkInfo;
+	private:
+		const JSphMk* MkInfo;
 
-  unsigned Np;
-  tdouble3 *Pos;
-  typecode *Code;
+		unsigned Np;
+		tdouble3 *Pos;
+		typecode *Code;
 
-  void FreeParticleData();
-  void LoadParticleData(unsigned np,const tdouble3 *pos,const typecode *code);
+		void FreeParticleData();
+		void LoadParticleData(unsigned np, const tdouble3 *pos, const typecode *code);
 
-public:
-  const bool Simulate2D;         ///<Indicates 2D simulation.
-  const double Simulate2DPosY;   ///<Y value in 2D simulations.
-  const double Dp;               ///<Distance between particles.
+	public:
+		const bool Simulate2D;         ///<Indicates 2D simulation.
+		const double Simulate2DPosY;   ///<Y value in 2D simulations.
+		const double Dp;               ///<Distance between particles.
 
-  JDsPartsInit(bool simulate2d,double simulate2dposy,double dp
-    ,const JSphMk* mkinfo,unsigned np,const tdouble3 *pos,const typecode *code);
-  ~JDsPartsInit();
-  void Reset();
+		JDsPartsInit(bool simulate2d, double simulate2dposy, double dp, const JSphMk* mkinfo, unsigned np, const tdouble3 *pos, const typecode *code);
+		~JDsPartsInit();
+		void Reset();
 
-  unsigned GetNp()const{ return(Np); }
-  const typecode* GetCode()const{ return(Code); }
-  const tdouble3* GetPos()const{ return(Pos); }
-  const JSphMk* GetMkInfo()const{ return(MkInfo); }
+		unsigned GetNp()const{
+			return(Np);
+		}
+		const typecode* GetCode()const{
+			return(Code);
+		}
+		const tdouble3* GetPos()const{
+			return(Pos);
+		}
+		const JSphMk* GetMkInfo()const{
+			return(MkInfo);
+		}
 };
 
 

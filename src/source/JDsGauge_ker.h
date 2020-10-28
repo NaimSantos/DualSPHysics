@@ -29,27 +29,26 @@
 namespace cugauge{
 
 //-Kernel for JGaugeVelocity.
-void Interaction_GaugeVel(const StCteSph &CSP,const StDivDataGpu &dvd
-  ,tdouble3 ptpos,const double2 *posxy,const double *posz
-  ,const typecode *code,const float4 *velrhop,float3 *ptvel);
+void Interaction_GaugeVel(const StCteSph &CSP, const StDivDataGpu &dvd,
+	tdouble3 ptpos, const double2 *posxy, const double *posz,
+	const typecode *code, const float4 *velrhop, float3 *ptvel);
 
 //-Kernel for JGaugeSwl.
-void Interaction_GaugeSwl(const StCteSph &CSP,const StDivDataGpu &dvd
-  ,tdouble3 point0,tdouble3 pointdir,unsigned pointnp,float masslimit
-  ,const double2 *posxy,const double *posz,const typecode *code
-  ,const float4 *velrhop,float3 *ptres);
+void Interaction_GaugeSwl(const StCteSph &CSP, const StDivDataGpu &dvd,
+	tdouble3 point0, tdouble3 pointdir, unsigned pointnp, float masslimit,
+	const double2 *posxy, const double *posz, const typecode *code,
+	const float4 *velrhop, float3 *ptres);
 
 //-Kernel for JGaugeMaxZ.
-void Interaction_GaugeMaxz(tdouble3 point0,float maxdist2,const StDivDataGpu &dvd
-  ,int cxini,int cxfin,int yini,int yfin,int zini,int zfin
-  ,const double2 *posxy,const double *posz,const typecode *code
-  ,float3 *ptres);
+void Interaction_GaugeMaxz(tdouble3 point0, float maxdist2, const StDivDataGpu &dvd,
+	int cxini, int cxfin, int yini, int yfin, int zini, int zfin,
+	const double2 *posxy, const double *posz, const typecode *code,
+	float3 *ptres);
 
 //-Kernel for JGaugeForce.
-void Interaction_GaugeForce(const StCteSph &CSP,const StDivDataGpu &dvd
-  ,unsigned n,unsigned idbegin,typecode codesel,const double2 *posxy,const double *posz
-  ,const typecode *code,const unsigned *idp,const float4 *velrhop
-  ,float3 *partace);
+void Interaction_GaugeForce(const StCteSph &CSP, const StDivDataGpu &dvd,
+	unsigned n, unsigned idbegin, typecode codesel, const double2 *posxy, const double *posz,
+	const typecode *code, const unsigned *idp, const float4 *velrhop,float3 *partace);
 
 
 }

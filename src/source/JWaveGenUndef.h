@@ -29,20 +29,34 @@
 #ifdef DISABLE_WAVEGEN
 class JWaveGen
 {
-public:
-  StMotionData MotionData;
-  JWaveGen(bool useomp,bool usegpu,JLog2* log,std::string dirdata,const JXml *sxml,const std::string &place,tdouble3 gravity3){}
-  ~JWaveGen(){}
-  static bool Available(){ return(false); }
-  bool ConfigPaddle(word mkbound,word motionref,unsigned idbegin,unsigned np){ return(false); }
-  void Init(JGaugeSystem *gaugesystem,const JSphMk *mkinfo,double timemax,double timepart){}
-  void SetTimeMod(double timemod){}
-  void VisuConfig(std::string txhead,std::string txfoot){}
-  const StMotionData& GetMotion(bool svdata,unsigned cp,double timestep,double dt){ return(MotionData); }
-  const StMotionData& GetMotionAce(bool svdata,unsigned cp,double timestep,double dt){ return(MotionData); }
-  word GetPaddleMkbound(unsigned cp)const{ return(0); }
-  unsigned GetCount()const{ return(0); }
-  bool UseAwas()const{ return(false); }
+	public:
+		StMotionData MotionData;
+		JWaveGen(bool useomp, bool usegpu, JLog2* log, std::string dirdata, const JXml *sxml, const std::string &place, tdouble3 gravity3){}
+		~JWaveGen(){}
+		static bool Available(){
+			return(false);
+		}
+		bool ConfigPaddle(word mkbound, word motionref, unsigned idbegin, unsigned np){
+			return(false);
+		}
+		void Init(JGaugeSystem *gaugesystem, const JSphMk *mkinfo, double timemax, double timepart){}
+		void SetTimeMod(double timemod){}
+		void VisuConfig(std::string txhead, std::string txfoot){}
+		const StMotionData& GetMotion(bool svdata, unsigned cp, double timestep, double dt){
+			return(MotionData);
+		}
+		const StMotionData& GetMotionAce(bool svdata, unsigned cp, double timestep, double dt){
+			return(MotionData);
+		}
+		word GetPaddleMkbound(unsigned cp)const{
+			return(0);
+		}
+		unsigned GetCount()const{
+			return(0);
+		}
+		bool UseAwas()const{
+			return(false);
+		}
 };
 #endif
 

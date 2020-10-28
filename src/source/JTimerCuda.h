@@ -38,34 +38,50 @@
 
 class JTimerCuda
 {
-private:
-  bool Stopped;
-  cudaEvent_t EventIni,EventEnd;
+	private:
+		bool Stopped;
+		cudaEvent_t EventIni,EventEnd;
 
-public:
-  JTimerCuda(){ EventIni=NULL; EventEnd=NULL; Stopped=false; }
-  ~JTimerCuda(){ Reset(); }
-  void Reset(){
-    if(EventIni)cudaEventDestroy(EventIni); EventIni=NULL;
-    if(EventEnd)cudaEventDestroy(EventEnd); EventEnd=NULL;
-    Stopped=false;
-  }
-  void Start(){
-    if(!EventIni)cudaEventCreate(&EventIni);
-    cudaEventRecord(EventIni,0);
-  }
-  void Stop(){
-    if(!EventEnd)cudaEventCreate(&EventEnd);
-    cudaEventRecord(EventEnd,0); 
-    cudaEventSynchronize(EventEnd);
-    Stopped=true;
-  }
-  //-Returns time in miliseconds.
-  float GetElapsedTimeF(){ 
-    float elapsed=0; if(Stopped&&EventIni&&EventEnd)cudaEventElapsedTime(&elapsed,EventIni,EventEnd);
-    return(elapsed); 
-  }
-  double GetElapsedTimeD(){ return(GetElapsedTimeF()); }
+	public:
+		JTimerCuda(){
+			EventIni=NULL;
+			EventEnd=NULL;
+			Stopped=false;
+		}
+	~JTimerCuda(){
+		Reset();
+	}
+	void Reset(){
+		if(EventIni)
+				cudaEventDestroy(EventIni);
+		EventIni=NULL;
+		if(EventEnd)
+			cudaEventDestroy(EventEnd);
+		EventEnd=NULL;
+		Stopped=false;
+	}
+	void Start(){
+		if(!EventIni)
+			cudaEventCreate(&EventIni);
+		cudaEventRecord(EventIni,0);
+	}
+	void Stop(){
+		if(!EventEnd)
+			cudaEventCreate(&EventEnd);
+		cudaEventRecord(EventEnd,0);
+		cudaEventSynchronize(EventEnd);
+		Stopped=true;
+	}
+	//-Returns time in miliseconds.
+	float GetElapsedTimeF(){
+		float elapsed=0;
+		if(Stopped&&EventIni&&EventEnd)
+			cudaEventElapsedTime(&elapsed, EventIni, EventEnd);
+		return(elapsed);
+	}
+	double GetElapsedTimeD(){
+		return(GetElapsedTimeF());
+	}
 };
 
 #endif

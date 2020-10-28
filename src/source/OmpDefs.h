@@ -25,15 +25,15 @@
 
 #define OMP_USE  ///<Enables/Disables OpenMP.
 #ifdef OMP_USE
-  //#define OMP_USE_RADIXSORT ///<Enables/disables OpenMP in JRadixSort.
-  #define OMP_USE_WAVEGEN    ///<Enables/disables OpenMP in JWaveGen.
+	//#define OMP_USE_RADIXSORT ///<Enables/disables OpenMP in JRadixSort.
+	#define OMP_USE_WAVEGEN    ///<Enables/disables OpenMP in JWaveGen.
 #endif
 
 #ifdef OMP_USE
-  #include <omp.h>  //-Active also in config. properties -> C/C++ -> Lenguage -> OpenMp.
+	#include <omp.h>  //-Active also in config. properties -> C/C++ -> Lenguage -> OpenMp.
 #else
-  #define omp_get_thread_num() 0
-  #define omp_get_max_threads() 1
+	#define omp_get_thread_num() 0
+	#define omp_get_max_threads() 1
 #endif
 
 #define OMP_MAXTHREADS 64  

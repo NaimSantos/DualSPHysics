@@ -34,12 +34,11 @@
 
 /// Implements a set of basic/general functions related to SPH.
 namespace fsph{
-void RunExceptioonFun(const std::string &srcfile,int srcline,const std::string &fun
-  ,const std::string &msg,const std::string &file="");
+	void RunExceptioonFun(const std::string &srcfile, int srcline, const std::string &fun, const std::string &msg, const std::string &file="");
 
-float GetKernelFactor(TpKernel tkernel);
-std::string GetKernelName(TpKernel tkernel);
-void GetKernelConfig(const StCteSph &CSP,std::vector<std::string> &lines);
+	float GetKernelFactor(TpKernel tkernel);
+	std::string GetKernelName(TpKernel tkernel);
+	void GetKernelConfig(const StCteSph &CSP, std::vector<std::string> &lines);
 
 }
 

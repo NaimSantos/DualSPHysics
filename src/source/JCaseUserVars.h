@@ -45,32 +45,34 @@ class JNumexLib;
 
 class JCaseUserVars : protected JObject
 {
-public:
-  typedef struct{
-    std::string name;
-    bool isnum;
-    double valuenum;
-    std::string valuestr;
-  }StVar;
-private:
-  std::vector<StVar> Vars;
+	public:
+		typedef struct{
+			std::string name;
+			bool isnum;
+			double valuenum;
+			std::string valuestr;
+		}StVar;
+	private:
+		std::vector<StVar> Vars;
 
-  void ReadXml(const JXml *sxml,TiXmlElement* lis);
-  void WriteXml(JXml *sxml,TiXmlElement* lis)const;
+		void ReadXml(const JXml *sxml, TiXmlElement* lis);
+		void WriteXml(JXml *sxml, TiXmlElement* lis)const;
 
-public:
-  JCaseUserVars();
-  ~JCaseUserVars();
-  void Reset();
+	public:
+		JCaseUserVars();
+		~JCaseUserVars();
+		void Reset();
 
-  void LoadExportVars(const JNumexLib *nuxlib);
-  void SaveXml(JXml *sxml,const std::string &place)const;
+		void LoadExportVars(const JNumexLib *nuxlib);
+		void SaveXml(JXml *sxml, const std::string &place)const;
 
-  void LoadFileXml(const std::string &file,const std::string &path);
-  void LoadXml(const JXml *sxml,const std::string &place,bool optional);
+		void LoadFileXml(const std::string &file, const std::string &path);
+		void LoadXml(const JXml *sxml, const std::string &place, bool optional);
 
-  unsigned CountVars()const{ return(unsigned(Vars.size())); };
-  StVar GetVar(unsigned idx)const;
+		unsigned CountVars()const{
+			return(unsigned(Vars.size()));
+		};
+		StVar GetVar(unsigned idx)const;
 
 };
 

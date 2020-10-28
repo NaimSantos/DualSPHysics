@@ -36,21 +36,36 @@
 //##############################################################################
 /// \brief Defines a class to measure time intervals with precision of clock().
 
-class JTimerClock
-{
-private:
-  bool Stopped;
-  clock_t CounterIni,CounterEnd;
+class JTimerClock{
+	private:
+		bool Stopped;
+		clock_t CounterIni, CounterEnd;
 
-public:
-  JTimerClock(){ Reset(); }
-  void Reset(){ Stopped=false; CounterIni=0; CounterEnd=0; }
-  void Start(){ Stopped=false; CounterIni=clock(); }
-  void Stop(){ CounterEnd=clock(); Stopped=true; }
-  //-Returns time in milliseconds.
-  //-Devuelve tiempo en milisegundos.
-  float GetElapsedTimeF(){ return((float(Stopped? CounterEnd-CounterIni: 0)*float(1000))/float(CLOCKS_PER_SEC)); }
-  double GetElapsedTimeD(){ return((double(Stopped? CounterEnd-CounterIni: 0)*double(1000))/double(CLOCKS_PER_SEC)); }
+	public:
+		JTimerClock(){
+			Reset();
+		}
+		void Reset(){
+			Stopped=false;
+			CounterIni=0;
+			CounterEnd=0;
+		}
+		void Start(){
+			Stopped=false;
+			CounterIni=clock();
+		}
+		void Stop(){
+			CounterEnd=clock();
+			Stopped=true;
+		}
+		//-Returns time in milliseconds.
+		//-Devuelve tiempo en milisegundos.
+		float GetElapsedTimeF(){
+			return((float(Stopped? CounterEnd-CounterIni: 0)*float(1000))/float(CLOCKS_PER_SEC));
+		}
+		double GetElapsedTimeD(){
+			return((double(Stopped? CounterEnd-CounterIni: 0)*double(1000))/double(CLOCKS_PER_SEC));
+		}
 };
 
 #endif
