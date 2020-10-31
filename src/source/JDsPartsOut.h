@@ -45,52 +45,78 @@
 
 class JDsPartsOut : protected JObject
 {
-protected:
-  const unsigned SizeUnit;
-  unsigned Size;
-  unsigned Count;
-  
-  unsigned OutPosCount,OutRhopCount,OutMoveCount;
+	protected:
+		const unsigned SizeUnit;
+		unsigned Size;
+		unsigned Count;
 
-  //-Normal CPU memory pointers.
-  unsigned *Idp;
-  tdouble3 *Pos;
-  tfloat3 *Vel;
-  float *Rhop;
-  byte *Motive; ///<Motives for exclusion. 1:position, 2:rhop, 3:velocity.
+		unsigned OutPosCount, OutRhopCount, OutMoveCount;
 
-  unsigned MemAllocs;     ///<Number of allocations.
-  llong MemCpuParticles;  ///<Allocated normal CPU memory.
+		//-Normal CPU memory pointers.
+		unsigned *Idp;
+		tdouble3 *Pos;
+		tfloat3 *Vel;
+		float *Rhop;
+		byte *Motive; ///<Motives for exclusion. 1:position, 2:rhop, 3:velocity.
+
+		unsigned MemAllocs;     ///<Number of allocations.
+		llong MemCpuParticles;  ///<Allocated normal CPU memory.
 
 
-  void AllocMemory(unsigned size,bool reset);
-  void AddData(unsigned np,const typecode* code);
+		void AllocMemory(unsigned size ,bool reset);
+		void AddData(unsigned np, const typecode* code);
 
-public:
-  JDsPartsOut(unsigned sizeunit=1024);
-  ~JDsPartsOut();
-  void Reset();
+	public:
+		JDsPartsOut(unsigned sizeunit=1024);
+		~JDsPartsOut();
+		void Reset();
 
-  unsigned GetMemAllocs()const{ return(MemAllocs); }
-  llong GetAllocMemory()const{ return(MemCpuParticles); }
+		unsigned GetMemAllocs()const{
+			return(MemAllocs);
+		}
+		llong GetAllocMemory()const{
+			return(MemCpuParticles);
+		}
 
-  void AddParticles(unsigned np,const unsigned* idp,const tdouble3* pos
-    ,const tfloat3* vel,const float* rhop,const typecode* code);
+		void AddParticles(unsigned np, const unsigned* idp, const tdouble3* pos, const tfloat3* vel, const float* rhop, const typecode* code);
 
-  unsigned GetSize()const{ return(Size); }
-  unsigned GetCount()const{ return(Count); }
+		unsigned GetSize()const{
+			return(Size);
+		}
+		unsigned GetCount()const{
+			return(Count);
+		}
 
-  unsigned GetOutPosCount()const{ return(OutPosCount); }
-  unsigned GetOutRhopCount()const{ return(OutRhopCount); }
-  unsigned GetOutMoveCount()const{ return(OutMoveCount); }
+		unsigned GetOutPosCount()const{
+			return(OutPosCount);
+		}
+		unsigned GetOutRhopCount()const{
+			return(OutRhopCount);
+		}
+		unsigned GetOutMoveCount()const{
+			return(OutMoveCount);
+		}
 
-  const unsigned* GetIdpOut(){ return(Idp); }
-  const tdouble3* GetPosOut(){ return(Pos); }
-  const tfloat3* GetVelOut(){ return(Vel); }
-  const float* GetRhopOut(){ return(Rhop); }
-  const byte* GetMotiveOut(){ return(Motive); }
+		const unsigned* GetIdpOut(){
+			return(Idp);
+		}
+		const tdouble3* GetPosOut(){
+			return(Pos);
+		}
+		const tfloat3* GetVelOut(){
+			return(Vel);
+		}
+		const float* GetRhopOut(){
+			return(Rhop);
+		}
+		const byte* GetMotiveOut(){
+			return(Motive);
+		}
 
-  void Clear(){ Count=0; OutPosCount=OutRhopCount=OutMoveCount=0; };
+		void Clear(){
+			Count=0;
+			OutPosCount=OutRhopCount=OutMoveCount=0;
+		};
 };
 
 #endif

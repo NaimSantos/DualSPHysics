@@ -45,24 +45,44 @@
 
 class JTimer
 {
-private:
-  bool Started,Stopped;
-  LARGE_INTEGER Freq;
-  LARGE_INTEGER CounterIni,CounterEnd;
+	private:
+		bool Started,Stopped;
+		LARGE_INTEGER Freq;
+		LARGE_INTEGER CounterIni,CounterEnd;
 
-  LARGE_INTEGER GetElapsed(){ 
-    LARGE_INTEGER dif; dif.QuadPart=(Stopped? CounterEnd.QuadPart-CounterIni.QuadPart: 0);
-    return(dif);
-  }
+		LARGE_INTEGER GetElapsed(){
+			LARGE_INTEGER dif; dif.QuadPart=(Stopped? CounterEnd.QuadPart-CounterIni.QuadPart: 0);
+			return(dif);
+		}
 
-public:
-  JTimer(){ QueryPerformanceFrequency(&Freq); Reset(); }
-  void Reset(){ Started=Stopped=false; CounterIni.QuadPart=0; CounterEnd.QuadPart=0; }
-  void Start(){ Stopped=false; QueryPerformanceCounter(&CounterIni); Started=true; }
-  void Stop(){ if(Started){ QueryPerformanceCounter(&CounterEnd); Stopped=true; } }
-  //-Returns time in miliseconds.
-  float GetElapsedTimeF(){ return((float(GetElapsed().QuadPart)*float(1000))/float(Freq.QuadPart)); }
-  double GetElapsedTimeD(){ return((double(GetElapsed().QuadPart)*double(1000))/double(Freq.QuadPart)); }
+	public:
+		JTimer(){
+			QueryPerformanceFrequency(&Freq);
+			Reset();
+		}
+		void Reset(){
+			Started=Stopped=false;
+			CounterIni.QuadPart=0;
+			CounterEnd.QuadPart=0;
+		}
+		void Start(){
+			Stopped=false;
+			QueryPerformanceCounter(&CounterIni);
+			Started=true;
+		}
+		void Stop(){
+			if(Started){
+				QueryPerformanceCounter(&CounterEnd);
+				Stopped=true;
+			}
+		}
+		//-Returns time in miliseconds.
+		float GetElapsedTimeF(){
+			return((float(GetElapsed().QuadPart)*float(1000))/float(Freq.QuadPart));
+		}
+		double GetElapsedTimeD(){
+			return((double(GetElapsed().QuadPart)*double(1000))/double(Freq.QuadPart));
+		}
 };
 
 #else
@@ -82,22 +102,39 @@ public:
 
 class JTimer
 {
-private:
-  bool Started,Stopped;
-  timeval CounterIni,CounterEnd;
+	private:
+		bool Started,Stopped;
+		timeval CounterIni,CounterEnd;
 
-public:
-  JTimer(){ Reset(); }
-  void Reset(){ Started=Stopped=false; CounterIni.tv_sec=0; CounterIni.tv_usec=0; CounterEnd.tv_sec=0; CounterEnd.tv_usec=0; }
-  void Start(){ Stopped=false; gettimeofday(&CounterIni,NULL); Started=true; }
-  void Stop(){if(Started){ gettimeofday(&CounterEnd,NULL); Stopped=true; } }
-  //-Returns time in miliseconds.
-  float GetElapsedTimeF(){ 
-    return((CounterEnd.tv_sec-CounterIni.tv_sec)*1000+(float(CounterEnd.tv_usec)/1000.f)-(float(CounterIni.tv_usec)/1000.f));
-  }
-  double GetElapsedTimeD(){
-    return((CounterEnd.tv_sec-CounterIni.tv_sec)*1000+(double(CounterEnd.tv_usec)/1000.0)-(double(CounterIni.tv_usec)/1000.0));
-  }
+	public:
+		JTimer(){
+			Reset();
+		}
+		void Reset(){
+			Started=Stopped=false;
+			CounterIni.tv_sec=0;
+			CounterIni.tv_usec=0;
+			CounterEnd.tv_sec=0;
+			CounterEnd.tv_usec=0;
+		}
+		void Start(){
+			Stopped=false;
+			gettimeofday(&CounterIni,NULL);
+			Started=true;
+		}
+		void Stop(){
+			if(Started){
+				gettimeofday(&CounterEnd,NULL);
+				Stopped=true;
+			}
+		}
+		//-Returns time in miliseconds.
+		float GetElapsedTimeF(){
+			return((CounterEnd.tv_sec-CounterIni.tv_sec)*1000+(float(CounterEnd.tv_usec)/1000.f)-(float(CounterIni.tv_usec)/1000.f));
+		}
+		double GetElapsedTimeD(){
+			return((CounterEnd.tv_sec-CounterIni.tv_sec)*1000+(double(CounterEnd.tv_usec)/1000.0)-(double(CounterIni.tv_usec)/1000.0));
+		}
 };
 
 #endif

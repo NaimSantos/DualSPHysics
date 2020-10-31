@@ -31,30 +31,30 @@
 #include <string>
 
 /// Types of periodic conditions.
-typedef enum{ 
-  PERI_None=0,      ///<No periodic conditions.
-  PERI_X=1,         ///<Periodic conditions on axis X.
-  PERI_Y=2,         ///<Periodic conditions on axis Y.
-  PERI_Z=4,         ///<Periodic conditions on axis Z.
-  PERI_XY=3,        ///<Periodic conditions on axis X and Y.
-  PERI_XZ=5,        ///<Periodic conditions on axis X and Z.
-  PERI_YZ=6,        ///<Periodic conditions on axis Y and Z.
-  PERI_Unknown=96   ///<Unknown periodic conditions.
-}TpPeri; 
+typedef enum{
+	PERI_None=0,      ///<No periodic conditions.
+	PERI_X=1,         ///<Periodic conditions on axis X.
+	PERI_Y=2,         ///<Periodic conditions on axis Y.
+	PERI_Z=4,         ///<Periodic conditions on axis Z.
+	PERI_XY=3,        ///<Periodic conditions on axis X and Y.
+	PERI_XZ=5,        ///<Periodic conditions on axis X and Z.
+	PERI_YZ=6,        ///<Periodic conditions on axis Y and Z.
+	PERI_Unknown=96   ///<Unknown periodic conditions.
+}TpPeri;
 
 /// Returns the string name of periodic condition type.
 inline const char* TpPeriName(TpPeri tperi){
-  switch(tperi){
-  case PERI_None:    return("None");
-  case PERI_X:       return("Axis-X");
-  case PERI_Y:       return("Axis-Y");
-  case PERI_Z:       return("Axis-Z");
-  case PERI_XY:      return("Axes-XY");
-  case PERI_XZ:      return("Axes-XZ");
-  case PERI_YZ:      return("Axes-YZ");
-  case PERI_Unknown: return("Unknown");
-  }
-  return("???");
+	switch(tperi){
+		case PERI_None:    return("None");
+		case PERI_X:       return("Axis-X");
+		case PERI_Y:       return("Axis-Y");
+		case PERI_Z:       return("Axis-Z");
+		case PERI_XY:      return("Axes-XY");
+		case PERI_XZ:      return("Axes-XZ");
+		case PERI_YZ:      return("Axes-YZ");
+		case PERI_Unknown: return("Unknown");
+	}
+	return("???");
 }
 
 #define PERI_AxisX(periactive) (periactive&1)
@@ -66,38 +66,44 @@ inline const char* TpPeriName(TpPeri tperi){
 #define PERI_Axis_Z(periactive) ((periactive&4)!=0)
 
 /// Returns PeriActive value according periodic axes.
-inline byte DefPeriActive(bool perix,bool periy,bool periz){ return(byte((perix? 1: 0)+(periy? 2: 0)+(periz? 4: 0))); }
+inline byte DefPeriActive(bool perix, bool periy, bool periz){
+	return(byte((perix? 1: 0)+(periy? 2: 0)+(periz? 4: 0)));
+}
 
 /// Returns PeriActive value according periodic axes.
-inline byte DefPeriActive(TpPeri tperi){ return(tperi==PERI_Unknown? 0: byte(tperi)); }
+inline byte DefPeriActive(TpPeri tperi){
+	return(tperi==PERI_Unknown? 0: byte(tperi));
+}
 
 /// Returns TpPeri value according periactive value.
 inline TpPeri TpPeriFromPeriActive(byte periactive){
-  return(periactive==DefPeriActive(PERI_Axis_X(periactive),PERI_Axis_Y(periactive),PERI_Axis_Z(periactive))? TpPeri(periactive): PERI_Unknown);
+	return(periactive==DefPeriActive(PERI_Axis_X(periactive), PERI_Axis_Y(periactive), PERI_Axis_Z(periactive))? TpPeri(periactive): PERI_Unknown);
 }
 
 
 /// Structure with Periodic information.
 typedef struct StrPeriodic{
-  TpPeri PeriMode;
-  tdouble3 PeriXinc;   ///<Value that is added at the outer limit to modify coordinates.
-  tdouble3 PeriYinc;   ///<Value that is added at the outer limit to modify coordinates.
-  tdouble3 PeriZinc;   ///<Value that is added at the outer limit to modify coordinates.
+	TpPeri PeriMode;
+	tdouble3 PeriXinc;   ///<Value that is added at the outer limit to modify coordinates.
+	tdouble3 PeriYinc;   ///<Value that is added at the outer limit to modify coordinates.
+	tdouble3 PeriZinc;   ///<Value that is added at the outer limit to modify coordinates.
 
-  //-Constructor by default.
-  StrPeriodic(){  Reset(); }
-  //-Constructor.
-  StrPeriodic(byte periactive,tdouble3 xinc,tdouble3 yinc,tdouble3 zinc){
-    PeriMode=TpPeriFromPeriActive(periactive);
-    PeriXinc=xinc;
-    PeriYinc=yinc;
-    PeriZinc=zinc;
-  }
-  //-Reset values.
-  void Reset(){
-    PeriMode=PERI_Unknown;
-    PeriXinc=PeriYinc=PeriZinc=TDouble3(0);
-  }
+	//-Constructor by default.
+	StrPeriodic(){
+		Reset();
+	}
+	//-Constructor.
+	StrPeriodic(byte periactive, tdouble3 xinc, tdouble3 yinc, tdouble3 zinc){
+	PeriMode=TpPeriFromPeriActive(periactive);
+	PeriXinc=xinc;
+	PeriYinc=yinc;
+	PeriZinc=zinc;
+	}
+	//-Reset values.
+	void Reset(){
+		PeriMode=PERI_Unknown;
+		PeriXinc=PeriYinc=PeriZinc=TDouble3(0);
+	}
 }StPeriodic;
 
 

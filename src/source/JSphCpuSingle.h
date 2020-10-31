@@ -34,71 +34,75 @@ class JCellDivCpuSingle;
 
 class JSphCpuSingle : public JSphCpu
 {
-protected:
-  JCellDivCpuSingle* CellDivSingle;
+	protected:
+		JCellDivCpuSingle* CellDivSingle;
 
-  llong GetAllocMemoryCpu()const;
-  void UpdateMaxValues();
-  void LoadConfig(JSphCfgRun *cfg);
-  void ConfigDomain();
+		llong GetAllocMemoryCpu()const;
+		void UpdateMaxValues();
+		void LoadConfig(JSphCfgRun *cfg);
+		void ConfigDomain();
 
-  void ResizeParticlesSize(unsigned newsize,float oversize,bool updatedivide);
-  unsigned PeriodicMakeList(unsigned np,unsigned pini,bool stable,unsigned nmax,tdouble3 perinc,const tdouble3 *pos,const typecode *code,unsigned *listp)const;
-  void PeriodicDuplicatePos(unsigned pnew,unsigned pcopy,bool inverse,double dx,double dy,double dz,tuint3 cellmax,tdouble3 *pos,unsigned *dcell)const;
-  void PeriodicDuplicateVerlet(unsigned np,unsigned pini,tuint3 cellmax,tdouble3 perinc,const unsigned *listp
-    ,unsigned *idp,typecode *code,unsigned *dcell,tdouble3 *pos,tfloat4 *velrhop,tsymatrix3f *spstau,tfloat4 *velrhopm1)const;
-  void PeriodicDuplicateSymplectic(unsigned np,unsigned pini,tuint3 cellmax,tdouble3 perinc,const unsigned *listp
-    ,unsigned *idp,typecode *code,unsigned *dcell,tdouble3 *pos,tfloat4 *velrhop,tsymatrix3f *spstau,tdouble3 *pospre,tfloat4 *velrhoppre)const;
-  void PeriodicDuplicateNormals(unsigned np,unsigned pini,tuint3 cellmax              //<vs_mddbc>
-    ,tdouble3 perinc,const unsigned *listp,tfloat3 *motionvel,tfloat3 *normals)const; //<vs_mddbc>
-  void RunPeriodic();
+		void ResizeParticlesSize(unsigned newsize, float oversize, bool updatedivide);
+		unsigned PeriodicMakeList(unsigned np, unsigned pini, bool stable, unsigned nmax, tdouble3 perinc, const tdouble3 *pos, const typecode *code, unsigned *listp)const;
+		void PeriodicDuplicatePos(unsigned pnew, unsigned pcopy, bool inverse, double dx, double dy, double dz, tuint3 cellmax, tdouble3 *pos, unsigned *dcell)const;
+		void PeriodicDuplicateVerlet(unsigned np, unsigned pini, tuint3 cellmax, tdouble3 perinc, const unsigned *listp,
+			unsigned *idp, typecode *code, unsigned *dcell, tdouble3 *pos, tfloat4 *velrhop, tsymatrix3f *spstau, tfloat4 *velrhopm1)const;
+		void PeriodicDuplicateSymplectic(unsigned np, unsigned pini, tuint3 cellmax, tdouble3 perinc, const unsigned *listp,
+			unsigned *idp, typecode *code, unsigned *dcell, tdouble3 *pos, tfloat4 *velrhop, tsymatrix3f *spstau, tdouble3 *pospre, tfloat4 *velrhoppre)const;
+		void PeriodicDuplicateNormals(unsigned np, unsigned pini, tuint3 cellmax,
+			tdouble3 perinc, const unsigned *listp, tfloat3 *motionvel, tfloat3 *normals)const; //<vs_mddbc>
+		void RunPeriodic();
 
-  void RunCellDivide(bool updateperiodic);
-  void AbortBoundOut();
+		void RunCellDivide(bool updateperiodic);
+		void AbortBoundOut();
 
-  void Interaction_Forces(TpInterStep tinterstep);
-  void MdbcBoundCorrection(); //<vs_mddbc>
+		void Interaction_Forces(TpInterStep tinterstep);
+		void MdbcBoundCorrection(); //<vs_mddbc>
 
-  double ComputeAceMax(unsigned np,const tfloat3* ace,const typecode *code)const;
-  template<bool checkcode> double ComputeAceMaxSeq(unsigned np,const tfloat3* ace,const typecode *code)const;
-  template<bool checkcode> double ComputeAceMaxOmp(unsigned np,const tfloat3* ace,const typecode *code)const;
-  
-  double ComputeStep(){ return(TStep==STEP_Verlet? ComputeStep_Ver(): ComputeStep_Sym()); }
-  double ComputeStep_Ver();
-  double ComputeStep_Sym();
+		double ComputeAceMax(unsigned np, const tfloat3* ace, const typecode *code)const;
+		template<bool checkcode>
+		double ComputeAceMaxSeq(unsigned np, const tfloat3* ace, const typecode *code)const;
+		template<bool checkcode>
+		double ComputeAceMaxOmp(unsigned np, const tfloat3* ace, const typecode *code)const;
 
-  inline tfloat3 FtPeriodicDist(const tdouble3 &pos,const tdouble3 &center,float radius)const;
-  void FtCalcForcesSum(unsigned cf,tfloat3 &face,tfloat3 &fomegaace)const;
-  void FtCalcForces(StFtoForces *ftoforces)const;
-  void FtCalcForcesRes(double dt,const StFtoForces *ftoforces,StFtoForcesRes *ftoforcesres)const;
-  void FtApplyImposedVel(StFtoForcesRes *ftoforcesres)const; //<vs_fttvel>
-  void FtSumExternalForces(unsigned cf,tfloat3 &face,tfloat3 &fomegaace)const;//<vs_fttvel>
-  void FtApplyConstraints(StFtoForces *ftoforces,StFtoForcesRes *ftoforcesres)const;
-  void RunFloating(double dt,bool predictor);
-  void RunGaugeSystem(double timestep);
+		double ComputeStep(){
+			return(TStep==STEP_Verlet? ComputeStep_Ver(): ComputeStep_Sym());
+		}
+		double ComputeStep_Ver();
+		double ComputeStep_Sym();
 
-  void ComputePips(bool run);
-  
-  void SaveData();
-  void FinishRun(bool stop);
+		inline tfloat3 FtPeriodicDist(const tdouble3 &pos, const tdouble3 &center, float radius)const;
+		void FtCalcForcesSum(unsigned cf, tfloat3 &face, tfloat3 &fomegaace)const;
+		void FtCalcForces(StFtoForces *ftoforces)const;
+		void FtCalcForcesRes(double dt, const StFtoForces *ftoforces, StFtoForcesRes *ftoforcesres)const;
+		void FtApplyImposedVel(StFtoForcesRes *ftoforcesres)const; //<vs_fttvel>
+		void FtSumExternalForces(unsigned cf, tfloat3 &face, tfloat3 &fomegaace)const;//<vs_fttvel>
+		void FtApplyConstraints(StFtoForces *ftoforces, StFtoForcesRes *ftoforcesres)const;
+		void RunFloating(double dt, bool predictor);
+		void RunGaugeSystem(double timestep);
 
-public:
-  JSphCpuSingle();
-  ~JSphCpuSingle();
-  void Run(std::string appname,JSphCfgRun *cfg,JLog2 *log);
+		void ComputePips(bool run);
 
-//<vs_innlet_ini>
-//-Code for InOut in JSphCpuSingle_InOut.cpp
-//--------------------------------------------
-protected:
-  void InOutInit(double timestepini);
-  void InOutIgnoreFluidDef(const std::vector<unsigned> &mkfluidlist);
-  void InOutCheckProximity(unsigned newnp);
-  void InOutComputeStep(double stepdt);
-  void InOutCalculeZsurf();
-  void InOutExtrapolateData(unsigned inoutcount,const int *inoutpart);
+		void SaveData();
+		void FinishRun(bool stop);
 
-  void BoundCorrectionData();
+	public:
+		JSphCpuSingle();
+		~JSphCpuSingle();
+		void Run(std::string appname, JSphCfgRun *cfg, JLog2 *log);
+
+		//<vs_innlet_ini>
+		//-Code for InOut in JSphCpuSingle_InOut.cpp
+		//--------------------------------------------
+	protected:
+		void InOutInit(double timestepini);
+		void InOutIgnoreFluidDef(const std::vector<unsigned> &mkfluidlist);
+		void InOutCheckProximity(unsigned newnp);
+		void InOutComputeStep(double stepdt);
+		void InOutCalculeZsurf();
+		void InOutExtrapolateData(unsigned inoutcount, const int *inoutpart);
+
+		void BoundCorrectionData();
 //<vs_innlet_end>
 };
 

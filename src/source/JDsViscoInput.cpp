@@ -30,29 +30,31 @@ using namespace std;
 /// Constructor.
 //==============================================================================
 JDsViscoInput::JDsViscoInput(){
-  ClassName="JDsViscoInput";
-  Times=NULL;
-  Values=NULL;
-  Reset();
+	ClassName="JDsViscoInput";
+	Times=NULL;
+	Values=NULL;
+	Reset();
 }
 
 //==============================================================================
 /// Destructor.
 //==============================================================================
 JDsViscoInput::~JDsViscoInput(){
-  DestructorActive=true;
-  Reset();
+	DestructorActive=true;
+	Reset();
 }
 
 //==============================================================================
 /// Initialisation of variables.
 //==============================================================================
 void JDsViscoInput::Reset(){
-  delete[] Times;  Times=NULL;
-  delete[] Values; Values=NULL;
-  File="";
-  Size=Count=Position=0;
-  LastTimestepInput=LastViscoOutput=-1;
+	delete[] Times;
+	Times=NULL;
+	delete[] Values;
+	Values=NULL;
+	File="";
+	Size=Count=Position=0;
+	LastTimestepInput=LastViscoOutput=-1;
 }
 
 //==============================================================================
@@ -60,9 +62,9 @@ void JDsViscoInput::Reset(){
 /// Resizes allocated space for values.
 //==============================================================================
 void JDsViscoInput::Resize(unsigned size){
-  Times=fun::ResizeAlloc(Times,Count,size);
-  Values=fun::ResizeAlloc(Values,Count,size);
-  Size=size;
+	Times=fun::ResizeAlloc(Times, Count, size);
+	Values=fun::ResizeAlloc(Values, Count, size);
+	Size=size;
 }
 
 //==============================================================================
@@ -70,10 +72,12 @@ void JDsViscoInput::Resize(unsigned size){
 /// Returns the allocated memory.
 //==============================================================================
 unsigned JDsViscoInput::GetAllocMemory()const{
-  unsigned s=0;
-  if(Times)s+=sizeof(float)*Size;
-  if(Values)s+=sizeof(float)*Size;
-  return(s);
+	unsigned s=0;
+	if(Times)
+		s+=sizeof(float)*Size;
+	if(Values)
+		s+=sizeof(float)*Size;
+	return(s);
 }
 
 //==============================================================================
@@ -81,19 +85,20 @@ unsigned JDsViscoInput::GetAllocMemory()const{
 /// Loads viscosity values for different instants (in secods).
 //==============================================================================
 void JDsViscoInput::LoadFile(std::string file){
-  Reset();
-  JReadDatafile rdat;
-  rdat.LoadFile(file,FILESIZEMAX);
-  const unsigned rows=rdat.Lines()-rdat.RemLines();
-  Resize(rows);
-  for(unsigned r=0;r<rows;r++){
-    Times[r]=rdat.ReadNextFloat(false);
-    Values[r]=rdat.ReadNextFloat(true);
-    //printf("FileData[%u]>  t:%f  ang:%f\n",r,Times[r],Values[r]);
-  }
-  Count=rows;
-  if(Count<2)Run_ExceptioonFile("Cannot be less than two values.",file);
-  File=file;
+	Reset();
+	JReadDatafile rdat;
+	rdat.LoadFile(file, FILESIZEMAX);
+	const unsigned rows=rdat.Lines()-rdat.RemLines();
+	Resize(rows);
+	for(unsigned r=0;r<rows;r++){
+		Times[r]=rdat.ReadNextFloat(false);
+		Values[r]=rdat.ReadNextFloat(true);
+		//printf("FileData[%u]>  t:%f  ang:%f\n", r, Times[r], Values[r]);
+	}
+	Count=rows;
+	if(Count<2)
+		Run_ExceptioonFile("Cannot be less than two values.", file);
+	File=file;
 }
 
 //==============================================================================
@@ -101,29 +106,32 @@ void JDsViscoInput::LoadFile(std::string file){
 /// Returns the viscosity value for the indicated instant.
 //==============================================================================
 float JDsViscoInput::GetVisco(float timestep){
-  if(LastTimestepInput>=0 && timestep==LastTimestepInput)return(LastViscoOutput);
-  LastTimestepInput=timestep;
-  float ret=0;
-  //-Busca intervalo del instante indicado.
-  //-Searches indicated interval of time.
-  float tini=Times[Position];
-  float tnext=(Position+1<Count? Times[Position+1]: tini);
-  for(;tnext<timestep&&Position+2<Count;Position++){
-    tini=tnext;
-    tnext=Times[Position+2];
-  }
-  //-Calcula dt en el instante indicado.
-  //-Computes dt for the indicated instant.
-  if(timestep<=tini)ret=Values[Position];
-  else if(timestep>=tnext)ret=Values[Position+1];
-  else{
-    const double tfactor=double(timestep-tini)/double(tnext-tini);
-    float vini=Values[Position];
-    float vnext=Values[Position+1];
-    ret=float(tfactor*(vnext-vini)+vini);
-  }
-  LastViscoOutput=ret;
-  return(ret);
+	if(LastTimestepInput>=0 && timestep==LastTimestepInput)
+		return(LastViscoOutput);
+	LastTimestepInput=timestep;
+	float ret=0;
+	//-Busca intervalo del instante indicado.
+	//-Searches indicated interval of time.
+	float tini=Times[Position];
+	float tnext=(Position+1<Count? Times[Position+1]: tini);
+	for(; tnext<timestep&&Position+2<Count; Position++){
+		tini=tnext;
+		tnext=Times[Position+2];
+	}
+	//-Calcula dt en el instante indicado.
+	//-Computes dt for the indicated instant.
+	if(timestep<=tini)
+		ret=Values[Position];
+	else if(timestep>=tnext)
+		ret=Values[Position+1];
+	else{
+		const double tfactor=double(timestep-tini)/double(tnext-tini);
+		float vini=Values[Position];
+		float vnext=Values[Position+1];
+		ret=float(tfactor*(vnext-vini)+vini);
+	}
+	LastViscoOutput=ret;
+	return(ret);
 }
 
 

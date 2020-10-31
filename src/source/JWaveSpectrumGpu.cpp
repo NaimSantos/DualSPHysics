@@ -32,73 +32,89 @@ using namespace std;
 /// Constructor.
 //==============================================================================
 JWaveSpectrumGpu::JWaveSpectrumGpu(){
-  ClassName="JWaveSpectrumGpu";
-  MemGpuFixed=0; Order2CoefsEtag=NULL; Order2CoefsDnmg=NULL; Order2CoefsPosg=NULL; Order2Auxg=NULL;
+	ClassName="JWaveSpectrumGpu";
+	MemGpuFixed=0;
+	Order2CoefsEtag=NULL;
+	Order2CoefsDnmg=NULL;
+	Order2CoefsPosg=NULL;
+	Order2Auxg=NULL;
 }
 
 //==============================================================================
 /// Frees GPU memory.
 //==============================================================================
 void JWaveSpectrumGpu::FreeMemoryGpu(){
-  MemGpuFixed=0;
-  #ifdef _WITHGPU
-    if(Order2CoefsEtag)cudaFree(Order2CoefsEtag);   Order2CoefsEtag=NULL;
-    if(Order2CoefsDnmg)cudaFree(Order2CoefsDnmg);   Order2CoefsDnmg=NULL;
-    if(Order2CoefsPosg)cudaFree(Order2CoefsPosg);   Order2CoefsPosg=NULL;
-    if(Order2Auxg)     cudaFree(Order2Auxg);        Order2Auxg=NULL;
-  #endif 
+	MemGpuFixed=0;
+	#ifdef _WITHGPU
+		if(Order2CoefsEtag)
+			cudaFree(Order2CoefsEtag);
+		Order2CoefsEtag=NULL;
+		if(Order2CoefsDnmg)
+			cudaFree(Order2CoefsDnmg);
+		Order2CoefsDnmg=NULL;
+		if(Order2CoefsPosg)
+			cudaFree(Order2CoefsPosg);
+		Order2CoefsPosg=NULL;
+		if(Order2Auxg)
+			cudaFree(Order2Auxg);
+		Order2Auxg=NULL;
+	#endif 
 }
 
 //==============================================================================
 /// Allocates GPU memory.
 //==============================================================================
 void JWaveSpectrumGpu::AllocMemoryGpu(unsigned sizewavecoefs){
-  FreeMemoryGpu();
-  #ifdef _WITHGPU
-    MemGpuFixed=0;
-    size_t m=sizeof(double4)*sizewavecoefs;
-    cudaMalloc((void**)&Order2CoefsEtag,m);     MemGpuFixed+=m;
-    m=sizeof(double)*sizewavecoefs;
-    cudaMalloc((void**)&Order2CoefsDnmg,m);     MemGpuFixed+=m;
-    m=sizeof(double2)*sizewavecoefs;
-    cudaMalloc((void**)&Order2CoefsPosg,m);     MemGpuFixed+=m;
-    m=sizeof(double)*cuwave2::GetSizeAux(sizewavecoefs);
-    //m=sizeof(double)*SizeWaveCoefs*2+512; 
-    cudaMalloc((void**)&Order2Auxg,m);          MemGpuFixed+=m;
-  #endif
+	FreeMemoryGpu();
+	#ifdef _WITHGPU
+		MemGpuFixed=0;
+		size_t m=sizeof(double4)*sizewavecoefs;
+		cudaMalloc((void**)&Order2CoefsEtag,m);
+		MemGpuFixed+=m;
+		m=sizeof(double)*sizewavecoefs;
+		cudaMalloc((void**)&Order2CoefsDnmg,m);
+		MemGpuFixed+=m;
+		m=sizeof(double2)*sizewavecoefs;
+		cudaMalloc((void**)&Order2CoefsPosg,m);
+		MemGpuFixed+=m;
+		m=sizeof(double)*cuwave2::GetSizeAux(sizewavecoefs);
+		//m=sizeof(double)*SizeWaveCoefs*2+512;
+		cudaMalloc((void**)&Order2Auxg,m);
+		MemGpuFixed+=m;
+	#endif
 }
 
 //==============================================================================
 /// Copy coefficients to GPU memory.
 //==============================================================================
-void JWaveSpectrumGpu::CopyCoefs(unsigned sizewavecoefs,const tdouble4 *d4,const double *d1,const tdouble2 *d2){
-  #ifdef _WITHGPU
-    cudaMemcpy(Order2CoefsEtag,d4,sizeof(double4)*sizewavecoefs,cudaMemcpyHostToDevice);
-    cudaMemcpy(Order2CoefsDnmg,d1,sizeof(double) *sizewavecoefs,cudaMemcpyHostToDevice);
-    cudaMemcpy(Order2CoefsPosg,d2,sizeof(double2)*sizewavecoefs,cudaMemcpyHostToDevice);
-  #endif
+void JWaveSpectrumGpu::CopyCoefs(unsigned sizewavecoefs, const tdouble4 *d4, const double *d1, const tdouble2 *d2){
+	#ifdef _WITHGPU
+		cudaMemcpy(Order2CoefsEtag, d4, sizeof(double4)*sizewavecoefs, cudaMemcpyHostToDevice);
+		cudaMemcpy(Order2CoefsDnmg, d1, sizeof(double) *sizewavecoefs, cudaMemcpyHostToDevice);
+		cudaMemcpy(Order2CoefsPosg, d2, sizeof(double2)*sizewavecoefs, cudaMemcpyHostToDevice);
+	#endif
 }
 
 //==============================================================================
 /// Returns paddle position using 2nd order wave theory.
 //==============================================================================
-double JWaveSpectrumGpu::CalcPosition(double time,unsigned sizewavecoefs){
-  #ifdef _WITHGPU
-    return(cuwave2::CalcPosition(time,sizewavecoefs,Order2CoefsDnmg,(double2*)Order2CoefsPosg,Order2Auxg));
-  #else
-    return(0);
-  #endif
+double JWaveSpectrumGpu::CalcPosition(double time, unsigned sizewavecoefs){
+	#ifdef _WITHGPU
+		return(cuwave2::CalcPosition(time, sizewavecoefs, Order2CoefsDnmg, (double2*)Order2CoefsPosg, Order2Auxg));
+	#else
+		return(0);
+	#endif
 }
 
 //==============================================================================
 /// Returns surface elevation using 2nd order wave theory.
 //==============================================================================
-double JWaveSpectrumGpu::CalcElevation(double time,double x,unsigned sizewavecoefs){
-  #ifdef _WITHGPU
-    return(cuwave2::CalcElevation(time,x,sizewavecoefs,(double4*)Order2CoefsEtag,Order2Auxg));
-  #else
-    return(0);
-  #endif
+double JWaveSpectrumGpu::CalcElevation(double time, double x, unsigned sizewavecoefs){
+	#ifdef _WITHGPU
+		return(cuwave2::CalcElevation(time, x, sizewavecoefs, (double4*)Order2CoefsEtag, Order2Auxg));
+	#else
+		return(0);
+	#endif
 }
 
 

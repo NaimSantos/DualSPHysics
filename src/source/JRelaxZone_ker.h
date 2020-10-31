@@ -40,46 +40,29 @@
 namespace curelaxzone{
 
 //# Kernels for JRelaxZone.
-void SetFluidVelUniform(unsigned n,unsigned pini
-  ,const tfloat3 &vt,const tfloat4 &cenpla
-  ,const tfloat4 &dompla1,const tfloat4 &dompla2,const tfloat4 &dompla3
-  ,float domsize1,float domsize2,float domsize3,float widthhalf
-  ,float coeff,double falpha,double fbeta,double fsub,double fdiv,unsigned fluidbeginidp
-  ,const double2 *posxy,const double *posz,const unsigned *idp,float4 *velrhop);
+void SetFluidVelUniform(unsigned n, unsigned pini, const tfloat3 &vt, const tfloat4 &cenpla, const tfloat4 &dompla1, const tfloat4 &dompla2,
+	const tfloat4 &dompla3, float domsize1, float domsize2, float domsize3, float widthhalf, float coeff, double falpha, double fbeta,
+	double fsub, double fdiv, unsigned fluidbeginidp, const double2 *posxy, const double *posz, const unsigned *idp, float4 *velrhop);
 
-void SetFluidVel(unsigned n,unsigned pini,bool order2,bool subdrift
-  ,double centerx,float widthhalf,float coeffx,float coeffz
-  ,double falpha,double fbeta,double fsub,double fdiv
-  ,double timewave,double swl,double kl,double sinhkld
-  ,double wpf,double cta,double depth,double framp
-  ,double ct2,double sinhkld4
-  ,double ctd,double ctd2,unsigned fluidbeginidp
-  ,const double2 *posxy,const double *posz,const unsigned *idp,float4 *velrhop);
+void SetFluidVel(unsigned n, unsigned pini, bool order2, bool subdrift, double centerx, float widthhalf, float coeffx, float coeffz,
+	double falpha, double fbeta, double fsub, double fdiv, double timewave, double swl, double kl, double sinhkld, double wpf,
+	double cta, double depth, double framp, double ct2, double sinhkld4, double ctd, double ctd2, unsigned fluidbeginidp,
+	const double2 *posxy, const double *posz, const unsigned *idp, float4 *velrhop);
 
-void SetFluidVelSpectrumSub(unsigned n,unsigned pini
-  ,double centerx,float widthhalf,float coeffx,float coeffz
-  ,double falpha,double fbeta,double fsub,double fdiv
-  ,double timewave,double swl,double depth,double framp,unsigned wavecount
-  ,const double *wavekl,const double *waveamp,const double *wavefang,const double *wavephase  
-  ,unsigned fluidbeginidp
-  ,const double2 *posxy,const double *posz,const unsigned *idp,float4 *velrhop
-  ,bool subdrift,double fun,double ctd,double ctd2,double ctd_2,double ctd2_2);
+void SetFluidVelSpectrumSub(unsigned n, unsigned pini, double centerx, float widthhalf, float coeffx, float coeffz, double falpha,
+	double fbeta, double fsub, double fdiv, double timewave, double swl, double depth, double framp, unsigned wavecount,
+	const double *wavekl, const double *waveamp, const double *wavefang, const double *wavephase, unsigned fluidbeginidp,
+	const double2 *posxy, const double *posz, const unsigned *idp, float4 *velrhop, bool subdrift, double fun,
+	double ctd, double ctd2, double ctd_2, double ctd2_2);
 
-void SetFluidVelExternal(unsigned n,unsigned pini
-  ,double centerx,float widthhalf,float coeffx,float coeffz
-  ,double falpha,double fbeta,double fsub,double fdiv
-  ,double pxmin,double pymin,double pzmin
-  ,double dpx,double dpy,double dpz
-  ,unsigned npx1,unsigned npy1,unsigned npz1
-  ,const double *velx,const double *velz
-  ,unsigned fluidbeginidp
-  ,const double2 *posxy,const double *posz,const unsigned *idp,float4 *velrhop
-  ,bool subdrift,double fun,double ctd,double ctd2,double ctd_2,double ctd2_2,double bottom);
+void SetFluidVelExternal(unsigned n, unsigned pini, double centerx, float widthhalf, float coeffx, float coeffz, double falpha,
+	double fbeta, double fsub, double fdiv, double pxmin, double pymin, double pzmin, double dpx, double dpy, double dpz,
+	unsigned npx1, unsigned npy1, unsigned npz1, const double *velx, const double *velz, unsigned fluidbeginidp,
+	const double2 *posxy, const double *posz, const unsigned *idp, float4 *velrhop, bool subdrift, double fun,
+	double ctd, double ctd2, double ctd_2, double ctd2_2, double bottom);
 
 //# Kernels for JRelaxZoneDrift.
-unsigned ComputeDrift(unsigned n,unsigned pini,double xmin,double xmax
-  ,const double2 *posxy,const typecode *code);
-
+unsigned ComputeDrift(unsigned n, unsigned pini, double xmin, double xmax, const double2 *posxy, const typecode *code);
 
 }
 

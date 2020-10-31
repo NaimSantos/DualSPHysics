@@ -31,32 +31,27 @@
 ////==============================================================================
 ///// Throws exception related to a file from a static method.
 ////==============================================================================
-//void JObject::RunExceptioonStatic(const std::string &srcfile,int srcline
-//  ,const std::string &method
-//  ,const std::string &msg,const std::string &file)
+//void JObject::RunExceptioonStatic(const std::string &srcfile, int srcline, const std::string &method, const std::string &msg, const std::string &file)
 //{
-//  throw JException(srcfile,srcline,"JObject",method,msg,file);
+//  throw JException(srcfile, srcline, "JObject", method, msg, file);
 //}
 
 //==============================================================================
 /// Throws exception related to a file or not.
 //==============================================================================
-void JObject::RunExceptioon(const std::string &srcfile,int srcline
-  ,const std::string &classname,const std::string &method
-  ,const std::string &msg,const std::string &file)const
+void JObject::RunExceptioon(const std::string &srcfile, int srcline, const std::string &classname, const std::string &method, const std::string &msg, const std::string &file)const
 {
-  throw JException(srcfile,srcline,classname,method,msg,file);
+	throw JException(srcfile, srcline, classname, method, msg, file);
 }
 
 //==============================================================================
 /// Throws exception related to a file or not.
 //==============================================================================
-void JObject::RunException(const std::string &method,const std::string &msg
-  ,const std::string &file)const
+void JObject::RunException(const std::string &method, const std::string &msg, const std::string &file)const
 {
-  //if(DestructorActive)PrintException(method,msg,file);
-  //PrintException(method,msg,file);
-  throw JException(ClassName,method,msg,file);
+	//if(DestructorActive)PrintException(method, msg, file);
+	//PrintException(method, msg, file);
+	throw JException(ClassName, method, msg, file);
 }
 
 ////==============================================================================
@@ -64,8 +59,8 @@ void JObject::RunException(const std::string &method,const std::string &msg
 ///// \param method Name of the method that throws an exception.
 ///// \param msg Text of the exception.
 ////==============================================================================
-//std::string JObject::GetExceptionText(const std::string &method,const std::string &msg)const{
-//  return(JException(ClassName,method,msg,"").ToStr());
+//std::string JObject::GetExceptionText(const std::string &method, const std::string &msg)const{
+//  return(JException(ClassName, method, msg, "").ToStr());
 //}
 //
 ////==============================================================================
@@ -74,8 +69,8 @@ void JObject::RunException(const std::string &method,const std::string &msg
 ///// \param msg Text of the exception.
 ///// \param file Name of the file.
 ////==============================================================================
-//std::string JObject::GetExceptionText(const std::string &method,const std::string &msg,const std::string &file)const{
-//  return(JException(ClassName,method,msg,file).ToStr());
+//std::string JObject::GetExceptionText(const std::string &method, const std::string &msg, const std::string &file)const{
+//  return(JException(ClassName, method, msg, file).ToStr());
 //}
 //
 ////==============================================================================
@@ -84,9 +79,9 @@ void JObject::RunException(const std::string &method,const std::string &msg
 ///// \param msg Text of the exception.
 ///// \param file Name of the file (is optional).
 ////==============================================================================
-//void JObject::PrintException(const std::string &method,const std::string &msg,const std::string &file)const{
-//  std::string text=(file.empty()? GetExceptionText(method,msg): GetExceptionText(method,msg,file));
-//  printf("\n*** %s\n",text.c_str());
+//void JObject::PrintException(const std::string &method, const std::string &msg, const std::string &file)const{
+//  std::string text=(file.empty()? GetExceptionText(method, msg): GetExceptionText(method, msg, file));
+//  printf("\n*** %s\n", text.c_str());
 //  fflush(stdout);
 //}
 

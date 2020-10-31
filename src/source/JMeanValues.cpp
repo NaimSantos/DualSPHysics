@@ -31,116 +31,126 @@ using namespace std;
 /// Constructor.
 //==============================================================================
 JMeanMoving::JMeanMoving(unsigned size){
-  ClassName="JMeanMoving";
-  Values=NULL; Weights=NULL;
-  InitSimple(size);
+	ClassName="JMeanMoving";
+	Values=NULL;
+	Weights=NULL;
+	InitSimple(size);
 }
 
 //==============================================================================
 /// Destructor.
 //==============================================================================
 JMeanMoving::~JMeanMoving(){
-  DestructorActive=true;
-  Reset();
+	DestructorActive=true;
+	Reset();
 }
- 
+
 //==============================================================================
 /// Initialisation of variables.
 //==============================================================================
 void JMeanMoving::Reset(){
-  delete[] Values;  Values=NULL;
-  delete[] Weights; Weights=NULL;
-  SizeValues=NextValue=0;
-  ValuesFull=false;
+	delete[] Values;
+	Values=NULL;
+	delete[] Weights;
+	Weights=NULL;
+	SizeValues=NextValue=0;
+	ValuesFull=false;
 }
- 
+
 //==============================================================================
 /// Configures type and size of mean.
 //==============================================================================
-void JMeanMoving::Init(unsigned size,bool weighted){ 
-  Reset();
-  if(size){
-    SizeValues=size;
-    try{
-      Values=new double[SizeValues];
-      if(weighted)Weights=new double[SizeValues];
-    }
-    catch(const std::bad_alloc){
-      Run_Exceptioon("Cannot allocate the requested memory.");
-    }
-  }
+void JMeanMoving::Init(unsigned size, bool weighted){
+	Reset();
+	if(size){
+		SizeValues=size;
+		try{
+			Values=new double[SizeValues];
+			if(weighted)
+				Weights=new double[SizeValues];
+		}
+		catch(const std::bad_alloc){
+			Run_Exceptioon("Cannot allocate the requested memory.");
+		}
+	}
 }
- 
+
 //==============================================================================
 /// Configures size of simple mean.
 //==============================================================================
 void JMeanMoving::InitSimple(unsigned size){ 
-  Init(size,false);
+	Init(size, false);
 }
- 
+
 //==============================================================================
 /// Configures size of weighted linear mean.
 //==============================================================================
-void JMeanMoving::InitWeightedLinear(unsigned size){ 
-  Init(size,true);
-  double sum=0;
-  for(unsigned c=0;c<SizeValues;c++){
-    Weights[c]=double(c+1);
-    sum+=Weights[c];
-  }
-  for(unsigned c=0;c<SizeValues;c++)Weights[c]=Weights[c]/sum;
+void JMeanMoving::InitWeightedLinear(unsigned size){
+	Init(size, true);
+	double sum=0;
+	for(unsigned c=0;c<SizeValues;c++){
+		Weights[c]=double(c+1);
+		sum+=Weights[c];
+	}
+	for(unsigned c=0;c<SizeValues;c++)
+		Weights[c]=Weights[c]/sum;
 }
- 
+
 //==============================================================================
 /// Configures size of weighted exponential mean.
 //==============================================================================
-void JMeanMoving::InitWeightedExponential(unsigned size,float fac){ 
-  Init(size,true);
-  double sum=0;
-  for(unsigned c=0;c<SizeValues;c++){
-    Weights[c]=(exp(double(c+1)*fac/SizeValues)-1.);
-    sum+=Weights[c];
-  }
-  for(unsigned c=0;c<SizeValues;c++)Weights[c]=Weights[c]/sum;
+void JMeanMoving::InitWeightedExponential(unsigned size, float fac){
+	Init(size, true);
+	double sum=0;
+	for(unsigned c=0;c<SizeValues;c++){
+		Weights[c]=(exp(double(c+1)*fac/SizeValues)-1.);
+		sum+=Weights[c];
+	}
+	for(unsigned c=0;c<SizeValues;c++)
+		Weights[c]=Weights[c]/sum;
 }
- 
+
 //==============================================================================
 /// Adds new value to mean.
 //==============================================================================
 void JMeanMoving::AddValue(double v){ 
-  if(SizeValues){
-    Values[NextValue]=v;
-    NextValue=(NextValue+1)%SizeValues;
-    if(!NextValue)ValuesFull=true;
-  }
-}  
+	if(SizeValues){
+		Values[NextValue]=v;
+		NextValue=(NextValue+1)%SizeValues;
+		if(!NextValue)
+			ValuesFull=true;
+	}
+}
 
 //==============================================================================
 /// Returns simple mean of values.
 //==============================================================================
 double JMeanMoving::GetSimpleMean()const{
-  double sum=0;
-  const unsigned n=(ValuesFull? SizeValues: NextValue);
-  for(unsigned c=0;c<n;c++)sum+=Values[c];
-  return(n? sum/n: 0);
+	double sum=0;
+	const unsigned n=(ValuesFull? SizeValues: NextValue);
+	for(unsigned c=0;c<n;c++)
+		sum+=Values[c];
+	return(n? sum/n: 0);
 }
 
 //==============================================================================
 /// Returns weighted mean of values.
 //==============================================================================
 double JMeanMoving::GetWeightedMean()const{
-  double sum=0;
-  const unsigned n=(ValuesFull? SizeValues: NextValue);
-  if(n && Weights){
-    const unsigned ini=(ValuesFull? NextValue: 0);
-    for(unsigned c=0;c<n;c++)sum+=(Values[(ini+c)%SizeValues]*Weights[c]);
-    if(!ValuesFull){ 
-      double wsum=0;
-      for(unsigned c=0;c<n;c++)wsum+=Weights[c];
-      sum=sum/wsum;
-    }
-  }
-  return(sum);
+	double sum=0;
+	const unsigned n=(ValuesFull? SizeValues: NextValue);
+	if(n && Weights){
+		const unsigned ini=(ValuesFull? NextValue: 0);
+		for(unsigned c=0;c<n;c++)
+			sum+=(Values[(ini+c)%SizeValues]*Weights[c]);
+		if(!ValuesFull){
+			double wsum=0;
+			for(unsigned c=0;c<n;c++)
+				wsum+=Weights[c];
+			sum=sum/wsum;
+		}
+	}
+	return(sum);
 }
 
 

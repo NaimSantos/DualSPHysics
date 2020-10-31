@@ -34,45 +34,43 @@ namespace cugeo{
 /// Devuelve true cuando pmin <= pt <= pmax.
 /// Returns true when pmin <= pt <= pmax.
 //------------------------------------------------------------------------------
-__device__ bool PointInMinMax(const double3 &pt,const double3 &pmin,const double3 &pmax){
-  return(pmin.x<=pt.x && pmin.y<=pt.y && pmin.z<=pt.z && pt.x<=pmax.x && pt.y<=pmax.x && pt.z<=pmax.z);
+__device__ bool PointInMinMax(const double3 &pt, const double3 &pmin, const double3 &pmax){
+	return(pmin.x<=pt.x && pmin.y<=pt.y && pmin.z<=pt.z && pt.x<=pmax.x && pt.y<=pmax.x && pt.z<=pmax.z);
 }
 
 //------------------------------------------------------------------------------
 /// Resuelve punto en el plano.
 /// Solves point in the plane.
 //------------------------------------------------------------------------------
-__device__ double PlanePoint(const double4 &pla,const double3 &pt){ 
-  return(pla.x*pt.x+pla.y*pt.y+pla.z*pt.z+pla.w);
+__device__ double PlanePoint(const double4 &pla, const double3 &pt){
+	return(pla.x*pt.x+pla.y*pt.y+pla.z*pt.z+pla.w);
 }
 
 //------------------------------------------------------------------------------
 /// Comprueba si el punto esta dentro del dominio definido.
 /// Checks the point is inside the defined domain.
 //------------------------------------------------------------------------------
-__device__ bool PlanesDomainCheck(const double3 &pt,const double4 &plax
-  ,const double4 &play,const double4 &plaz,const double3 &pladist)
-{
-  const double dx=PlanePoint(plax,pt);
-  const double dy=PlanePoint(play,pt);
-  const double dz=PlanePoint(plaz,pt);
-  return(dx>=0 && dx<=pladist.x && dy>=0 && dy<=pladist.y && dz>=0 && dz<=pladist.z);
+__device__ bool PlanesDomainCheck(const double3 &pt, const double4 &plax, const double4 &play, const double4 &plaz, const double3 &pladist){
+	const double dx=PlanePoint(plax, pt);
+	const double dy=PlanePoint(play, pt);
+	const double dz=PlanePoint(plaz, pt);
+	return(dx>=0 && dx<=pladist.x && dy>=0 && dy<=pladist.y && dz>=0 && dz<=pladist.z);
 }
 
 //------------------------------------------------------------------------------
 /// Resuelve punto en el plano.
 /// Solves point in the plane.
 //------------------------------------------------------------------------------
-__device__ float PlanePoint(const float4 &pla,const float &ptx,const float &pty,const float &ptz){ 
-  return(pla.x*ptx+pla.y*pty+pla.z*ptz+pla.w);
+__device__ float PlanePoint(const float4 &pla, const float &ptx, const float &pty, const float &ptz){
+	return(pla.x*ptx+pla.y*pty+pla.z*ptz+pla.w);
 }
 
 //------------------------------------------------------------------------------
 /// Devuelve la distancia entre un punto y un plano con signo.
 /// Returns the distance between a point and a plane with sign.
 //------------------------------------------------------------------------------
-__device__ float PlaneDistSign(const float4 &pla,const float &ptx,const float &pty,const float &ptz){ 
-  return(PlanePoint(pla,ptx,pty,ptz)/sqrt(pla.x*pla.x+pla.y*pla.y+pla.z*pla.z));
+__device__ float PlaneDistSign(const float4 &pla, const float &ptx, const float &pty, const float &ptz){
+	return(PlanePoint(pla, ptx, pty, ptz)/sqrt(pla.x*pla.x+pla.y*pla.y+pla.z*pla.z));
 }
 
 
