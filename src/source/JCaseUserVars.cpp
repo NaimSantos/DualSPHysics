@@ -34,129 +34,137 @@ using namespace std;
 /// Constructor.
 //==============================================================================
 JCaseUserVars::JCaseUserVars(){
-  ClassName="JCaseUserVars";
-  Reset();
+	ClassName="JCaseUserVars";
+	Reset();
 }
 
 //==============================================================================
 /// Destructor.
 //==============================================================================
 JCaseUserVars::~JCaseUserVars(){
-  DestructorActive=true;
-  Reset();
+	DestructorActive=true;
+	Reset();
 }
 
 //==============================================================================
 /// Initialization of variables.
 //==============================================================================
 void JCaseUserVars::Reset(){
-  Vars.clear();
+	Vars.clear();
 }
 
 //==============================================================================
 /// Sort funtion.
 //==============================================================================
-bool JCaseUserVarsSort(const JCaseUserVars::StVar &a,const JCaseUserVars::StVar &b){ 
-  return (a.isnum!=b.isnum? !a.isnum: a.name<b.name);
+bool JCaseUserVarsSort(const JCaseUserVars::StVar &a, const JCaseUserVars::StVar &b){
+	return (a.isnum!=b.isnum? !a.isnum: a.name<b.name);
 }
 
 //==============================================================================
 /// Configures MkBoundFirst and MkFluidFirst.
 //==============================================================================
 void JCaseUserVars::LoadExportVars(const JNumexLib *nuxlib){
-  Reset();
-  std::vector<unsigned> vars;
-  const unsigned nv=nuxlib->GetExportVars(vars);
-  for(unsigned cv=0;cv<nv;cv++){
-    const unsigned idx=vars[cv];
-    StVar v;
-    v.name=nuxlib->GetVarName(idx);
-    v.isnum=nuxlib->VarIsNum(idx);
-    v.valuenum=(v.isnum? nuxlib->GetVarNum(idx): 0);
-    if(!v.isnum)v.valuestr=nuxlib->GetVarStr(idx);
-    Vars.push_back(v);
-  }
-  //-Sort variables.
-  std::sort(Vars.begin(),Vars.end(),JCaseUserVarsSort);
+	Reset();
+	std::vector<unsigned> vars;
+	const unsigned nv=nuxlib->GetExportVars(vars);
+	for(unsigned cv=0;cv<nv;cv++){
+		const unsigned idx=vars[cv];
+		StVar v;
+		v.name=nuxlib->GetVarName(idx);
+		v.isnum=nuxlib->VarIsNum(idx);
+		v.valuenum=(v.isnum? nuxlib->GetVarNum(idx): 0);
+		if(!v.isnum)
+			v.valuestr=nuxlib->GetVarStr(idx);
+		Vars.push_back(v);
+	}
+	//-Sort variables.
+	std::sort(Vars.begin(), Vars.end(), JCaseUserVarsSort);
 }
 
 //==============================================================================
 /// Reads particles information in XML format.
 //==============================================================================
-void JCaseUserVars::ReadXml(const JXml *sxml,TiXmlElement* lis){
-  sxml->CheckElementNames(lis,false,"varstr varnum");
-  //-Loads user variables.
-  TiXmlElement* ele=lis->FirstChildElement();
-  while(ele){
-    string ename=ele->Value();
-    if(ename.length() && ename[0]!='_'){
-      StVar v;
-      if(ename=="varstr"){
-        v.name=sxml->GetAttributeStr(ele,"name");
-        v.isnum=false;
-        v.valuenum=0;
-        v.valuestr=sxml->GetAttributeStr(ele,"value");
-      }
-      else if(ename=="varnum"){
-        v.name=sxml->GetAttributeStr(ele,"name");
-        v.isnum=true;
-        v.valuenum=sxml->GetAttributeDouble(ele,"value");
-      }
-      else sxml->ErrReadElement(ele,ename,false);
-      Vars.push_back(v);
-    }
-    ele=ele->NextSiblingElement();
-  }
+void JCaseUserVars::ReadXml(const JXml *sxml, TiXmlElement* lis){
+	sxml->CheckElementNames(lis, false, "varstr varnum");
+	//-Loads user variables.
+	TiXmlElement* ele=lis->FirstChildElement();
+	while(ele){
+		string ename=ele->Value();
+		if(ename.length() && ename[0]!='_'){
+			StVar v;
+			if(ename=="varstr"){
+				v.name=sxml->GetAttributeStr(ele, "name");
+				v.isnum=false;
+				v.valuenum=0;
+				v.valuestr=sxml->GetAttributeStr(ele, "value");
+			}
+			else if(ename=="varnum"){
+				v.name=sxml->GetAttributeStr(ele, "name");
+				v.isnum=true;
+				v.valuenum=sxml->GetAttributeDouble(ele, "value");
+			}
+			else
+				sxml->ErrReadElement(ele, ename, false);
+			Vars.push_back(v);
+		}
+		ele=ele->NextSiblingElement();
+	}
 }
 
 //==============================================================================
 /// Writes information in XML format.
 //==============================================================================
-void JCaseUserVars::WriteXml(JXml *sxml,TiXmlElement* lis)const{
-  lis->Clear();
-  const unsigned nv=unsigned(Vars.size());
-  for(unsigned cv=0;cv<nv;cv++){
-    const StVar &v=Vars[cv];
-    TiXmlElement item(v.isnum? "varnum": "varstr");
-    JXml::AddAttribute(&item,"name",v.name);
-    if(v.isnum)JXml::AddAttribute(&item,"value",v.valuenum);
-    else       JXml::AddAttribute(&item,"value",v.valuestr);
-    lis->InsertEndChild(item);
-  }
+void JCaseUserVars::WriteXml(JXml *sxml, TiXmlElement* lis)const{
+	lis->Clear();
+	const unsigned nv=unsigned(Vars.size());
+	for(unsigned cv=0;cv<nv;cv++){
+		const StVar &v=Vars[cv];
+		TiXmlElement item(v.isnum? "varnum": "varstr");
+		JXml::AddAttribute(&item, "name", v.name);
+		if(v.isnum)
+			JXml::AddAttribute(&item, "value", v.valuenum);
+		else
+			JXml::AddAttribute(&item, "value", v.valuestr);
+		lis->InsertEndChild(item);
+	}
 }
 
 //==============================================================================
 /// Loads data in XML format from a file.
 //==============================================================================
-void JCaseUserVars::LoadFileXml(const std::string &file,const std::string &path){
-  JXml jxml;
-  jxml.LoadFile(file);
-  LoadXml(&jxml,path,false);
+void JCaseUserVars::LoadFileXml(const std::string &file, const std::string &path){
+	JXml jxml;
+	jxml.LoadFile(file);
+	LoadXml(&jxml, path, false);
 }
 
 //==============================================================================
 /// Loads information from the object XML.
 //==============================================================================
-void JCaseUserVars::LoadXml(const JXml *sxml,const std::string &place,bool optional){
-  Reset();
-  TiXmlNode* node=sxml->GetNodeSimple(place);
-  if(!node && !optional)Run_Exceptioon(std::string("Cannot find the element \'")+place+"\'.");
-  if(node)ReadXml(sxml,node->ToElement());
+void JCaseUserVars::LoadXml(const JXml *sxml, const std::string &place, bool optional){
+	Reset();
+	TiXmlNode* node=sxml->GetNodeSimple(place);
+	if(!node && !optional)
+		Run_Exceptioon(std::string("Cannot find the element \'")+place+"\'.");
+	if(node)
+		ReadXml(sxml, node->ToElement());
 }
 
 //==============================================================================
 /// Stores information in the object XML.
 //==============================================================================
-void JCaseUserVars::SaveXml(JXml *sxml,const std::string &place)const{
-  if(unsigned(Vars.size())>0)WriteXml(sxml,sxml->GetNode(place,true)->ToElement());
+void JCaseUserVars::SaveXml(JXml *sxml, const std::string &place)const{
+	if(unsigned(Vars.size())>0)
+		WriteXml(sxml, sxml->GetNode(place, true)->ToElement());
 }
 
 //==============================================================================
 /// Returns data of requested variable according to index.
 //==============================================================================
 JCaseUserVars::StVar JCaseUserVars::GetVar(unsigned idx)const{
-  if(idx>=CountVars())Run_Exceptioon(fun::PrintStr("Index %d of variable is invalid.",idx));
-  return(Vars[idx]);
+	if(idx>=CountVars())
+		Run_Exceptioon(fun::PrintStr("Index %d of variable is invalid.", idx));
+	return(Vars[idx]);
 }
 
 

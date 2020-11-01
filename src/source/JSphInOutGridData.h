@@ -33,7 +33,7 @@
 #include "JObject.h"
 #include "DualSphDef.h"
 #ifdef _WITHGPU
-  #include <cuda_runtime_api.h>
+	#include <cuda_runtime_api.h>
 #endif
 
 class JLog2;
@@ -44,29 +44,35 @@ class JLog2;
 /// \brief Stores data points in time.
 class JSphInOutGridDataTime
 {
-private:
-  double Time;
-  float *Velx;
-  float *Velz;
+	private:
+		double Time;
+		float *Velx;
+		float *Velz;
 
-  inline void AllocData(bool usevelz);
-  void ResetInit();
+		inline void AllocData(bool usevelz);
+		void ResetInit();
 
-public:
-  const unsigned Nx;
-  const unsigned Nz;
-  const unsigned Npt;
-  JSphInOutGridDataTime(unsigned nx,unsigned nz);
-  JSphInOutGridDataTime(unsigned nx,unsigned nz,double time,const float *velx,const float *velz);
-  ~JSphInOutGridDataTime();
+	public:
+		const unsigned Nx;
+		const unsigned Nz;
+		const unsigned Npt;
+		JSphInOutGridDataTime(unsigned nx, unsigned nz);
+		JSphInOutGridDataTime(unsigned nx, unsigned nz, double time, const float *velx, const float *velz);
+		~JSphInOutGridDataTime();
 
-  void SetData(double time,const float *velx,const float *velz);
-  void CopyFrom(double time,const JSphInOutGridDataTime *gdt){ SetData(time,gdt->Velx,gdt->Velz); }
-  void Interpolate(double time,const JSphInOutGridDataTime *gdt,const JSphInOutGridDataTime *gdt2);
+		void SetData(double time, const float *velx, const float *velz);
+		void CopyFrom(double time, const JSphInOutGridDataTime *gdt){ SetData(time, gdt->Velx, gdt->Velz); }
+		void Interpolate(double time, const JSphInOutGridDataTime *gdt, const JSphInOutGridDataTime *gdt2);
 
-  double GetTime()const{ return(Time); }
-  const float* GetVelx()const{ return(Velx); };
-  const float* GetVelz()const{ return(Velz); };
+		double GetTime()const{
+			return(Time);
+		}
+		const float* GetVelx()const{
+			return(Velx);
+		};
+		const float* GetVelz()const{
+			return(Velz);
+		};
 };
 
 
@@ -76,93 +82,91 @@ public:
 /// \brief Defines object to manage interpolation grid points.
 class JSphInOutGridData : protected JObject
 {
-private:
-  JLog2 *Log;
-  std::string File;
+	private:
+		JLog2 *Log;
+		std::string File;
 
-  unsigned Nx;
-  unsigned Nz;
-  unsigned Npt;
-  double Dpx;
-  double Dpz;
-  bool UseVelz;
+		unsigned Nx;
+		unsigned Nz;
+		unsigned Npt;
+		double Dpx;
+		double Dpz;
+		bool UseVelz;
 
-  tdouble3 PosMin;
-  tdouble3 PosMax;
+		tdouble3 PosMin;
+		tdouble3 PosMax;
 
-  std::vector<JSphInOutGridDataTime*> DataTimes;
+		std::vector<JSphInOutGridDataTime*> DataTimes;
 
-  void LoadDataCsv(const std::string &filename);
-  void LoadDataBin(const std::string &filename);
+		void LoadDataCsv(const std::string &filename);
+		void LoadDataBin(const std::string &filename);
 
-  unsigned SelCt;
-  JSphInOutGridDataTime* SelData;
+		unsigned SelCt;
+		JSphInOutGridDataTime* SelData;
 
- #ifdef _WITHGPU
-  double TimeGpu;
-  unsigned CtVel0;  //-DataTime on GPU memory (CtVel0=SelCt).
-  unsigned CtVel1;  //-DataTime on GPU memory (CtVel1=SelCt+1).
-  unsigned CtSelVel;//-DataTime on GPU memory.
+		#ifdef _WITHGPU
+			double TimeGpu;
+			unsigned CtVel0;  //-DataTime on GPU memory (CtVel0=SelCt).
+			unsigned CtVel1;  //-DataTime on GPU memory (CtVel1=SelCt+1).
+			unsigned CtSelVel;//-DataTime on GPU memory.
 
-  float* Velx0g;    //-X velocity data on GPU at CtVel0.
-  float* Velx1g;    //-X velocity data on GPU at CtVel1.
-  float* SelVelxg;  //-X velocity data on GPU at requested time.
+			float* Velx0g;    //-X velocity data on GPU at CtVel0.
+			float* Velx1g;    //-X velocity data on GPU at CtVel1.
+			float* SelVelxg;  //-X velocity data on GPU at requested time.
 
-  float* Velz0g;    //-Z velocity data on GPU at CtVel0.
-  float* Velz1g;    //-Z velocity data on GPU at CtVel1.
-  float* SelVelzg;  //-Z velocity data on GPU at requested time.
+			float* Velz0g;    //-Z velocity data on GPU at CtVel0.
+			float* Velz1g;    //-Z velocity data on GPU at CtVel1.
+			float* SelVelzg;  //-Z velocity data on GPU at requested time.
 
-  void AllocateMemoryGpu();
-  void FreeMemoryGpu();
-  void ComputeTimeGpu(double t);
- #endif
+			void AllocateMemoryGpu();
+			void FreeMemoryGpu();
+			void ComputeTimeGpu(double t);
+		#endif
 
-  void ComputeTime(double t);
-  void SaveVtk(const JSphInOutGridDataTime *gdt,std::string filename)const;
+		void ComputeTime(double t);
+		void SaveVtk(const JSphInOutGridDataTime *gdt, std::string filename)const;
 
-public:
-  const static unsigned FmtVersion=1;
+	public:
+		const static unsigned FmtVersion=1;
 
-  JSphInOutGridData(JLog2 *log);
-  ~JSphInOutGridData();
-  void Reset();
-  void ConfigFromFile(const std::string &filename);
-  void ConfigGridData(unsigned nx,unsigned nz,double dpx,double dpz,bool usevelz);
-  void SetPosMin(const tdouble3 &posmin);
+		JSphInOutGridData(JLog2 *log);
+		~JSphInOutGridData();
+		void Reset();
+		void ConfigFromFile(const std::string &filename);
+		void ConfigGridData(unsigned nx, unsigned nz, double dpx, double dpz, bool usevelz);
+		void SetPosMin(const tdouble3 &posmin);
 
-  void AddDataTime(double time,unsigned npt,const float *velx,const float *velz);
+		void AddDataTime(double time, unsigned npt, const float *velx, const float *velz);
 
-  unsigned GetNx()const{ return(Nx); }
-  unsigned GetNz()const{ return(Nz); }
-  double GetDpx()const{ return(Dpx); }
-  double GetDpz()const{ return(Dpz); }
-  bool GetUseVelz()const{ return(UseVelz); }
+		unsigned GetNx()const{ return(Nx); }
+		unsigned GetNz()const{ return(Nz); }
+		double GetDpx()const{ return(Dpx); }
+		double GetDpz()const{ return(Dpz); }
+		bool GetUseVelz()const{ return(UseVelz); }
 
-  unsigned CountTimes()const{ return(unsigned(DataTimes.size())); }
-  std::string GetFile()const{ return(File); };
+		unsigned CountTimes()const{
+			return(unsigned(DataTimes.size()));
+		}
+		std::string GetFile()const{
+			return(File);
+		};
 
-  void InterpolateVelCpu(double time,unsigned izone,unsigned np,const int *plist
-    ,const tdouble3 *pos,const typecode *code,const unsigned *idp,tfloat4 *velrhop
-    ,float velcorr);
-  void InterpolateZVelCpu(double time,unsigned izone,unsigned np,const int *plist
-    ,const tdouble3 *pos,const typecode *code,const unsigned *idp,tfloat4 *velrhop
-    ,float velcorr);
+		void InterpolateVelCpu(double time, unsigned izone, unsigned np, const int *plist, const tdouble3 *pos, const typecode *code, const unsigned *idp, tfloat4 *velrhop, float velcorr);
+		void InterpolateZVelCpu(double time, unsigned izone, unsigned np, const int *plist, const tdouble3 *pos, const typecode *code, const unsigned *idp, tfloat4 *velrhop, float velcorr);
 
-#ifdef _WITHGPU
-  void InterpolateZVelGpu(double time,unsigned izone,unsigned np,const int *plist
-    ,const double2 *posxyg,const double *poszg,const typecode *codeg
-    ,const unsigned *idpg,float4 *velrhopg,float velcorr);
-#endif
+		#ifdef _WITHGPU
+			void InterpolateZVelGpu(double time, unsigned izone, unsigned np, const int *plist, const double2 *posxyg, const double *poszg, const typecode *codeg, const unsigned *idpg, float4 *velrhopg, float velcorr);
+		#endif
 
 
 
-  void SaveDataCsv(std::string filename)const;
-  void SaveDataBin(std::string filename)const;
+		void SaveDataCsv(std::string filename)const;
+		void SaveDataBin(std::string filename)const;
 
-  void SaveDataVtk(std::string filename,int ctime=-1)const;
-  void SaveDataVtkTime(std::string filename,double tmax,double dt);
+		void SaveDataVtk(std::string filename, int ctime=-1)const;
+		void SaveDataVtkTime(std::string filename, double tmax, double dt);
 
-  //void SaveVtkGrid(std::string filename,tfloat3 pos0)const;
+		//void SaveVtkGrid(std::string filename, tfloat3 pos0)const;
 
 };
 

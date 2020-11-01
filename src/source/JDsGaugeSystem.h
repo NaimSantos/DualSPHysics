@@ -56,83 +56,86 @@ class JSphMk;
 
 class JGaugeSystem : protected JObject
 {
-private:
-  JLog2* Log;
-  const bool Cpu;
+	private:
+		JLog2* Log;
+		const bool Cpu;
 
-  bool Configured;
-  StCteSph CSP;           ///<Structure with main SPH constants values and configurations.
-  bool Symmetry;          ///<Use of symmetry in plane y=0.
-  double TimeMax;         ///<Total time to simulate [s].
-  double TimePart;        ///<Time of output data [s].
-  tdouble3 DomPosMin;     ///<Lower limit of simulation + edge (KernelSize) if periodic conditions. DomPosMin=Map_PosMin+(DomCelIni*Scell); | Limite inferior de simulacion + borde (KernelSize) si hay condiciones periodicas. 
-  tdouble3 DomPosMax;     ///<Upper limit of simulation + edge (KernelSize) if periodic conditions. DomPosMax=min(Map_PosMax,Map_PosMin+(DomCelFin*Scell)); | Limite inferior de simulacion + borde (KernelSize) si hay condiciones periodicas. 
-  float Scell;            ///<Cell size: KernelSize/ScellDiv (KernelSize or KernelSize/2).
-  int ScellDiv;           ///<Value to divide KernelSize (1 or 2).
-
-
-  JGaugeItem::StDefault CfgDefault; ///<Default configuration.
-  
-  std::vector<JGaugeItem*> Gauges;
-
-  //-Variables for GPU.
- #ifdef _WITHGPU
-  float3* AuxMemoryg;  ///<Auxiliary allocated memory on GPU [1].
- #endif
+		bool Configured;
+		StCteSph CSP;           ///<Structure with main SPH constants values and configurations.
+		bool Symmetry;          ///<Use of symmetry in plane y=0.
+		double TimeMax;         ///<Total time to simulate [s].
+		double TimePart;        ///<Time of output data [s].
+		tdouble3 DomPosMin;     ///<Lower limit of simulation + edge (KernelSize) if periodic conditions. DomPosMin=Map_PosMin+(DomCelIni*Scell); | Limite inferior de simulacion + borde (KernelSize) si hay condiciones periodicas. 
+		tdouble3 DomPosMax;     ///<Upper limit of simulation + edge (KernelSize) if periodic conditions. DomPosMax=min(Map_PosMax,Map_PosMin+(DomCelFin*Scell)); | Limite inferior de simulacion + borde (KernelSize) si hay condiciones periodicas. 
+		float Scell;            ///<Cell size: KernelSize/ScellDiv (KernelSize or KernelSize/2).
+		int ScellDiv;           ///<Value to divide KernelSize (1 or 2).
 
 
-  void ResetCfgDefault();
-  void LoadLinePoints(double coefdp,const tdouble3 &point1,const tdouble3 &point2,std::vector<tdouble3> &points,const std::string &ref)const;
-  void LoadLinePoints(unsigned count,const tdouble3 &point1,const tdouble3 &point2,std::vector<tdouble3> &points,const std::string &ref)const;
-  void LoadPoints(JXml *sxml,TiXmlElement* lis,std::vector<tdouble3> &points)const;
-  JGaugeItem::StDefault ReadXmlCommon(const JXml *sxml,TiXmlElement* ele)const;
-  void ReadXml(const JXml *sxml,TiXmlElement* ele,const JSphMk* mkinfo);
-  void SaveVtkInitPoints()const;
+		JGaugeItem::StDefault CfgDefault; ///<Default configuration.
 
-public:
-  JGaugeSystem(bool cpu,JLog2* log);
-  ~JGaugeSystem();
-  void Reset();
+		std::vector<JGaugeItem*> Gauges;
 
-  void Config(const StCteSph & csp,bool symmetry,double timemax,double timepart
-    ,tdouble3 posmin,tdouble3 posmax,float scell,int scelldiv);
+		//-Variables for GPU.
+		#ifdef _WITHGPU
+			float3* AuxMemoryg;  ///<Auxiliary allocated memory on GPU [1].
+		#endif
 
-  void LoadXml(const JXml *sxml,const std::string &place,const JSphMk* mkinfo);
-  void VisuConfig(std::string txhead,std::string txfoot);
 
-  bool GetSimulate2D()const{ return(CSP.simulate2d); };
-  double GetSimulate2DPosY()const{ return(CSP.simulate2dposy); };
-  double GetDp()const{ return(CSP.dp); }
-  tdouble3 GetDomPosMin()const{ return(DomPosMin); }
-  tdouble3 GetDomPosMax()const{ return(DomPosMax); }
-  float GetMassFluid()const{ return(CSP.massfluid); }
-  //float GetMassBound()const{ return(MassBound); }
-  float GetKernelH()const{ return(CSP.kernelh); }
-  float GetScell()const{ return(Scell); }
+		void ResetCfgDefault();
+		void LoadLinePoints(double coefdp, const tdouble3 &point1, const tdouble3 &point2, std::vector<tdouble3> &points, const std::string &ref)const;
+		void LoadLinePoints(unsigned count, const tdouble3 &point1, const tdouble3 &point2, std::vector<tdouble3> &points, const std::string &ref)const;
+		void LoadPoints(JXml *sxml, TiXmlElement* lis, std::vector<tdouble3> &points)const;
+		JGaugeItem::StDefault ReadXmlCommon(const JXml *sxml, TiXmlElement* ele)const;
+		void ReadXml(const JXml *sxml, TiXmlElement* ele, const JSphMk* mkinfo);
+		void SaveVtkInitPoints()const;
 
-  void LoadLinePoints(double coefdp,const tdouble3 &point1,const tdouble3 &point2,std::vector<tdouble3> &points)const{ LoadLinePoints(coefdp,point1,point2,points,""); }
-  void LoadLinePoints(unsigned count,const tdouble3 &point1,const tdouble3 &point2,std::vector<tdouble3> &points)const{ LoadLinePoints(count,point1,point2,points,""); }
+	public:
+		JGaugeSystem(bool cpu, JLog2* log);
+		~JGaugeSystem();
+		void Reset();
 
-  JGaugeVelocity* AddGaugeVel  (std::string name,double computestart,double computeend,double computedt,const tdouble3 &point);
-  JGaugeSwl*      AddGaugeSwl  (std::string name,double computestart,double computeend,double computedt,tdouble3 point0,tdouble3 point2,double pointdp,float masslimit=0);
-  JGaugeMaxZ*     AddGaugeMaxZ (std::string name,double computestart,double computeend,double computedt,tdouble3 point0,double height,float distlimit);
-  JGaugeForce*    AddGaugeForce(std::string name,double computestart,double computeend,double computedt,const JSphMk* mkinfo,word mkbound);
+		void Config(const StCteSph & csp, bool symmetry, double timemax, double timepart, tdouble3 posmin, tdouble3 posmax, float scell, int scelldiv);
 
-  unsigned GetCount()const{ return(unsigned(Gauges.size())); }
-  unsigned GetGaugeIdx(const std::string &name)const;
-  JGaugeItem* GetGauge(unsigned c)const;
+		void LoadXml(const JXml *sxml, const std::string &place, const JSphMk* mkinfo);
+		void VisuConfig(std::string txhead, std::string txfoot);
 
-  void CalculeCpu(double timestep,bool svpart,const StDivDataCpu &dvd
-    ,unsigned npbok,unsigned npb,unsigned np,const tdouble3 *pos
-    ,const typecode *code,const unsigned *idp,const tfloat4 *velrhop);
+		bool GetSimulate2D()const{ return(CSP.simulate2d); };
+		double GetSimulate2DPosY()const{ return(CSP.simulate2dposy); };
+		double GetDp()const{ return(CSP.dp); }
+		tdouble3 GetDomPosMin()const{ return(DomPosMin); }
+		tdouble3 GetDomPosMax()const{ return(DomPosMax); }
+		float GetMassFluid()const{ return(CSP.massfluid); }
+		//float GetMassBound()const{ return(MassBound); }
+		float GetKernelH()const{ return(CSP.kernelh); }
+		float GetScell()const{ return(Scell); }
 
- #ifdef _WITHGPU
-  void CalculeGpu(double timestep,bool svpart,const StDivDataGpu &dvd
-    ,unsigned npbok,unsigned npb,unsigned np,const double2 *posxy,const double *posz
-    ,const typecode *code,const unsigned *idp,const float4 *velrhop);
- #endif
+		void LoadLinePoints(double coefdp, const tdouble3 &point1, const tdouble3 &point2, std::vector<tdouble3> &points)const{
+			LoadLinePoints(coefdp, point1, point2, points, "");
+		}
+		void LoadLinePoints(unsigned count, const tdouble3 &point1, const tdouble3 &point2, std::vector<tdouble3> &points)const{
+			LoadLinePoints(count, point1, point2, points, "");
+		}
 
-  void SaveResults(unsigned cpart);
+		JGaugeVelocity* AddGaugeVel  (std::string name, double computestart, double computeend, double computedt, const tdouble3 &point);
+		JGaugeSwl* AddGaugeSwl  (std::string name, double computestart, double computeend, double computedt, tdouble3 point0, tdouble3 point2, double pointdp, float masslimit=0);
+		JGaugeMaxZ* AddGaugeMaxZ (std::string name, double computestart, double computeend, double computedt, tdouble3 point0, double height, float distlimit);
+		JGaugeForce* AddGaugeForce(std::string name, double computestart, double computeend, double computedt, const JSphMk* mkinfo, word mkbound);
+
+		unsigned GetCount()const{
+			return(unsigned(Gauges.size()));
+		}
+		unsigned GetGaugeIdx(const std::string &name)const;
+		JGaugeItem* GetGauge(unsigned c)const;
+
+		void CalculeCpu(double timestep, bool svpart, const StDivDataCpu &dvd, unsigned npbok, unsigned npb, unsigned np,
+			const tdouble3 *pos, const typecode *code, const unsigned *idp, const tfloat4 *velrhop);
+
+		#ifdef _WITHGPU
+		void CalculeGpu(double timestep, bool svpart, const StDivDataGpu &dvd, unsigned npbok, unsigned npb, unsigned np,
+			const double2 *posxy, const double *posz, const typecode *code, const unsigned *idp, const float4 *velrhop);
+		#endif
+
+		void SaveResults(unsigned cpart);
 };
 
 

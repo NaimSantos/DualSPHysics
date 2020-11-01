@@ -55,53 +55,52 @@ class JDsPartsInit;
 /// \brief Manages one configuration for boundary extrapolated correction.
 class JSphBoundCorrZone : protected JObject
 {
-public:
-///Direction mode.
-typedef enum{ 
-    DIR_None=0,
-    DIR_Top=1,
-    DIR_Bottom=2,
-    DIR_Left=3,
-    DIR_Right=4,
-    DIR_Front=5,
-    DIR_Back=6,
-    DIR_Defined=10
-}TpDirection;  
+	public:
+		///Direction mode.
+		typedef enum{
+			DIR_None=0,
+			DIR_Top=1,
+			DIR_Bottom=2,
+			DIR_Left=3,
+			DIR_Right=4,
+			DIR_Front=5,
+			DIR_Back=6,
+			DIR_Defined=10
+		}TpDirection;
 
-private:
-  JLog2 *Log;
+	private:
+		JLog2 *Log;
 
-  //-Selection of particles
-  typecode BoundCode;      ///<Code to select boundary particles.
+		//-Selection of particles
+		typecode BoundCode;      ///<Code to select boundary particles.
 
-  //-Configuration parameters.
-  TpDirection AutoDir; ///<Direction configuration for automatic definition.
-  double AutoDpFactor; ///<Point is calculated starting from bound particles at distance dp*AutoDpFactor.
-  tdouble3 LimitPos;   ///<Limit between boundary and fluid.
-  tdouble3 Direction;  ///<Direction to fluid particles.
-  tplane3f Plane;      ///<Plane in limit.
+		//-Configuration parameters.
+		TpDirection AutoDir; ///<Direction configuration for automatic definition.
+		double AutoDpFactor; ///<Point is calculated starting from bound particles at distance dp*AutoDpFactor.
+		tdouble3 LimitPos;   ///<Limit between boundary and fluid.
+		tdouble3 Direction;  ///<Direction to fluid particles.
+		tplane3f Plane;      ///<Plane in limit.
 
-  void Reset();
+		void Reset();
 
-public:
-  const unsigned IdZone;
-  const word MkBound;
+	public:
+		const unsigned IdZone;
+		const word MkBound;
 
-  JSphBoundCorrZone(JLog2 *log,unsigned idzone,word mkbound
-    ,TpDirection autodir,double autodpfactor,tdouble3 limitpos,tdouble3 direction);
-  ~JSphBoundCorrZone();
-  void ConfigBoundCode(typecode boundcode);
-  void ConfigAuto(const JDsPartsInit *partsdata);
+		JSphBoundCorrZone(JLog2 *log, unsigned idzone, word mkbound, TpDirection autodir, double autodpfactor, tdouble3 limitpos, tdouble3 direction);
+		~JSphBoundCorrZone();
+		void ConfigBoundCode(typecode boundcode);
+		void ConfigAuto(const JDsPartsInit *partsdata);
 
-  void RunMotion(const StMotionData& motiondata);
+		void RunMotion(const StMotionData& motiondata);
 
-  void GetConfig(std::vector<std::string> &lines)const;
+		void GetConfig(std::vector<std::string> &lines)const;
 
-  TpDirection GetAutoDir()const{ return(AutoDir); }
-  tdouble3 GetLimitPos()const{ return(LimitPos); }
-  tdouble3 GetDirection()const{ return(Direction); }
-  tplane3f GetPlane()const{ return(Plane); }
-  typecode GetBoundCode()const{ return(BoundCode); }
+		TpDirection GetAutoDir()const{ return(AutoDir); }
+		tdouble3 GetLimitPos()const{ return(LimitPos); }
+		tdouble3 GetDirection()const{ return(Direction); }
+		tplane3f GetPlane()const{ return(Plane); }
+		typecode GetBoundCode()const{ return(BoundCode); }
 };
 
 //##############################################################################
@@ -110,45 +109,45 @@ public:
 /// \brief Manages configurations for boundary extrapolated correction.
 class JSphBoundCorr : protected JObject
 {
-private:
-  JLog2 *Log;
-  const double Dp;       ///<Initial distance between particles [m].
+	private:
+		JLog2 *Log;
+		const double Dp;       ///<Initial distance between particles [m].
 
-  float DetermLimit;     ///<Limit for determinant. Use 1e-3 for first_order or 1e+3 for zeroth_order (default=1e+3).
-  byte ExtrapolateMode;  ///<Calculation mode for rhop extrapolation from ghost nodes 1:fast-single, 2:single, 3:double (default=1).
+		float DetermLimit;     ///<Limit for determinant. Use 1e-3 for first_order or 1e+3 for zeroth_order (default=1e+3).
+		byte ExtrapolateMode;  ///<Calculation mode for rhop extrapolation from ghost nodes 1:fast-single,  2:single,  3:double (default=1).
 
-  std::vector<JSphBoundCorrZone*> List; ///<List of configurations.
+		std::vector<JSphBoundCorrZone*> List; ///<List of configurations.
 
-  const bool SaveMotionVtk;  ///<Saves CfgBoundCorr_Limit_XXXX.vtk for each part when motion is applied.
-  bool UseMotion; ///<Some boundary is moving boundary.
+		const bool SaveMotionVtk;  ///<Saves CfgBoundCorr_Limit_XXXX.vtk for each part when motion is applied.
+		bool UseMotion; ///<Some boundary is moving boundary.
 
-  void Reset();
-  bool ExistMk(word mkbound)const;
-  void LoadXml(const JXml *sxml,const std::string &place);
-  void ReadXml(const JXml *sxml,TiXmlElement* lis);
-  void UpdateMkCode(const JSphMk *mkinfo);
-  void SaveVtkConfig(double dp,int part)const;
+		void Reset();
+		bool ExistMk(word mkbound)const;
+		void LoadXml(const JXml *sxml, const std::string &place);
+		void ReadXml(const JXml *sxml, TiXmlElement* lis);
+		void UpdateMkCode(const JSphMk *mkinfo);
+		void SaveVtkConfig(double dp, int part)const;
 
-public:
-  const bool Cpu;
+	public:
+		const bool Cpu;
 
-  JSphBoundCorr(bool cpu,double dp,JLog2 *log,const JXml *sxml,const std::string &place,const JSphMk *mkinfo);
-  ~JSphBoundCorr();
+		JSphBoundCorr(bool cpu, double dp, JLog2 *log, const JXml *sxml, const std::string &place, const JSphMk *mkinfo);
+		~JSphBoundCorr();
 
-  void RunAutoConfig(const JDsPartsInit *partsdata);
+		void RunAutoConfig(const JDsPartsInit *partsdata);
 
-  void VisuConfig(std::string txhead,std::string txfoot)const;
-  unsigned GetCount()const{ return(unsigned(List.size())); };
+		void VisuConfig(std::string txhead, std::string txfoot)const;
+		unsigned GetCount()const{ return(unsigned(List.size())); };
 
-  float GetDetermLimit()const{ return(DetermLimit); };
-  byte GetExtrapolateMode()const{ return(ExtrapolateMode); };
+		float GetDetermLimit()const{ return(DetermLimit); };
+		byte GetExtrapolateMode()const{ return(ExtrapolateMode); };
 
-  bool GetUseMotion()const{ return(UseMotion); }
-  void RunMotion(const StMotionData& motiondata);
+		bool GetUseMotion()const{ return(UseMotion); }
+		void RunMotion(const StMotionData& motiondata);
 
-  const JSphBoundCorrZone* GetMkZone(unsigned idx)const{ return(idx<GetCount()? List[idx]: NULL); }
+		const JSphBoundCorrZone* GetMkZone(unsigned idx)const{ return(idx<GetCount()? List[idx]: NULL); }
 
-  void SaveData(int part)const;
+		void SaveData(int part)const;
 
 };
 

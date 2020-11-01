@@ -34,99 +34,99 @@ using namespace std;
 //==============================================================================
 // Constructor.
 //==============================================================================
-JAppInfo::JAppInfo(std::string name,std::string ver,std::string date){
-  ClassName="JAppInfo";
-  #ifdef JAppInfo_UseLog
-    Log=NULL;
-  #endif
-  Reset();
-  MainName=name; MainVer=ver; Date=date;
+JAppInfo::JAppInfo(std::string name, std::string ver, std::string date){
+	ClassName="JAppInfo";
+	#ifdef JAppInfo_UseLog
+		Log=NULL;
+	#endif
+	Reset();
+	MainName=name; MainVer=ver; Date=date;
 }
 
 //==============================================================================
 // Constructor with subname.
 //==============================================================================
-JAppInfo::JAppInfo(std::string name,std::string ver
-  ,std::string subname,std::string subver,std::string date)
+JAppInfo::JAppInfo(std::string name, std::string ver, std::string subname, std::string subver, std::string date)
 {
-  ClassName="JAppInfo";
-  #ifdef JAppInfo_UseLog
-    Log=NULL;
-  #endif
-  Reset();
-  MainName=name; MainVer=ver; Date=date;
-  SubName=subname;
-  SubVer=subver;
+	ClassName="JAppInfo";
+	#ifdef JAppInfo_UseLog
+	Log=NULL;
+	#endif
+	Reset();
+	MainName=name; MainVer=ver; Date=date;
+	SubName=subname;
+	SubVer=subver;
 }
 
 //==============================================================================
 // Destructor.
 //==============================================================================
 JAppInfo::~JAppInfo(){
-  DestructorActive=true;
-  Reset();
+	DestructorActive=true;
+	Reset();
 }
 
 //==============================================================================
 // Initialization of variables.
 //==============================================================================
 void JAppInfo::Reset(){
-  //-Application information.
-  MainName=MainNameExtra=MainVer=Date="";
-  SubName=SubVer="";
-  //-Execution paths.
-  RunCommand=RunPath=ProgramPath="";
-  //-Output configuration.
-  CreateDirs=true;
-  CsvSepComa=false;
-  DirOut=DirDataOut="";
-  //-Log definition.
-  #ifdef JAppInfo_UseLog
-    delete Log; Log=NULL;
-  #endif
+	//-Application information.
+	MainName=MainNameExtra=MainVer=Date="";
+	SubName=SubVer="";
+	//-Execution paths.
+	RunCommand=RunPath=ProgramPath="";
+	//-Output configuration.
+	CreateDirs=true;
+	CsvSepComa=false;
+	DirOut=DirDataOut="";
+	//-Log definition.
+	#ifdef JAppInfo_UseLog
+		delete Log; Log=NULL;
+	#endif
 }
 
 //==============================================================================
 // Adds extra name.
 //==============================================================================
 void JAppInfo::AddNameExtra(std::string extra){
-  if(!MainNameExtra.empty())MainNameExtra=MainNameExtra+"+";
-  MainNameExtra=MainNameExtra+extra;
+	if(!MainNameExtra.empty())
+		MainNameExtra=MainNameExtra+"+";
+	MainNameExtra=MainNameExtra+extra;
 }
 
 //==============================================================================
 // Configures execution paths.
 //==============================================================================
 void JAppInfo::ConfigRunPaths(std::string runcommand){
-  RunCommand=runcommand;
-  RunPath=fun::GetCurrentDir();
-  ProgramPath=fun::GetDirParent(fun::GetCanonicalPath(RunPath,RunCommand));
+	RunCommand=runcommand;
+	RunPath=fun::GetCurrentDir();
+	ProgramPath=fun::GetDirParent(fun::GetCanonicalPath(RunPath, RunCommand));
 }
 
 //==============================================================================
 // Configures general output options.
 //==============================================================================
-void JAppInfo::ConfigOutput(bool createdirs,bool csvsepcoma,std::string dirout,std::string dirdataout){
-  CreateDirs=createdirs;
-  CsvSepComa=csvsepcoma;
-  DirOut=fun::GetDirWithSlash(dirout);
-  DirDataOut=(!dirdataout.empty()? fun::GetDirWithSlash(DirOut+dirdataout): DirOut);
+void JAppInfo::ConfigOutput(bool createdirs, bool csvsepcoma, std::string dirout, std::string dirdataout){
+	CreateDirs=createdirs;
+	CsvSepComa=csvsepcoma;
+	DirOut=fun::GetDirWithSlash(dirout);
+	DirDataOut=(!dirdataout.empty()? fun::GetDirWithSlash(DirOut+dirdataout): DirOut);
 }
 
 #ifdef JAppInfo_UseLog
 //==============================================================================
 // Configures general output options.
-// When fname is empty, log file is not created.
+// When fname is empty,  log file is not created.
 //==============================================================================
-void JAppInfo::LogInit(std::string fname,bool mpirun,int mpirank,int mpilaunch){
-  delete Log; Log=NULL;
-  //-Creates directory for log file when it is necessary.
-  if(AppInfo.GetCreateDirs() && !fname.empty()){
-    fun::MkdirPath(fun::GetDirParent(fname));
-  }
-  //-Creates object for log.
-  Log=new JLog2;
-  Log->Init(fname);
+void JAppInfo::LogInit(std::string fname, bool mpirun, int mpirank, int mpilaunch){
+	delete Log; Log=NULL;
+	//-Creates directory for log file when it is necessary.
+	if(AppInfo.GetCreateDirs() && !fname.empty()){
+		fun::MkdirPath(fun::GetDirParent(fname));
+	}
+	//-Creates object for log.
+	Log=new JLog2;
+	Log->Init(fname);
 }
 #endif
 
@@ -135,39 +135,38 @@ void JAppInfo::LogInit(std::string fname,bool mpirun,int mpirank,int mpilaunch){
 // Returns short application name.
 //==============================================================================
 std::string JAppInfo::GetShortName()const{
-  return(MainName+(!SubName.empty()? "-": "")+SubName);
+	return(MainName+(!SubName.empty()? "-": "")+SubName);
 }
 
 //==============================================================================
 // Returns full application name.
 //==============================================================================
 std::string JAppInfo::GetFullName()const{
-  string extra=(!MainNameExtra.empty()? string(" [")+MainNameExtra+"]": "");
-  string subnamever=string(" ")+(!SubName.empty()? SubVer+" ("+MainVer+")": MainVer);
-  string date=string(" (")+Date+")"; 
-  return(GetShortName()+extra+subnamever+date); 
+	string extra=(!MainNameExtra.empty()? string(" [")+MainNameExtra+"]": "");
+	string subnamever=string(" ")+(!SubName.empty()? SubVer+" ("+MainVer+")": MainVer);
+	string date=string(" (")+Date+")"; 
+	return(GetShortName()+extra+subnamever+date);
 }
 
 //==============================================================================
 // Create directory path when necessary.
 //==============================================================================
 int JAppInfo::MkdirPath(const std::string &dir)const{
-  int ret=0;
-  if(AppInfo.GetCreateDirs())ret=fun::MkdirPath(dir);
-  return(ret);
+	int ret=0;
+	if(AppInfo.GetCreateDirs())
+		ret=fun::MkdirPath(dir);
+	return(ret);
 }
 
 //==============================================================================
 // Create file path when necessary.
 //==============================================================================
 int JAppInfo::MkdirPathFile(const std::string &file)const{
-  int ret=0;
-  if(AppInfo.GetCreateDirs())ret=fun::MkdirPath(fun::GetDirParent(file));
-  return(ret);
+	int ret=0;
+	if(AppInfo.GetCreateDirs())
+		ret=fun::MkdirPath(fun::GetDirParent(file));
+	return(ret);
 }
-
-
-
 
 
 

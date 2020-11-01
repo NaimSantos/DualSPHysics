@@ -64,40 +64,40 @@ class JDsFtForcePoints;
 
 class JDsMooredFloating : protected JObject
 {
-public:
-  typedef struct StrLinkData{
-    unsigned ftid;     ///<Number of floating body.
-    unsigned fairnum;  ///<Number of fairlead.
-    tdouble3 linkpos;  ///<Link point in the floating (initial position).
-    word ptid;         ///<Ptid in JDsFtForcePoints object.
-    StrLinkData(unsigned xftid,unsigned xfairnum,const tdouble3 &xlinkpos,word xptid){ 
-      ftid=xftid; fairnum=xfairnum; linkpos=xlinkpos; ptid=xptid;
-    }
-  }StLinkData;
+	public:
+		typedef struct StrLinkData{
+		unsigned ftid;     ///<Number of floating body.
+		unsigned fairnum;  ///<Number of fairlead.
+		tdouble3 linkpos;  ///<Link point in the floating (initial position).
+		word ptid;         ///<Ptid in JDsFtForcePoints object.
+		StrLinkData(unsigned xftid, unsigned xfairnum, const tdouble3 &xlinkpos, word xptid){
+			ftid=xftid; fairnum=xfairnum; linkpos=xlinkpos; ptid=xptid;
+		}
+		}StLinkData;
 
-private:
-  JLog2 *Log;
-  unsigned FtIdx;  ///<Number of floating with moorings.
-  unsigned FtId;   ///<Number of floating in the general list of floatings.
+	private:
+		JLog2 *Log;
+		unsigned FtIdx;  ///<Number of floating with moorings.
+		unsigned FtId;   ///<Number of floating in the general list of floatings.
 
-  std::vector<StLinkData> Fairleads;
+		std::vector<StLinkData> Fairleads;
 
-public:
-  const word FloatingMk;   ///<Mkbound of the Floating body the mooring is linked to.
+	public:
+		const word FloatingMk;   ///<Mkbound of the Floating body the mooring is linked to.
 
-  JDsMooredFloating(JLog2 *log,word fmk);
-  ~JDsMooredFloating();
-  void Reset();
+		JDsMooredFloating(JLog2 *log, word fmk);
+		~JDsMooredFloating();
+		void Reset();
 
-  void ConfigIds(unsigned ftidx,unsigned ftid);
-  void AddFairlead(unsigned fairnum,const tdouble3 &linkpos,word ptid);
-  
-  void VisuConfig()const;
+		void ConfigIds(unsigned ftidx, unsigned ftid);
+		void AddFairlead(unsigned fairnum, const tdouble3 &linkpos, word ptid);
 
-  unsigned GetFtIdx()const{ return(FtIdx); }
-  unsigned GetFtId()const{ return(FtId); }
-  unsigned Count()const{ return(unsigned(Fairleads.size())); }
-  StLinkData GetFairlead(unsigned fairnum)const;
+		void VisuConfig()const;
+
+		unsigned GetFtIdx()const{ return(FtIdx); }
+		unsigned GetFtId()const{ return(FtId); }
+		unsigned Count()const{ return(unsigned(Fairleads.size())); }
+		StLinkData GetFairlead(unsigned fairnum)const;
 
 };
 
@@ -108,54 +108,59 @@ public:
 
 class JDsMooredFloatings : protected JObject
 {
-private:
-  JLog2 *Log;
-  const std::string DirCase;
-  const std::string CaseName;
-  const tfloat3 Gravity;
-  std::string FileLines;
-  std::string MoordynDir;   ///<Work directory for MoorDyn.
+	private:
+		JLog2 *Log;
+		const std::string DirCase;
+		const std::string CaseName;
+		const tfloat3 Gravity;
+		std::string FileLines;
+		std::string MoordynDir;   ///<Work directory for MoorDyn.
 
-  bool SvVtkMoorings;  ///<Saves vtk with moorings (def=true).
-  bool SvCsvPoints;    ///<Saves csv with link points (def=true). 
-  bool SvVtkPoints;    ///<Saves vtk with link points (def=false).
+		bool SvVtkMoorings;  ///<Saves vtk with moorings (def=true).
+		bool SvCsvPoints;    ///<Saves csv with link points (def=true). 
+		bool SvVtkPoints;    ///<Saves vtk with link points (def=false).
 
-  std::vector<JDsMooredFloating*> Floatings; ///<List of floatings with moorings.
+		std::vector<JDsMooredFloating*> Floatings; ///<List of floatings with moorings.
 
-  bool MoorDynReady;   ///<Indicate if MoorDyn was initializated.
+		bool MoorDynReady;   ///<Indicate if MoorDyn was initializated.
 
-  bool FairArrays;          ///<Indicate if the fairlead arrays was initializated.
-  unsigned FairNftm;        ///<Number of moored floatings.
-  unsigned* FairFtmNum;     ///<Number of fairleads per each moored floating [FairNftm].
-  double*** FairleadPos;    ///<Stores link positions  [FairNftm][FairFtmNum[cf]][3].  
-  double*** FairleadVel;    ///<Stores link velocities [FairNftm][FairFtmNum[cf]][3].  
-  double*** FairleadForce;  ///<Stores link forces     [FairNftm][FairFtmNum[cf]][3].  
+		bool FairArrays;          ///<Indicate if the fairlead arrays was initializated.
+		unsigned FairNftm;        ///<Number of moored floatings.
+		unsigned* FairFtmNum;     ///<Number of fairleads per each moored floating [FairNftm].
+		double*** FairleadPos;    ///<Stores link positions  [FairNftm][FairFtmNum[cf]][3].  
+		double*** FairleadVel;    ///<Stores link velocities [FairNftm][FairFtmNum[cf]][3].  
+		double*** FairleadForce;  ///<Stores link forces     [FairNftm][FairFtmNum[cf]][3].  
 
-  //double SaveDataTime;   ///<Saves CSV with data exchange (0=all steps, <0:none).
-  //double NextTime;
-  //double LastTimeOk;
+		//double SaveDataTime;   ///<Saves CSV with data exchange (0=all steps,  <0:none).
+		//double NextTime;
+		//double LastTimeOk;
 
-  unsigned GetFloatingByMk(word mkbound)const;
-  void ReadXml(const JXml *sxml,TiXmlElement* ele);
-  void ConfigFloatings(unsigned ftcount,const StFloatingData *ftdata);
-  void AllocFairMemory();
-  void FreeFairMemory();
+		unsigned GetFloatingByMk(word mkbound)const;
+		void ReadXml(const JXml *sxml, TiXmlElement* ele);
+		void ConfigFloatings(unsigned ftcount, const StFloatingData *ftdata);
+		void AllocFairMemory();
+		void FreeFairMemory();
 
-public:
-  JDsMooredFloatings(JLog2 *log,std::string dircase,std::string casename,tfloat3 gravity);
-  ~JDsMooredFloatings();
-  void Reset();
-  void LoadXml(const JXml *sxml,const std::string &place);
-  void Config(unsigned ftcount,const StFloatingData *ftdata,JDsFtForcePoints *forcepoints);
+	public:
+		JDsMooredFloatings(JLog2 *log, std::string dircase, std::string casename, tfloat3 gravity);
+		~JDsMooredFloatings();
+		void Reset();
+		void LoadXml(const JXml *sxml, const std::string &place);
+		void Config(unsigned ftcount, const StFloatingData *ftdata, JDsFtForcePoints *forcepoints);
 
-  void VisuConfig(std::string txhead,std::string txfoot)const;
+		void VisuConfig(std::string txhead, std::string txfoot)const;
 
-  void ComputeForces(unsigned nstep,double timestep,double dt,JDsFtForcePoints *forcepoints);
+		void ComputeForces(unsigned nstep, double timestep, double dt, JDsFtForcePoints *forcepoints);
 
-  void SaveVtkMoorings(unsigned numfile)const;
-  void SaveData(unsigned numfile)const{ if(SvVtkMoorings)SaveVtkMoorings(numfile); }
+		void SaveVtkMoorings(unsigned numfile)const;
+		void SaveData(unsigned numfile)const{
+			if(SvVtkMoorings)
+				SaveVtkMoorings(numfile);
+		}
 
-  unsigned Count()const{ return(unsigned(Floatings.size())); }
+		unsigned Count()const{
+			return(unsigned(Floatings.size()));
+		}
 };
 
 

@@ -53,82 +53,108 @@
 
 class JPartsLoad4 : protected JObject
 {
-protected:
-  const bool UseOmp;
+	protected:
+		const bool UseOmp;
 
-  unsigned Npiece;
-  bool Simulate2D;         ///<Indicates 2D simulation.
-  double Simulate2DPosY;   ///<Y value in 2D simulations.
-  bool NpDynamic;          ///<CaseNp can increase.
+		unsigned Npiece;
+		bool Simulate2D;         ///<Indicates 2D simulation.
+		double Simulate2DPosY;   ///<Y value in 2D simulations.
+		bool NpDynamic;          ///<CaseNp can increase.
 
-  ullong CaseNp;           ///<Number of total particles.  
-  ullong CaseNfixed;       ///<Number of fixed boundary particles. 
-  ullong CaseNmoving;      ///<Number of moving boundary particles. 
-  ullong CaseNfloat;       ///<Number of floating boundary particles. 
-  ullong CaseNfluid;       ///<Number of fluid particles (including the excluded ones). 
+		ullong CaseNp;           ///<Number of total particles.  
+		ullong CaseNfixed;       ///<Number of fixed boundary particles. 
+		ullong CaseNmoving;      ///<Number of moving boundary particles. 
+		ullong CaseNfloat;       ///<Number of floating boundary particles. 
+		ullong CaseNfluid;       ///<Number of fluid particles (including the excluded ones). 
 
-  TpPeri PeriMode;
-  tdouble3 PeriXinc;
-  tdouble3 PeriYinc;
-  tdouble3 PeriZinc;
+		TpPeri PeriMode;
+		tdouble3 PeriXinc;
+		tdouble3 PeriYinc;
+		tdouble3 PeriZinc;
 
-  bool MapSize;                  ///<Indicates whether MapPosMin and MapPosMax are valid. | Indica si MapPosMin y MapPosMax son validos.
-  tdouble3 MapPosMin,MapPosMax;  ///<Domain limits that already include the border. | Limites del dominio que ya incluyen el borde.
+		bool MapSize;                  ///<Indicates whether MapPosMin and MapPosMax are valid. | Indica si MapPosMin y MapPosMax son validos.
+		tdouble3 MapPosMin,MapPosMax;  ///<Domain limits that already include the border. | Limites del dominio que ya incluyen el borde.
 
-  tdouble3 CasePosMin,CasePosMax;
+		tdouble3 CasePosMin,CasePosMax;
 
-  unsigned PartBegin;
-  double PartBeginTimeStep;
-  ullong PartBeginTotalNp;        ///<Total number of simulated particles.
+		unsigned PartBegin;
+		double PartBeginTimeStep;
+		ullong PartBeginTotalNp;        ///<Total number of simulated particles.
 
-  //-Variables to restart.
-  double SymplecticDtPre;        ///<Previous Dt to use with Symplectic.
-  double DemDtForce;             ///<Dt for tangencial acceleration in DEM calculations.
+		//-Variables to restart.
+		double SymplecticDtPre;        ///<Previous Dt to use with Symplectic.
+		double DemDtForce;             ///<Dt for tangencial acceleration in DEM calculations.
 
-  //-Variables for particles.
-  unsigned Count;    //-Number of particles.
-  unsigned *Idp;
-  tdouble3 *Pos;
-  tfloat4 *VelRhop;
+		//-Variables for particles.
+		unsigned Count;    //-Number of particles.
+		unsigned *Idp;
+		tdouble3 *Pos;
+		tfloat4 *VelRhop;
 
-  void AllocMemory(unsigned count);
-  template<typename T> T* SortParticles(const unsigned *vsort,unsigned count,T *v)const;
-  void CheckSortParticles();
-  void SortParticles();
-  void CalculateCasePos();
+		void AllocMemory(unsigned count);
+		template<typename T> T* SortParticles(const unsigned *vsort, unsigned count, T *v)const;
+		void CheckSortParticles();
+		void SortParticles();
+		void CalculateCasePos();
 
-public:
-  JPartsLoad4(bool useomp);
-  ~JPartsLoad4();
-  void Reset();
+	public:
+		JPartsLoad4(bool useomp);
+		~JPartsLoad4();
+		void Reset();
 
-  void LoadParticles(const std::string &casedir,const std::string &casename,unsigned partbegin,const std::string &casedirbegin);
-  void CheckConfig(ullong casenp,ullong casenfixed,ullong casenmoving,ullong casenfloat,ullong casenfluid,bool simulate2d,double simulate2dposy,TpPeri tperi)const;
-  void CheckConfig(ullong casenp,ullong casenfixed,ullong casenmoving,ullong casenfloat,ullong casenfluid)const;
-  void RemoveBoundary();
+		void LoadParticles(const std::string &casedir, const std::string &casename, unsigned partbegin, const std::string &casedirbegin);
+		void CheckConfig(ullong casenp, ullong casenfixed, ullong casenmoving, ullong casenfloat, ullong casenfluid, bool simulate2d, double simulate2dposy, TpPeri tperi)const;
+		void CheckConfig(ullong casenp, ullong casenfixed, ullong casenmoving, ullong casenfloat, ullong casenfluid)const;
+		void RemoveBoundary();
 
-  unsigned GetCount()const{ return(Count); }
+		unsigned GetCount()const{
+			return(Count);
+		}
 
-  bool MapSizeLoaded()const{ return(MapSize); }
-  void GetMapSize(tdouble3 &mapmin,tdouble3 &mapmax)const;
-  void CalculeLimits(double border,double borderperi,bool perix,bool periy,bool periz,tdouble3 &mapmin,tdouble3 &mapmax);
+		bool MapSizeLoaded()const{
+			return(MapSize);
+		}
+		void GetMapSize(tdouble3 &mapmin, tdouble3 &mapmax)const;
+		void CalculeLimits(double border, double borderperi, bool perix, bool periy, bool periz, tdouble3 &mapmin, tdouble3 &mapmax);
 
-  bool GetSimulate2D()const{ return(Simulate2D); }
-  double GetSimulate2DPosY()const{ return(Simulate2DPosY); }
-  double GetPartBeginTimeStep()const{ return(PartBeginTimeStep); }
-  ullong GetPartBeginTotalNp()const{ return(PartBeginTotalNp); }
+		bool GetSimulate2D()const{
+			return(Simulate2D);
+		}
+		double GetSimulate2DPosY()const{
+			return(Simulate2DPosY);
+		}
+		double GetPartBeginTimeStep()const{
+			return(PartBeginTimeStep);
+		}
+		ullong GetPartBeginTotalNp()const{
+			return(PartBeginTotalNp);
+		}
 
-  const unsigned* GetIdp(){ return(Idp); }
-  const tdouble3* GetPos(){ return(Pos); }
-  const tfloat4* GetVelRhop(){ return(VelRhop); }
+		const unsigned* GetIdp(){
+			return(Idp);
+		}
+		const tdouble3* GetPos(){
+			return(Pos);
+		}
+		const tfloat4* GetVelRhop(){
+			return(VelRhop);
+		}
 
-  tdouble3 GetCasePosMin()const{ return(CasePosMin); }
-  tdouble3 GetCasePosMax()const{ return(CasePosMax); }
+		tdouble3 GetCasePosMin()const{
+			return(CasePosMin);
+		}
+		tdouble3 GetCasePosMax()const{
+			return(CasePosMax);
+		}
 
-  double GetSymplecticDtPre()const{ return(SymplecticDtPre); }
-  double GetDemDtForce()const{ return(DemDtForce); }
+		double GetSymplecticDtPre()const{
+			return(SymplecticDtPre);
+		}
+		double GetDemDtForce()const{
+			return(DemDtForce);
+		}
 
-  llong GetAllocMemory()const;
+		llong GetAllocMemory()const;
 };
 
 #endif
