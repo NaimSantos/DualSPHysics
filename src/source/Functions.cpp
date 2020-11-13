@@ -452,47 +452,53 @@ std::string VectorStr(const std::vector<std::string> &v){
 /// Returns true when str is a valid integer number.
 //==============================================================================
 bool StrIsIntegerNumber(const std::string &str){
-  bool valid=true;
-  byte state=0;
-  unsigned n=unsigned(str.size());
-  //-Avoid decimal part when it is null.
-  int point=int(str.find_last_of("."));
-  if(point>0){
-    for(unsigned c=point+1;c<n && valid;c++)valid=(str[c]=='0');
-    if(valid)n=point;
-  }
-  //-Checks integer format.
-  for(unsigned c=0;c<n && valid;c++){
-    const char let=str[c];
-    const bool num=('0'<=let && let<='9');
-    const bool sp=(let==' ' || let=='\t');
-    if(state==0){//-First character. Expected values:[\t, , +, -, 0-9].
-      if(let=='+' || let=='-')state=1;
-      else if(num)state=2;
-      else if(!sp)valid=false;
-    }
-    else if(state==1){//-After +/-. Expected values:[0-9]
-      if(num)state=2;
-      else valid=false;
-    }
-    else if(state==2){//-After +/- and some number. Expected values:[0-9\t, ]
-      if(sp)state=15;
-      else if(!num)valid=false;
-    }
-    else if(state==15 && !sp)valid=false; //-After some space. Expected values:[\t, ]
-  }
-  if(state==1)valid=false;
-  //printf("StrIsIntegerNumber(%s) => state:%d  %s  [%d]\n", str.c_str(), state, (valid? "Ok": "ERROR"), atoi(str.c_str()));
-  return(valid);
+	bool valid=true;
+	byte state=0;
+	unsigned n=unsigned(str.size());
+	//-Avoid decimal part when it is null.
+	int point=int(str.find_last_of("."));
+	if(point>0){
+		for(unsigned c=point+1;c<n && valid;c++)valid=(str[c]=='0');
+		if(valid)n=point;
+	}
+	//-Checks integer format.
+	for(unsigned c=0;c<n && valid;c++){
+		const char let=str[c];
+		const bool num=('0'<=let && let<='9');
+		const bool sp=(let==' ' || let=='\t');
+		if(state==0){//-First character. Expected values:[\t, , +, -, 0-9].
+			if(let=='+' || let=='-')
+				state=1;
+			else if(num)
+				state=2;
+			else if(!sp)
+				valid=false;
+		}
+		else if(state==1){//-After +/-. Expected values:[0-9]
+			if(num)state=2;
+			else valid=false;
+		}
+		else if(state==2){//-After +/- and some number. Expected values:[0-9\t, ]
+			if(sp)
+				state=15;
+			else if(!num)
+				valid=false;
+		}
+		else if(state==15 && !sp)valid=false; //-After some space. Expected values:[\t, ]
+	}
+	if(state==1)
+		valid=false;
+	//printf("StrIsIntegerNumber(%s) => state:%d  %s  [%d]\n", str.c_str(), state, (valid? "Ok": "ERROR"), atoi(str.c_str()));
+	return(valid);
 }
 
 //==============================================================================
 /// Returns true when str is a valid real number.
 //==============================================================================
 bool StrIsRealNumber(const std::string &str){
-  bool valid=true;
-  byte state=0;
-  const unsigned n=unsigned(str.size());
+	bool valid=true;
+	byte state=0;
+	const unsigned n=unsigned(str.size());
   for(unsigned c=0;c<n && valid;c++){
     const char let=str[c];
     const bool num=('0'<=let && let<='9');
@@ -534,16 +540,17 @@ bool StrIsRealNumber(const std::string &str){
     }    
     else if(state==15 && !sp)valid=false; //-After some space. Expected values:[\t, ]
   }
-  if(state==1 || state==10 || state==11)valid=false;
-  //printf("StrIsRealNumber(%s) => state:%d  %s  [%g]\n", str.c_str(), state, (valid? "Ok": "ERROR"), atof(str.c_str()));
-  return(valid);
+	if(state==1 || state==10 || state==11)
+		valid=false;
+	//printf("StrIsRealNumber(%s) => state:%d  %s  [%g]\n", str.c_str(), state, (valid? "Ok": "ERROR"), atof(str.c_str()));
+	return(valid);
 }
 
 //==============================================================================
 /// Converts string to int value.
 //==============================================================================
 int StrToInt(const std::string &v){
-  return(atoi(v.c_str()));
+	return(atoi(v.c_str()));
 }
 
 //==============================================================================
@@ -914,7 +921,7 @@ unsigned VectorFind(const std::string &key, const std::vector<std::string> &vec,
 }
 
 //==============================================================================
-/// Find string mask (using *, ?, |) in a string vector vector since first position. 
+/// Find string mask (using *, ?, |) in a string vector vector since first position.
 /// Returns UINT_MAX when it was not found.
 //==============================================================================
 unsigned VectorFindMask(const std::string &keymask, const std::vector<std::string> &vec, unsigned first){
