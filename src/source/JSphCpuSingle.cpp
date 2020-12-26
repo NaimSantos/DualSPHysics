@@ -50,27 +50,28 @@ using namespace std;
 /// Constructor.
 //==============================================================================
 JSphCpuSingle::JSphCpuSingle():JSphCpu(false){
-  ClassName="JSphCpuSingle";
-  CellDivSingle=NULL;
+	ClassName="JSphCpuSingle";
+	CellDivSingle=NULL;
 }
 
 //==============================================================================
 /// Destructor.
 //==============================================================================
 JSphCpuSingle::~JSphCpuSingle(){
-  DestructorActive=true;
-  delete CellDivSingle; CellDivSingle=NULL;
+	DestructorActive=true;
+	delete CellDivSingle; CellDivSingle=NULL;
 }
 
 //==============================================================================
 /// Return memory reserved in CPU.
 /// Devuelve la memoria reservada en cpu.
 //==============================================================================
-llong JSphCpuSingle::GetAllocMemoryCpu()const{  
-  llong s=JSphCpu::GetAllocMemoryCpu();
-  //-Allocated in other objects.
-  if(CellDivSingle)s+=CellDivSingle->GetAllocMemory();
-  return(s);
+llong JSphCpuSingle::GetAllocMemoryCpu()const{
+	llong s=JSphCpu::GetAllocMemoryCpu();
+	//-Allocated in other objects.
+	if(CellDivSingle)
+		s+=CellDivSingle->GetAllocMemory();
+	return(s);
 }
 
 //==============================================================================
@@ -78,11 +79,12 @@ llong JSphCpuSingle::GetAllocMemoryCpu()const{
 /// Actualiza los valores maximos de memory, particles y cells.
 //==============================================================================
 void JSphCpuSingle::UpdateMaxValues(){
-  const llong mcpu=GetAllocMemoryCpu();
-  MaxNumbers.memcpu=max(MaxNumbers.memcpu,mcpu);
-  MaxNumbers.memgpu=0;
-  MaxNumbers.particles=max(MaxNumbers.particles,Np);
-  if(CellDivSingle)MaxNumbers.cells=max(MaxNumbers.cells,CellDivSingle->GetNct());
+	const llong mcpu=GetAllocMemoryCpu();
+	MaxNumbers.memcpu=max(MaxNumbers.memcpu,mcpu);
+	MaxNumbers.memgpu=0;
+	MaxNumbers.particles=max(MaxNumbers.particles,Np);
+	if(CellDivSingle)
+		MaxNumbers.cells=max(MaxNumbers.cells,CellDivSingle->GetNct());
 }
 
 //==============================================================================
@@ -90,12 +92,12 @@ void JSphCpuSingle::UpdateMaxValues(){
 /// Carga la configuracion de ejecucion.
 //==============================================================================
 void JSphCpuSingle::LoadConfig(JSphCfgRun *cfg){
-  //-Load OpenMP configuraction. | Carga configuracion de OpenMP.
-  ConfigOmp(cfg);
-  //-Load basic general configuraction. | Carga configuracion basica general.
-  JSph::LoadConfig(cfg);
-  //-Checks compatibility of selected options.
-  Log->Print("**Special case configuration is loaded");
+	//-Load OpenMP configuraction. | Carga configuracion de OpenMP.
+	ConfigOmp(cfg);
+	//-Load basic general configuraction. | Carga configuracion basica general.
+	JSph::LoadConfig(cfg);
+	//-Checks compatibility of selected options.
+	Log->Print("**Special case configuration is loaded");
 }
 
 //==============================================================================
@@ -103,67 +105,70 @@ void JSphCpuSingle::LoadConfig(JSphCfgRun *cfg){
 /// Configuracion del dominio actual.
 //==============================================================================
 void JSphCpuSingle::ConfigDomain(){
-  //-Calculate number of particles. | Calcula numero de particulas.
-  Np=PartsLoaded->GetCount(); Npb=CaseNpb; NpbOk=Npb;
-  //-Allocates fixed memory for moving & floating particles. | Reserva memoria fija para moving y floating.
-  AllocCpuMemoryFixed();
-  //-Allocates memory in CPU for particles. | Reserva memoria en Cpu para particulas.
-  AllocCpuMemoryParticles(Np,0);
+	//-Calculate number of particles. | Calcula numero de particulas.
+	Np=PartsLoaded->GetCount(); Npb=CaseNpb; NpbOk=Npb;
+	//-Allocates fixed memory for moving & floating particles. | Reserva memoria fija para moving y floating.
+	AllocCpuMemoryFixed();
+	//-Allocates memory in CPU for particles. | Reserva memoria en Cpu para particulas.
+	AllocCpuMemoryParticles(Np,0);
 
-  //-Copies particle data.
-  ReserveBasicArraysCpu();
-  memcpy(Posc,PartsLoaded->GetPos(),sizeof(tdouble3)*Np);
-  memcpy(Idpc,PartsLoaded->GetIdp(),sizeof(unsigned)*Np);
-  memcpy(Velrhopc,PartsLoaded->GetVelRhop(),sizeof(tfloat4)*Np);
+	//-Copies particle data.
+	ReserveBasicArraysCpu();
+	memcpy(Posc,PartsLoaded->GetPos(),sizeof(tdouble3)*Np);
+	memcpy(Idpc,PartsLoaded->GetIdp(),sizeof(unsigned)*Np);
+	memcpy(Velrhopc,PartsLoaded->GetVelRhop(),sizeof(tfloat4)*Np);
 
-  //-Computes radius of floating bodies.
-  if(CaseNfloat && PeriActive!=0 && !PartBegin)CalcFloatingRadius(Np,Posc,Idpc);
+	//-Computes radius of floating bodies.
+	if(CaseNfloat && PeriActive!=0 && !PartBegin)
+		CalcFloatingRadius(Np,Posc,Idpc);
 
-  //<vs_mlapiston_ini>
-  //-Configures Multi-Layer Pistons according particles. | Configura pistones Multi-Layer segun particulas.
-  if(MLPistons)MLPistons->PreparePiston(Dp,Np,Idpc,Posc);
-  //<vs_mlapiston_end>
+	//<vs_mlapiston_ini>
+	//-Configures Multi-Layer Pistons according particles. | Configura pistones Multi-Layer segun particulas.
+	if(MLPistons)
+		MLPistons->PreparePiston(Dp,Np,Idpc,Posc);
+	//<vs_mlapiston_end>
 
-  //-Load particle code. | Carga code de particulas.
-  LoadCodeParticles(Np,Idpc,Codec);
+	//-Load particle code. | Carga code de particulas.
+	LoadCodeParticles(Np,Idpc,Codec);
 
-  //-Load normals for boundary particles (fixed and moving).       //<vs_mddbc>
-  if(UseNormals)LoadBoundNormals(Np,Npb,Idpc,Codec,BoundNormalc);  //<vs_mddbc>
+	//-Load normals for boundary particles (fixed and moving).       //<vs_mddbc>
+	if(UseNormals)
+		LoadBoundNormals(Np,Npb,Idpc,Codec,BoundNormalc);  //<vs_mddbc>
 
-  //-Runs initialization operations from XML.
-  tfloat3 *boundnormal=NULL;
-  boundnormal=BoundNormalc;                                        //<vs_mddbc>
-  RunInitialize(Np,Npb,Posc,Idpc,Codec,Velrhopc,boundnormal);
-  if(UseNormals)ConfigBoundNormals(Np,Npb,Posc,Idpc,BoundNormalc); //<vs_mddbc>
+	//-Runs initialization operations from XML.
+	tfloat3 *boundnormal=NULL;
+	boundnormal=BoundNormalc;                                        //<vs_mddbc>
+	RunInitialize(Np,Npb,Posc,Idpc,Codec,Velrhopc,boundnormal);
+	if(UseNormals)
+		ConfigBoundNormals(Np,Npb,Posc,Idpc,BoundNormalc); //<vs_mddbc>
 
-  //-Creates PartsInit object with initial particle data for automatic configurations.
-  CreatePartsInit(Np,Posc,Codec);
+	//-Creates PartsInit object with initial particle data for automatic configurations.
+	CreatePartsInit(Np,Posc,Codec);
 
-  //-Computes MK domain for boundary and fluid particles.
-  MkInfo->ComputeMkDomains(Np,Posc,Codec);
+	//-Computes MK domain for boundary and fluid particles.
+	MkInfo->ComputeMkDomains(Np,Posc,Codec);
 
-  //-Configure cells division. | Configura division celdas.
-  ConfigCellDivision();
-  //-Sets local domain of the simulation within Map_Cells and computes DomCellCode.
-  //-Establece dominio de simulacion local dentro de Map_Cells y calcula DomCellCode.
-  SelecDomain(TUint3(0,0,0),Map_Cells);
-  //-Computes inital cell of the particles and checks if there are unexpected excluded particles.
-  //-Calcula celda inicial de particulas y comprueba si hay excluidas inesperadas.
-  LoadDcellParticles(Np,Codec,Posc,Dcellc);
+	//-Configure cells division. | Configura division celdas.
+	ConfigCellDivision();
+	//-Sets local domain of the simulation within Map_Cells and computes DomCellCode.
+	//-Establece dominio de simulacion local dentro de Map_Cells y calcula DomCellCode.
+	SelecDomain(TUint3(0,0,0),Map_Cells);
+	//-Computes inital cell of the particles and checks if there are unexpected excluded particles.
+	//-Calcula celda inicial de particulas y comprueba si hay excluidas inesperadas.
+	LoadDcellParticles(Np,Codec,Posc,Dcellc);
 
-  //-Creates object for Celldiv on the CPU and selects a valid cellmode.
-  //-Crea objeto para divide en CPU y selecciona un cellmode valido.
-  CellDivSingle=new JCellDivCpuSingle(Stable,FtCount!=0,PeriActive,CellMode
-    ,Scell,Map_PosMin,Map_PosMax,Map_Cells,CaseNbound,CaseNfixed,CaseNpb,Log,DirOut);
-  CellDivSingle->DefineDomain(DomCellCode,DomCelIni,DomCelFin,DomPosMin,DomPosMax);
-  ConfigCellDiv((JCellDivCpu*)CellDivSingle);
+	//-Creates object for Celldiv on the CPU and selects a valid cellmode.
+	//-Crea objeto para divide en CPU y selecciona un cellmode valido.
+	CellDivSingle=new JCellDivCpuSingle(Stable,FtCount!=0,PeriActive,CellMode,Scell,Map_PosMin,Map_PosMax,Map_Cells,CaseNbound,CaseNfixed,CaseNpb,Log,DirOut);
+	CellDivSingle->DefineDomain(DomCellCode,DomCelIni,DomCelFin,DomPosMin,DomPosMax);
+	ConfigCellDiv((JCellDivCpu*)CellDivSingle);
 
-  ConfigSaveData(0,1,"");
+	ConfigSaveData(0,1,"");
 
-  //-Reorders particles according to cells.
-  //-Reordena particulas por celda.
-  BoundChanged=true;
-  RunCellDivide(true);
+	//-Reorders particles according to cells.
+	//-Reordena particulas por celda.
+	BoundChanged=true;
+	RunCellDivide(true);
 }
 
 //==============================================================================
@@ -174,11 +179,12 @@ void JSphCpuSingle::ConfigDomain(){
 /// tiempo consumido con TMC_SuResizeNp. Al terminar actualiza el divide.
 //==============================================================================
 void JSphCpuSingle::ResizeParticlesSize(unsigned newsize,float oversize,bool updatedivide){
-  TmcStart(Timers,TMC_SuResizeNp);
-  newsize+=(oversize>0? unsigned(oversize*newsize): 0);
-  ResizeCpuMemoryParticles(newsize);
-  TmcStop(Timers,TMC_SuResizeNp);
-  if(updatedivide)RunCellDivide(true);
+	TmcStart(Timers,TMC_SuResizeNp);
+	newsize+=(oversize>0? unsigned(oversize*newsize): 0);
+	ResizeCpuMemoryParticles(newsize);
+	TmcStop(Timers,TMC_SuResizeNp);
+	if(updatedivide)
+		RunCellDivide(true);
 }
 
 //==============================================================================
@@ -189,32 +195,32 @@ void JSphCpuSingle::ResizeParticlesSize(unsigned newsize,float oversize,bool upd
 /// Con stable activado reordena lista de periodicas.
 //==============================================================================
 unsigned JSphCpuSingle::PeriodicMakeList(unsigned n,unsigned pini,bool stable,unsigned nmax,tdouble3 perinc,const tdouble3 *pos,const typecode *code,unsigned *listp)const{
-  unsigned count=0;
-  if(n){
-    //-Initialize size of list lsph to zero. | Inicializa tamanho de lista lspg a cero.
-    listp[nmax]=0;
-    for(unsigned p=0;p<n;p++){
-      const unsigned p2=p+pini;
-      //-Keep normal or periodic particles. | Se queda con particulas normales o periodicas.
-      if(CODE_GetSpecialValue(code[p2])<=CODE_PERIODIC){
-        //-Get particle position. | Obtiene posicion de particula.
-        const tdouble3 ps=pos[p2];
-        tdouble3 ps2=ps+perinc;
-        if(Map_PosMin<=ps2 && ps2<Map_PosMax){
-          unsigned cp=listp[nmax]; listp[nmax]++; if(cp<nmax)listp[cp]=p2;
-        }
-        ps2=ps-perinc;
-        if(Map_PosMin<=ps2 && ps2<Map_PosMax){
-          unsigned cp=listp[nmax]; listp[nmax]++; if(cp<nmax)listp[cp]=(p2|0x80000000);
-        }
-      }
-    }
-    count=listp[nmax];
-    //-Reorder list if it is valid and stability is activated. | Reordena lista si es valida y stable esta activado.
-    if(stable && count && count<=nmax){
-      //-Don't make mistake because at the moment the list is not created using OpenMP. | No hace falta porque de momento no se crea la lista usando OpenMP.
-    }
-  }
+	unsigned count=0;
+	if(n){
+		//-Initialize size of list lsph to zero. | Inicializa tamanho de lista lspg a cero.
+		listp[nmax]=0;
+		for(unsigned p=0;p<n;p++){
+			const unsigned p2=p+pini;
+			//-Keep normal or periodic particles. | Se queda con particulas normales o periodicas.
+			if(CODE_GetSpecialValue(code[p2])<=CODE_PERIODIC){
+				//-Get particle position. | Obtiene posicion de particula.
+				const tdouble3 ps=pos[p2];
+				tdouble3 ps2=ps+perinc;
+				if(Map_PosMin<=ps2 && ps2<Map_PosMax){
+					unsigned cp=listp[nmax]; listp[nmax]++; if(cp<nmax)listp[cp]=p2;
+				}
+				ps2=ps-perinc;
+				if(Map_PosMin<=ps2 && ps2<Map_PosMax){
+					unsigned cp=listp[nmax]; listp[nmax]++; if(cp<nmax)listp[cp]=(p2|0x80000000);
+				}
+			}
+		}
+		count=listp[nmax];
+		//-Reorder list if it is valid and stability is activated. | Reordena lista si es valida y stable esta activado.
+		if(stable && count && count<=nmax){
+		//-Don't make mistake because at the moment the list is not created using OpenMP. | No hace falta porque de momento no se crea la lista usando OpenMP.
+		}
+	}
   return(count);
 }
 
@@ -234,23 +240,23 @@ unsigned JSphCpuSingle::PeriodicMakeList(unsigned n,unsigned pini,bool stable,un
 /// Se controla que las coordendas de celda no sobrepasen el maximo.
 //==============================================================================
 void JSphCpuSingle::PeriodicDuplicatePos(unsigned pnew,unsigned pcopy,bool inverse,double dx,double dy,double dz,tuint3 cellmax,tdouble3 *pos,unsigned *dcell)const{
-  //-Get pos of particle to be duplicated. | Obtiene pos de particula a duplicar.
-  tdouble3 ps=pos[pcopy];
-  //-Apply displacement. | Aplica desplazamiento.
-  ps.x+=(inverse? -dx: dx);
-  ps.y+=(inverse? -dy: dy);
-  ps.z+=(inverse? -dz: dz);
-  //-Calculate coordinates of cell inside of domain. | Calcula coordendas de celda dentro de dominio.
-  unsigned cx=unsigned((ps.x-DomPosMin.x)/Scell);
-  unsigned cy=unsigned((ps.y-DomPosMin.y)/Scell);
-  unsigned cz=unsigned((ps.z-DomPosMin.z)/Scell);
-  //-Adjust coordinates of cell is they exceed maximum. | Ajusta las coordendas de celda si sobrepasan el maximo.
-  cx=(cx<=cellmax.x? cx: cellmax.x);
-  cy=(cy<=cellmax.y? cy: cellmax.y);
-  cz=(cz<=cellmax.z? cz: cellmax.z);
-  //-Record position and cell of new particles. |  Graba posicion y celda de nuevas particulas.
-  pos[pnew]=ps;
-  dcell[pnew]=PC__Cell(DomCellCode,cx,cy,cz);
+	//-Get pos of particle to be duplicated. | Obtiene pos de particula a duplicar.
+	tdouble3 ps=pos[pcopy];
+	//-Apply displacement. | Aplica desplazamiento.
+	ps.x+=(inverse? -dx: dx);
+	ps.y+=(inverse? -dy: dy);
+	ps.z+=(inverse? -dz: dz);
+	//-Calculate coordinates of cell inside of domain. | Calcula coordendas de celda dentro de dominio.
+	unsigned cx=unsigned((ps.x-DomPosMin.x)/Scell);
+	unsigned cy=unsigned((ps.y-DomPosMin.y)/Scell);
+	unsigned cz=unsigned((ps.z-DomPosMin.z)/Scell);
+	//-Adjust coordinates of cell is they exceed maximum. | Ajusta las coordendas de celda si sobrepasan el maximo.
+	cx=(cx<=cellmax.x? cx: cellmax.x);
+	cy=(cy<=cellmax.y? cy: cellmax.y);
+	cz=(cz<=cellmax.z? cz: cellmax.z);
+	//-Record position and cell of new particles. |  Graba posicion y celda de nuevas particulas.
+	pos[pnew]=ps;
+	dcell[pnew]=PC__Cell(DomCellCode,cx,cy,cz);
 }
 
 //==============================================================================
@@ -262,26 +268,25 @@ void JSphCpuSingle::PeriodicDuplicatePos(unsigned pnew,unsigned pcopy,bool inver
 /// Se presupone que todas las particulas son validas.
 /// Este kernel vale para single-cpu y multi-cpu porque usa domposmin. 
 //==============================================================================
-void JSphCpuSingle::PeriodicDuplicateVerlet(unsigned np,unsigned pini,tuint3 cellmax,tdouble3 perinc,const unsigned *listp
-  ,unsigned *idp,typecode *code,unsigned *dcell,tdouble3 *pos,tfloat4 *velrhop,tsymatrix3f *spstau,tfloat4 *velrhopm1)const
+void JSphCpuSingle::PeriodicDuplicateVerlet(unsigned np,unsigned pini,tuint3 cellmax,tdouble3 perinc,const unsigned *listp,unsigned *idp,typecode *code,unsigned *dcell,tdouble3 *pos,tfloat4 *velrhop,tsymatrix3f *spstau,tfloat4 *velrhopm1)const
 {
-  const int n=int(np);
-  #ifdef OMP_USE
-    #pragma omp parallel for schedule (static) if(n>OMP_LIMIT_COMPUTELIGHT)
-  #endif
-  for(int p=0;p<n;p++){
-    const unsigned pnew=unsigned(p)+pini;
-    const unsigned rp=listp[p];
-    const unsigned pcopy=(rp&0x7FFFFFFF);
-    //-Adjust position and cell of new particle. | Ajusta posicion y celda de nueva particula.
-    PeriodicDuplicatePos(pnew,pcopy,(rp>=0x80000000),perinc.x,perinc.y,perinc.z,cellmax,pos,dcell);
-    //-Copy the rest of the values. | Copia el resto de datos.
-    idp[pnew]=idp[pcopy];
-    code[pnew]=CODE_SetPeriodic(code[pcopy]);
-    velrhop[pnew]=velrhop[pcopy];
-    velrhopm1[pnew]=velrhopm1[pcopy];
-    if(spstau)spstau[pnew]=spstau[pcopy];
-  }
+	const int n=int(np);
+	#ifdef OMP_USE
+	#pragma omp parallel for schedule (static) if(n>OMP_LIMIT_COMPUTELIGHT)
+	#endif
+	for(int p=0;p<n;p++){
+		const unsigned pnew=unsigned(p)+pini;
+		const unsigned rp=listp[p];
+		const unsigned pcopy=(rp&0x7FFFFFFF);
+		//-Adjust position and cell of new particle. | Ajusta posicion y celda de nueva particula.
+		PeriodicDuplicatePos(pnew,pcopy,(rp>=0x80000000),perinc.x,perinc.y,perinc.z,cellmax,pos,dcell);
+		//-Copy the rest of the values. | Copia el resto de datos.
+		idp[pnew]=idp[pcopy];
+		code[pnew]=CODE_SetPeriodic(code[pcopy]);
+		velrhop[pnew]=velrhop[pcopy];
+		velrhopm1[pnew]=velrhopm1[pcopy];
+		if(spstau)spstau[pnew]=spstau[pcopy];
+	}
 }
 
 //==============================================================================
@@ -296,24 +301,27 @@ void JSphCpuSingle::PeriodicDuplicateVerlet(unsigned np,unsigned pini,tuint3 cel
 void JSphCpuSingle::PeriodicDuplicateSymplectic(unsigned np,unsigned pini,tuint3 cellmax,tdouble3 perinc,const unsigned *listp
   ,unsigned *idp,typecode *code,unsigned *dcell,tdouble3 *pos,tfloat4 *velrhop,tsymatrix3f *spstau,tdouble3 *pospre,tfloat4 *velrhoppre)const
 {
-  const int n=int(np);
-  #ifdef OMP_USE
-    #pragma omp parallel for schedule (static) if(n>OMP_LIMIT_COMPUTELIGHT)
-  #endif
-  for(int p=0;p<n;p++){
-    const unsigned pnew=unsigned(p)+pini;
-    const unsigned rp=listp[p];
-    const unsigned pcopy=(rp&0x7FFFFFFF);
-    //-Adjust position and cell of new particle. | Ajusta posicion y celda de nueva particula.
-    PeriodicDuplicatePos(pnew,pcopy,(rp>=0x80000000),perinc.x,perinc.y,perinc.z,cellmax,pos,dcell);
-    //-Copy the rest of the values. | Copia el resto de datos.
-    idp[pnew]=idp[pcopy];
-    code[pnew]=CODE_SetPeriodic(code[pcopy]);
-    velrhop[pnew]=velrhop[pcopy];
-    if(pospre)pospre[pnew]=pospre[pcopy];
-    if(velrhoppre)velrhoppre[pnew]=velrhoppre[pcopy];
-    if(spstau)spstau[pnew]=spstau[pcopy];
-  }
+	const int n=int(np);
+	#ifdef OMP_USE
+		#pragma omp parallel for schedule (static) if(n>OMP_LIMIT_COMPUTELIGHT)
+	#endif
+	for(int p=0;p<n;p++){
+		const unsigned pnew=unsigned(p)+pini;
+		const unsigned rp=listp[p];
+		const unsigned pcopy=(rp&0x7FFFFFFF);
+		//-Adjust position and cell of new particle. | Ajusta posicion y celda de nueva particula.
+		PeriodicDuplicatePos(pnew,pcopy,(rp>=0x80000000),perinc.x,perinc.y,perinc.z,cellmax,pos,dcell);
+		//-Copy the rest of the values. | Copia el resto de datos.
+		idp[pnew]=idp[pcopy];
+		code[pnew]=CODE_SetPeriodic(code[pcopy]);
+		velrhop[pnew]=velrhop[pcopy];
+		if(pospre)
+			pospre[pnew]=pospre[pcopy];
+		if(velrhoppre)
+			velrhoppre[pnew]=velrhoppre[pcopy];
+		if(spstau)
+			spstau[pnew]=spstau[pcopy];
+	}
 }
 
 //<vs_mddbc_ini>
@@ -545,13 +553,14 @@ void JSphCpuSingle::Interaction_Forces(TpInterStep interstep){
   }
 
   //-Add Delta-SPH correction to Arg[]. | Anhade correccion de Delta-SPH a Arg[].
-  if(Deltac){
-    const int ini=int(Npb),fin=int(Np),npf=int(Np-Npb);
-    #ifdef OMP_USE
-      #pragma omp parallel for schedule (static) if(npf>OMP_LIMIT_COMPUTELIGHT)
-    #endif
-    for(int p=ini;p<fin;p++)if(Deltac[p]!=FLT_MAX)Arc[p]+=Deltac[p];
-  }
+	if(Deltac){
+		const int ini=int(Npb),fin=int(Np),npf=int(Np-Npb);
+		#ifdef OMP_USE
+			#pragma omp parallel for schedule (static) if(npf>OMP_LIMIT_COMPUTELIGHT)
+		#endif
+		for(int p=ini;p<fin;p++)
+			if(Deltac[p]!=FLT_MAX)Arc[p]+=Deltac[p];
+	}
 
   //-Calculates maximum value of ViscDt.
   ViscDtMax=res.viscdt;
@@ -567,9 +576,9 @@ void JSphCpuSingle::Interaction_Forces(TpInterStep interstep){
 /// Calcula datos extrapolados en el contorno para mDBC.
 //==============================================================================
 void JSphCpuSingle::MdbcBoundCorrection(){
-  TmcStart(Timers,TMC_CfPreForces);
-  Interaction_MdbcCorrection(SlipMode,DivData,Posc,Codec,Idpc,BoundNormalc,MotionVelc,Velrhopc);
-  TmcStop(Timers,TMC_CfPreForces);
+	TmcStart(Timers,TMC_CfPreForces);
+	Interaction_MdbcCorrection(SlipMode,DivData,Posc,Codec,Idpc,BoundNormalc,MotionVelc,Velrhopc);
+	TmcStop(Timers,TMC_CfPreForces);
 }
 //<vs_mddbc_end>
 

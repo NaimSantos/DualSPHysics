@@ -38,22 +38,28 @@
 
 class JMLPistonsGpu : protected JObject
 {
-private:
-  byte *PistonIdg;     ///<Data of PistonId on GPU.
-  double *MovVelg;     ///<Data of MovVel on GPU.
-  llong MemGpuFixed;  
+	private:
+		byte *PistonIdg;     ///<Data of PistonId on GPU.
+		double *MovVelg;     ///<Data of MovVel on GPU.
+		llong MemGpuFixed;
 
-public:
-  JMLPistonsGpu();
-  ~JMLPistonsGpu();
-  void FreeMemoryGpu();
-  inline llong GetAllocMemoryGpu()const{ return(MemGpuFixed); }
+	public:
+		JMLPistonsGpu();
+		~JMLPistonsGpu();
+		void FreeMemoryGpu();
+		inline llong GetAllocMemoryGpu()const{
+			return(MemGpuFixed);
+		}
 
-  void PreparePiston1d(unsigned sizepistonid,const byte *pistonid,unsigned sizemovvel);
-  void CopyMovVel(unsigned sizemovvel,const double *movvel);
+		void PreparePiston1d(unsigned sizepistonid,const byte *pistonid,unsigned sizemovvel);
+		void CopyMovVel(unsigned sizemovvel,const double *movvel);
 
-  inline const byte* GetPistonIdg()const{ return(PistonIdg);}
-  inline const double* GetMovVelg()const{ return(MovVelg);}
+		inline const byte* GetPistonIdg()const{
+			return(PistonIdg);
+		}
+		inline const double* GetMovVelg()const{
+			return(MovVelg);
+		}
 };
 
 //##############################################################################
@@ -63,20 +69,24 @@ public:
 
 class JMLPiston2DGpu : protected JObject
 {
-private:
-  unsigned Size;
-  double *MovVelyzg;  ///<Data of MovVelyz on GPU. [Size]
+	private:
+		unsigned Size;
+		double *MovVelyzg;  ///<Data of MovVelyz on GPU. [Size]
 
-public:
-  JMLPiston2DGpu();
-  ~JMLPiston2DGpu();
-  void FreeMemoryGpu();
-  inline llong GetAllocMemoryGpu()const{ return(sizeof(double)*Size); }
+	public:
+		JMLPiston2DGpu();
+		~JMLPiston2DGpu();
+		void FreeMemoryGpu();
+		inline llong GetAllocMemoryGpu()const{
+			return(sizeof(double)*Size);
+		}
 
-  void AllocMemoryGpu(unsigned size);
-  void CopyMovVelyz(const double *movvelyz);
+		void AllocMemoryGpu(unsigned size);
+		void CopyMovVelyz(const double *movvelyz);
 
-  inline const double* GetMovVelyzg()const{ return(MovVelyzg); }
+		inline const double* GetMovVelyzg()const{
+			return(MovVelyzg);
+		}
 
 };
 

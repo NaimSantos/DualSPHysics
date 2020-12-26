@@ -54,67 +54,83 @@
 /// \brief Allows reading data in ASCII files.
 // Clase para facilitar la lectura de ficheros de datos en texto.
 
-class JReadDatafile  : protected JObject
+class JReadDatafile : protected JObject
 {
-private:
-  std::string File;      ///< Name of file.
+	private:
+		std::string File;      ///< Name of file.
 
-  unsigned SizeFile;     ///< Size of file.
-  unsigned Size;         ///< Size of data.
-  char *Data;            ///< Data from file.
+		unsigned SizeFile;     ///< Size of file.
+		unsigned Size;         ///< Size of data.
+		char *Data;            ///< Data from file.
 
-  int LineCount;         ///< Number of lines.
-  unsigned *LineBegin;   ///< Inicio de cada linea [LineCount+1].
-  int RemLineCount;      ///< Number of remark lines.
+		int LineCount;         ///< Number of lines.
+		unsigned *LineBegin;   ///< Inicio de cada linea [LineCount+1].
+		int RemLineCount;      ///< Number of remark lines.
 
-  std::string Sep;       ///< Value separator.
+		std::string Sep;       ///< Value separator.
 
-  int ReadLin;
-  int ReadLinValue;
-  std::string ReadLine;
-  std::string ReadValue;
+		int ReadLin;
+		int ReadLinValue;
+		std::string ReadLine;
+		std::string ReadValue;
 
-  void ProcessSpaces();
-  void ProcessLines();
-  void ResetReadLine();
+		void ProcessSpaces();
+		void ProcessLines();
+		void ResetReadLine();
 
-public:
-  JReadDatafile();
-  ~JReadDatafile();
-  void Reset();
+	public:
+		JReadDatafile();
+		~JReadDatafile();
+		void Reset();
 
-  void LoadFile(const std::string &file,unsigned maxsize=1048576000);
-  void RemoveChar(char let);
+		void LoadFile(const std::string &file, unsigned maxsize=1048576000);
+		void RemoveChar(char let);
 
-  unsigned Lines()const{ return(LineCount); }
-  unsigned RemLines()const{ return(RemLineCount); }
+		unsigned Lines()const{
+			return(LineCount);
+		}
+		unsigned RemLines()const{
+			return(RemLineCount);
+		}
 
-  void SetReadLine(int line);
+		void SetReadLine(int line);
 
-  std::string GetLine(int line)const;
-  
-  std::string ReadNextValue(bool in_line=false);
+		std::string GetLine(int line)const;
 
-  double ReadNextDouble(bool in_line=false);
-  tdouble3 ReadNextDouble3(bool in_line=false);
-  
-  float ReadNextFloat(bool in_line=false){    return(float(ReadNextDouble(in_line)));      }
-  tfloat3 ReadNextFloat3(bool in_line=false){ return(ToTFloat3(ReadNextDouble3(in_line))); }
+		std::string ReadNextValue(bool in_line=false);
 
-  int ReadNextInt(bool in_line=false);
-  tint3 ReadNextInt3(bool in_line=false);
+		double ReadNextDouble(bool in_line=false);
+		tdouble3 ReadNextDouble3(bool in_line=false);
 
-  unsigned ReadNextUnsigned(bool in_line=false){ return(unsigned(ReadNextInt(in_line))); }
-  tuint3 ReadNextUnsigned3(bool in_line=false);
+		float ReadNextFloat(bool in_line=false){
+			return(float(ReadNextDouble(in_line)));
+		}
+		tfloat3 ReadNextFloat3(bool in_line=false){
+			return(ToTFloat3(ReadNextDouble3(in_line)));
+		}
 
-  int GetReadLin()const{           return(ReadLin);      }
-  int GetReadLinValue()const{      return(ReadLinValue); }
-  std::string GetReadValue()const{ return(ReadValue);    }
+		int ReadNextInt(bool in_line=false);
+		tint3 ReadNextInt3(bool in_line=false);
+
+		unsigned ReadNextUnsigned(bool in_line=false){
+			return(unsigned(ReadNextInt(in_line)));
+		}
+		tuint3 ReadNextUnsigned3(bool in_line=false);
+
+		int GetReadLin()const{
+			return(ReadLin);
+		}
+		int GetReadLinValue()const{
+			return(ReadLinValue);
+		}
+		std::string GetReadValue()const{
+			return(ReadValue);
+		}
 
 
-  tint2 Find(std::string key,int firstline=0)const;
-  std::string FindValueStr(std::string key,bool optional=false,std::string valdef="")const;
-  double FindValueDbl(std::string key,bool optional=false,double valdef=0)const;
+		tint2 Find(std::string key, int firstline=0)const;
+		std::string FindValueStr(std::string key, bool optional=false, std::string valdef="")const;
+		double FindValueDbl(std::string key, bool optional=false, double valdef=0)const;
 
 };
 

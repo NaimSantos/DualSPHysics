@@ -32,51 +32,56 @@ using namespace std;
 /// Constructor.
 //==============================================================================
 JMLPistonsGpu::JMLPistonsGpu(){
-  ClassName="JMLPistonsGpu";
-  PistonIdg=NULL; MovVelg=NULL;
-  MemGpuFixed=0; 
+	ClassName="JMLPistonsGpu";
+	PistonIdg=NULL;
+	MovVelg=NULL;
+	MemGpuFixed=0;
 }
 
 //==============================================================================
 /// Destructor.
 //==============================================================================
 JMLPistonsGpu::~JMLPistonsGpu(){
-  DestructorActive=true; 
-  FreeMemoryGpu();
+	DestructorActive=true;
+	FreeMemoryGpu();
 }
 
 //==============================================================================
 /// Frees GPU memory.
 //==============================================================================
 void JMLPistonsGpu::FreeMemoryGpu(){
-  MemGpuFixed=0;
-  #ifdef _WITHGPU
-    //-GPU memory for List1d.
-    if(PistonIdg)cudaFree(PistonIdg);  PistonIdg=NULL;
-    if(MovVelg)  cudaFree(MovVelg);    MovVelg=NULL;
-  #endif 
+	MemGpuFixed=0;
+	#ifdef _WITHGPU
+		//-GPU memory for List1d.
+		if(PistonIdg)
+			cudaFree(PistonIdg);
+		PistonIdg=NULL;
+		if(MovVelg)
+			cudaFree(MovVelg);
+		MovVelg=NULL;
+	#endif
 }
 
 //==============================================================================
 /// Allocates GPU memory for PistonIdg and MovVelg.
 //==============================================================================
-void JMLPistonsGpu::PreparePiston1d(unsigned sizepistonid,const byte *pistonid,unsigned sizemovvel){
-  #ifdef _WITHGPU
-    cudaMalloc((void**)&PistonIdg,sizeof(byte)*sizepistonid);
-    cudaMemcpy(PistonIdg,pistonid,sizeof(byte)*sizepistonid,cudaMemcpyHostToDevice);
-    cudaMalloc((void**)&MovVelg,sizeof(double)*sizemovvel);
-    MemGpuFixed=sizeof(byte)*sizepistonid;
-    MemGpuFixed+=sizeof(double)*sizemovvel;
-  #endif 
+void JMLPistonsGpu::PreparePiston1d(unsigned sizepistonid, const byte *pistonid, unsigned sizemovvel){
+	#ifdef _WITHGPU
+		cudaMalloc((void**)&PistonIdg, sizeof(byte)*sizepistonid);
+		cudaMemcpy(PistonIdg, pistonid, sizeof(byte)*sizepistonid, cudaMemcpyHostToDevice);
+		cudaMalloc((void**)&MovVelg, sizeof(double)*sizemovvel);
+		MemGpuFixed=sizeof(byte)*sizepistonid;
+		MemGpuFixed+=sizeof(double)*sizemovvel;
+	#endif
 }
 
 //==============================================================================
 /// Copies MovVel data on GPU memory.
 //==============================================================================
-void JMLPistonsGpu::CopyMovVel(unsigned sizemovvel,const double *movvel){
-  #ifdef _WITHGPU
-    cudaMemcpy(MovVelg,movvel,sizeof(double)*sizemovvel,cudaMemcpyHostToDevice);
-  #endif 
+void JMLPistonsGpu::CopyMovVel(unsigned sizemovvel, const double *movvel){
+	#ifdef _WITHGPU
+		cudaMemcpy(MovVelg, movvel, sizeof(double)*sizemovvel, cudaMemcpyHostToDevice);
+	#endif
 }
 
 
@@ -87,46 +92,47 @@ void JMLPistonsGpu::CopyMovVel(unsigned sizemovvel,const double *movvel){
 /// Constructor.
 //==============================================================================
 JMLPiston2DGpu::JMLPiston2DGpu(){
-  ClassName="JMLPiston2DGpu";
-  Size=0; MovVelyzg=NULL;
+	ClassName="JMLPiston2DGpu";
+	Size=0;
+	MovVelyzg=NULL;
 }
 
 //==============================================================================
 /// Destructor.
 //==============================================================================
 JMLPiston2DGpu::~JMLPiston2DGpu(){
-  DestructorActive=true; 
-  FreeMemoryGpu();
+	DestructorActive=true;
+	FreeMemoryGpu();
 }
 
 //==============================================================================
 /// Frees GPU memory.
 //==============================================================================
 void JMLPiston2DGpu::FreeMemoryGpu(){
-  Size=0;
-  #ifdef _WITHGPU
-    if(MovVelyzg)cudaFree(MovVelyzg);  MovVelyzg=NULL;
-  #endif 
+	Size=0;
+	#ifdef _WITHGPU
+	if(MovVelyzg)cudaFree(MovVelyzg);  MovVelyzg=NULL;
+	#endif
 }
 
 //==============================================================================
 /// Allocates GPU memory for MovVelyzg of pistons 2D.
 //==============================================================================
 void JMLPiston2DGpu::AllocMemoryGpu(unsigned size){
-  #ifdef _WITHGPU
-    FreeMemoryGpu();
-    Size=size;
-    cudaMalloc((void**)&MovVelyzg,sizeof(double)*Size);
-  #endif 
+	#ifdef _WITHGPU
+		FreeMemoryGpu();
+		Size=size;
+		cudaMalloc((void**)&MovVelyzg, sizeof(double)*Size);
+	#endif
 }
 
 //==============================================================================
 /// Copies MovVelyz data on GPU memory.
 //==============================================================================
 void JMLPiston2DGpu::CopyMovVelyz(const double *movvelyz){
-  #ifdef _WITHGPU
-    cudaMemcpy(MovVelyzg,movvelyz,sizeof(double)*Size,cudaMemcpyHostToDevice);
-  #endif 
+	#ifdef _WITHGPU
+		cudaMemcpy(MovVelyzg, movvelyz, sizeof(double)*Size, cudaMemcpyHostToDevice);
+	#endif
 }
 
 

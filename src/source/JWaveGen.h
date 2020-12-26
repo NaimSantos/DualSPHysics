@@ -54,78 +54,77 @@ class JSphMk;
 #else
 class JWaveGen
 {
-private:
-  const bool UseOmp;
-  const bool UseGpu;
-  double TimeMod;       ///<Modifies the timestep for paddle motion.
-  JWavePaddles* WavPad; 
-  
-  //-Vars. auxiliares cargadas tras Init().
-  //-Auxiliary variables loaded after Init().
-  bool Use_Awas;    //-Use of AWAS-Zsurf.
-  unsigned Count;
+	private:
+		const bool UseOmp;
+		const bool UseGpu;
+		double TimeMod;       ///<Modifies the timestep for paddle motion.
+		JWavePaddles* WavPad; 
 
-public:
+		//-Vars. auxiliares cargadas tras Init().
+		//-Auxiliary variables loaded after Init().
+		bool Use_Awas;    //-Use of AWAS-Zsurf.
+		unsigned Count;
 
-  //==============================================================================
-  /// Constructor.
-  //==============================================================================
-  JWaveGen(bool useomp,bool usegpu,JLog2* log,std::string dirdata,const JXml *sxml
-    ,const std::string &place,tdouble3 gravity3);
+	public:
 
-  //==============================================================================
-  /// Destructor.
-  //==============================================================================
-  ~JWaveGen();
+		//==============================================================================
+		/// Constructor.
+		//==============================================================================
+		JWaveGen(bool useomp, bool usegpu, JLog2* log, std::string dirdata, const JXml *sxml, const std::string &place, tdouble3 gravity3);
 
-  //==============================================================================
-  /// Returns true when this feature is available.
-  //==============================================================================
-  static bool Available(){ return(true); }
+		//==============================================================================
+		/// Destructor.
+		//==============================================================================
+		~JWaveGen();
 
-  //==============================================================================
-  /// Configura paddle con datos de las particulas.
-  /// Set paddle with the particle data.
-  //==============================================================================
-  bool ConfigPaddle(word mkbound,word motionref,unsigned idbegin,unsigned np);
+		//==============================================================================
+		/// Returns true when this feature is available.
+		//==============================================================================
+		static bool Available(){ return(true); }
 
-  //==============================================================================
-  /// Prepara movimiento de paddles.
-  /// Prepares paddle movement.
-  //==============================================================================
-  void Init(JGaugeSystem *gaugesystem,const JSphMk *mkinfo,double timemax,double timepart);
+		//==============================================================================
+		/// Configura paddle con datos de las particulas.
+		/// Set paddle with the particle data.
+		//==============================================================================
+		bool ConfigPaddle(word mkbound, word motionref, unsigned idbegin, unsigned np);
 
-  //==============================================================================
-  /// Adjust motion paddles for the first simulation instant.
-  //==============================================================================
-  void SetTimeMod(double timemod){ TimeMod=timemod; };
+		//==============================================================================
+		/// Prepara movimiento de paddles.
+		/// Prepares paddle movement.
+		//==============================================================================
+		void Init(JGaugeSystem *gaugesystem, const JSphMk *mkinfo, double timemax, double timepart);
 
-  //==============================================================================
-  /// Shows object configuration using Log.
-  //==============================================================================
-  void VisuConfig(std::string txhead,std::string txfoot);
+		//==============================================================================
+		/// Adjust motion paddles for the first simulation instant.
+		//==============================================================================
+		void SetTimeMod(double timemod){ TimeMod=timemod; };
 
-  //==============================================================================
-  /// Devuelve datos del movimiento lineal o matricial para el intervalo indicado.
-  /// Returns linear or matrix motion data for the specified interval.
-  //==============================================================================
-  const StMotionData& GetMotion(bool svdata,unsigned cp,double timestep,double dt);
+		//==============================================================================
+		/// Shows object configuration using Log.
+		//==============================================================================
+		void VisuConfig(std::string txhead, std::string txfoot);
 
-  //==============================================================================
-  /// Devuelve datos del movimiento lineal o matricial para el intervalo indicado.
-  /// Returns linear or matrix motion data for the specified interval.
-  //==============================================================================
-  const StMotionData& GetMotionAce(bool svdata,unsigned cp,double timestep,double dt);
+		//==============================================================================
+		/// Devuelve datos del movimiento lineal o matricial para el intervalo indicado.
+		/// Returns linear or matrix motion data for the specified interval.
+		//==============================================================================
+		const StMotionData& GetMotion(bool svdata, unsigned cp, double timestep, double dt);
 
-  //==============================================================================
-  /// Devuelve Mkbound de paddle.
-  /// Returns Mkbound of paddle.
-  //==============================================================================
-  word GetPaddleMkbound(unsigned cp)const;
+		//==============================================================================
+		/// Devuelve datos del movimiento lineal o matricial para el intervalo indicado.
+		/// Returns linear or matrix motion data for the specified interval.
+		//==============================================================================
+		const StMotionData& GetMotionAce(bool svdata, unsigned cp, double timestep, double dt);
+
+		//==============================================================================
+		/// Devuelve Mkbound de paddle.
+		/// Returns Mkbound of paddle.
+		//==============================================================================
+		word GetPaddleMkbound(unsigned cp)const;
 
 
-  unsigned GetCount()const{ return(Count); }
-  bool UseAwas()const{ return(Use_Awas); } 
+		unsigned GetCount()const{ return(Count); }
+		bool UseAwas()const{ return(Use_Awas); } 
 
 };
 #endif

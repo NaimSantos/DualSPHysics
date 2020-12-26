@@ -47,70 +47,96 @@ class JLog2;
 
 class JAppInfo : public JObject
 {
-private:
-  //-Application information.
-  std::string MainName;
-  std::string MainNameExtra;
-  std::string MainVer;
-  std::string SubName;
-  std::string SubVer;
-  std::string Date;
+	private:
+		//-Application information.
+		std::string MainName;
+		std::string MainNameExtra;
+		std::string MainVer;
+		std::string SubName;
+		std::string SubVer;
+		std::string Date;
 
-  //-Execution paths.
-  std::string RunCommand;
-  std::string RunPath;
-  std::string ProgramPath;
+		//-Execution paths.
+		std::string RunCommand;
+		std::string RunPath;
+		std::string ProgramPath;
 
-  //-Output configuration.
-  bool CreateDirs;   ///<Creates full path for output files (true by default).
-  bool CsvSepComa;   ///<Separator character in CSV files (0=semicolon, 1=coma).
-  std::string DirOut;
-  std::string DirDataOut;
+		//-Output configuration.
+		bool CreateDirs;   ///<Creates full path for output files (true by default).
+		bool CsvSepComa;   ///<Separator character in CSV files (0=semicolon, 1=coma).
+		std::string DirOut;
+		std::string DirDataOut;
 
-  //-Log definition.
-#ifdef JAppInfo_UseLog
-  JLog2* Log;
-#endif
+		//-Log definition.
+	#ifdef JAppInfo_UseLog
+		JLog2* Log;
+	#endif
 
-public:
-  JAppInfo(std::string name,std::string ver,std::string date);
-  JAppInfo(std::string name,std::string ver,std::string subname,std::string subver,std::string date);
-  ~JAppInfo();
-  void Reset();
-  void ClearNameExtra(){ MainNameExtra=""; };
-  void AddNameExtra(std::string extra);
+	public:
+		JAppInfo(std::string name, std::string ver, std::string date);
+		JAppInfo(std::string name, std::string ver, std::string subname, std::string subver, std::string date);
+		~JAppInfo();
+		void Reset();
+		void ClearNameExtra(){ MainNameExtra=""; };
+		void AddNameExtra(std::string extra);
 
-  void ConfigRunPaths(std::string runcommand);
-  void ConfigOutput(bool createdirs,bool csvsepcoma,std::string dirout,std::string dirdataout="");
+		void ConfigRunPaths(std::string runcommand);
+		void ConfigOutput(bool createdirs, bool csvsepcoma, std::string dirout, std::string dirdataout="");
 
-  void SetMainName(const std::string &mname){ MainName=mname; }
+		void SetMainName(const std::string &mname){ MainName=mname; }
 
-#ifdef JAppInfo_UseLog
-  void LogInit(std::string fname,bool mpirun=false,int mpirank=0,int mpilaunch=0);
-  JLog2* LogPtr(){ return(Log); }
-  bool LogDefined()const{ return(Log!=NULL); }
-#else
-  bool LogDefined()const{ return(false); }
-#endif
+	#ifdef JAppInfo_UseLog
+		void LogInit(std::string fname, bool mpirun=false, int mpirank=0, int mpilaunch=0);
+		JLog2* LogPtr(){
+			return(Log);
+		}
+		bool LogDefined()const{
+			return(Log!=NULL);
+		}
+	#else
+		bool LogDefined()const{
+			return(false);
+	}
+	#endif
 
-  std::string GetShortName()const;
-  std::string GetFullName()const;
+		std::string GetShortName()const;
+		std::string GetFullName()const;
 
-  std::string GetMainName()const{ return(MainName); }
-  std::string GetMainVer()const{ return(MainVer); }
-  std::string GetDate()const{ return(Date); }
+		std::string GetMainName()const{
+			return(MainName);
+		}
+		std::string GetMainVer()const{
+			return(MainVer);
+		}
+		std::string GetDate()const{
+			return(Date);
+		}
 
-  std::string GetRunCommand()const{ return(RunCommand); };
-  std::string GetRunPath()const{ return(RunPath); };
-  std::string GetProgramPath()const{ return(ProgramPath); };
+		std::string GetRunCommand()const{
+			return(RunCommand);
+		};
+		std::string GetRunPath()const{
+			return(RunPath);
+		};
+		std::string GetProgramPath()const{
+			return(ProgramPath);
+		};
 
-  bool GetCreateDirs()const{ return(CreateDirs); };
-  bool GetCsvSepComa()const{ return(CsvSepComa); };
-  std::string GetDirOut()const{ return(DirOut); };
-  std::string GetDirDataOut()const{ return(DirDataOut); };
+		bool GetCreateDirs()const{
+			return(CreateDirs);
+		};
+		bool GetCsvSepComa()const{
+			return(CsvSepComa);
+		};
+		std::string GetDirOut()const{
+			return(DirOut);
+		};
+		std::string GetDirDataOut()const{
+			return(DirDataOut);
+		};
 
-  int MkdirPath(const std::string &dir)const;
-  int MkdirPathFile(const std::string &file)const;
+		int MkdirPath(const std::string &dir)const;
+		int MkdirPathFile(const std::string &file)const;
 
 };
 

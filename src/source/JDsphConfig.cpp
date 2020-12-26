@@ -32,48 +32,49 @@ using namespace std;
 /// Constructor.
 //==============================================================================
 JDsphConfig::JDsphConfig(){
-  ClassName="JDsphConfig";
-  Reset();
+	ClassName="JDsphConfig";
+	Reset();
 }
 
 //==============================================================================
 /// Destructor.
 //==============================================================================
 JDsphConfig::~JDsphConfig(){
-  DestructorActive=true;
-  Reset();
+	DestructorActive=true;
+	Reset();
 }
 
 //==============================================================================
 /// Initialisation of variables.
 //==============================================================================
 void JDsphConfig::Reset(){
-  FileCfg="";
-  CreateDirs=-1;
-  CsvSeparator=-1;
+	FileCfg="";
+	CreateDirs=-1;
+	CsvSeparator=-1;
 }
 
 //==============================================================================
 /// Initialisation of log file.
 //==============================================================================
 void JDsphConfig::Init(std::string path){
-  Reset();
-  const string file=fun::GetDirWithSlash(path)+"DsphConfig.xml";
-  if(fun::FileExists(file)){
-    //-Loads XML file.
-    JXml sxml;
-    sxml.LoadFile(file);
-    const string place="dsphconfig.common";
-    TiXmlNode* node=sxml.GetNode(place,false);
-    if(!node)Run_ExceptioonFile(string("Cannot find the element \'")+place+"\'.",file);
-    //-Reads configuration values in XML file.
-    CreateDirs=sxml.ReadElementInt(node,"createdirs","v",true,-1);
-    CsvSeparator=sxml.ReadElementInt(node,"csvseparator","v",true,-1);
-    //printf("JDsphConfig::CreateDirs: %d\n",CreateDirs);
-    //printf("JDsphConfig::csvseparator: %d\n",CsvSeparator);
-    //-Stores name of configuration file.
-    FileCfg=file;
-  }
+	Reset();
+	const string file=fun::GetDirWithSlash(path)+"DsphConfig.xml";
+	if(fun::FileExists(file)){
+		//-Loads XML file.
+		JXml sxml;
+		sxml.LoadFile(file);
+		const string place="dsphconfig.common";
+		TiXmlNode* node=sxml.GetNode(place, false);
+		if(!node)
+			Run_ExceptioonFile(string("Cannot find the element \'")+place+"\'.",file);
+		//-Reads configuration values in XML file.
+		CreateDirs=sxml.ReadElementInt(node, "createdirs", "v", true, -1);
+		CsvSeparator=sxml.ReadElementInt(node, "csvseparator", "v", true, -1);
+		//printf("JDsphConfig::CreateDirs: %d\n",CreateDirs);
+		//printf("JDsphConfig::csvseparator: %d\n",CsvSeparator);
+		//-Stores name of configuration file.
+		FileCfg=file;
+	}
 }
 
 

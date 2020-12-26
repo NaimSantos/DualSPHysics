@@ -31,15 +31,14 @@ class JMotionMov;
 //##############################################################################
 /// \brief Manages events for motions.
 
-class JMotionEvent
-{
-public:
-  JMotionObj* const Obj;
-  JMotionMov* const Mov;
-  const double TimeStart;
-  const double TimeFinish;
+class JMotionEvent{
+	public:
+		JMotionObj* const Obj;
+		JMotionMov* const Mov;
+		const double TimeStart;
+		const double TimeFinish;
 
-  JMotionEvent(JMotionObj* obj,JMotionMov* mov,double timestart,double timefinish):Obj(obj),Mov(mov),TimeStart(timestart),TimeFinish(timefinish){}
+	JMotionEvent(JMotionObj* obj, JMotionMov* mov, double timestart, double timefinish) : Obj(obj), Mov(mov), TimeStart(timestart), TimeFinish(timefinish){}
 };
 
 

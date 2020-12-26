@@ -37,63 +37,73 @@ namespace fsph{
 //==============================================================================
 /// Throws an exception related to a file or not.
 //==============================================================================
-void RunExceptioonFun(const std::string &srcfile,int srcline,const std::string &fun
-  ,const std::string &msg,const std::string &file)
-{ // fun::RunExceptioonFun(__FILE__,__LINE__,__func__,"msg");
-  std::string tx;
-  tx=fun::PrintStr("\n*** Exception (%s::%s:%d)\n",fun::GetPathLevels(srcfile,3).c_str(),fun.c_str(),srcline);
-  if(!msg.empty())tx=tx+fun::PrintStr("Text: %s\n",msg.c_str());
-  if(!file.empty())tx=tx+fun::PrintStr("File: %s\n",file.c_str());
-  printf("%s\n",tx.c_str());
-  fflush(stdout);
-  throw string("#")+tx;
+void RunExceptioonFun(const std::string &srcfile, int srcline, const std::string &fun, const std::string &msg, const std::string &file)
+{ // fun::RunExceptioonFun(__FILE__, __LINE__, __func__, "msg");
+	std::string tx;
+	tx=fun::PrintStr("\n*** Exception (%s::%s:%d)\n", fun::GetPathLevels(srcfile, 3).c_str(), fun.c_str(), srcline);
+	if(!msg.empty())
+		tx=tx+fun::PrintStr("Text: %s\n", msg.c_str());
+	if(!file.empty())
+		tx=tx+fun::PrintStr("File: %s\n", file.c_str());
+	printf("%s\n", tx.c_str());
+	fflush(stdout);
+	throw string("#")+tx;
 }
 
 //==============================================================================
 /// Returns factor value to compute KernelSize according to KernelH.
 //==============================================================================
 float GetKernelFactor(TpKernel tkernel){
-  float kh=GetKernel_Factor(tkernel);
-  if(!kh)Run_ExceptioonFun("Kernel unknown.");
-  return(kh);
+	float kh=GetKernel_Factor(tkernel);
+	if(!kh)
+		Run_ExceptioonFun("Kernel unknown.");
+	return(kh);
 }
 
 //==============================================================================
 /// Returns the name of the kernel in text format.
 //==============================================================================
 std::string GetKernelName(TpKernel tkernel){
-  string tx;
-  switch(tkernel){
-    case KERNEL_Cubic:      tx=GetKernelCubic_Name();       break;
-    case KERNEL_Wendland:   tx=GetKernelWendland_Name();    break;
-    default: Run_ExceptioonFun("Kernel unknown.");
-  }
-  return(tx);
+	string tx;
+	switch(tkernel){
+		case KERNEL_Cubic:
+			tx=GetKernelCubic_Name();
+			break;
+		case KERNEL_Wendland:
+			tx=GetKernelWendland_Name();
+			break;
+		default:
+			Run_ExceptioonFun("Kernel unknown.");
+	}
+	return(tx);
 }
 
 //==============================================================================
 /// Returns strings with Kernel configuration.
 //==============================================================================
-void GetKernelConfig(const StCteSph &CSP,std::vector<std::string> &lines){
-  lines.push_back(fun::VarStr("Kernel",GetKernelName(CSP.tkernel)));
-  switch(CSP.tkernel){
-    case KERNEL_Cubic:{
-      const StKCubicCte &kc=CSP.kcubic;
-      lines.push_back(fun::VarStr("  Cubic.a1" ,kc.a1));
-      lines.push_back(fun::VarStr("  Cubic.aa" ,kc.aa));
-      lines.push_back(fun::VarStr("  Cubic.a24",kc.a24));
-      lines.push_back(fun::VarStr("  Cubic.c1" ,kc.c1));
-      lines.push_back(fun::VarStr("  Cubic.c2" ,kc.c2));
-      lines.push_back(fun::VarStr("  Cubic.d1" ,kc.d1));
-      lines.push_back(fun::VarStr("  Cubic.od_wdeltap",kc.od_wdeltap));
-    }break;
-    case KERNEL_Wendland:{
-      const StKWendlandCte &kc=CSP.kwend;
-      lines.push_back(fun::VarStr("  Wendland.awen" ,kc.awen));
-      lines.push_back(fun::VarStr("  Wendland.bwen" ,kc.bwen));
-    }break;
-    default: Run_ExceptioonFun("Kernel unknown.");
-  }
+void GetKernelConfig(const StCteSph &CSP, std::vector<std::string> &lines){
+	lines.push_back(fun::VarStr("Kernel", GetKernelName(CSP.tkernel)));
+		switch(CSP.tkernel){
+		case KERNEL_Cubic:{
+			const StKCubicCte &kc=CSP.kcubic;
+				lines.push_back(fun::VarStr("  Cubic.a1", kc.a1));
+				lines.push_back(fun::VarStr("  Cubic.aa", kc.aa));
+				lines.push_back(fun::VarStr("  Cubic.a24", kc.a24));
+				lines.push_back(fun::VarStr("  Cubic.c1", kc.c1));
+				lines.push_back(fun::VarStr("  Cubic.c2", kc.c2));
+				lines.push_back(fun::VarStr("  Cubic.d1", kc.d1));
+				lines.push_back(fun::VarStr("  Cubic.od_wdeltap", kc.od_wdeltap));
+			}
+			break;
+		case KERNEL_Wendland:{
+			const StKWendlandCte &kc=CSP.kwend;
+			lines.push_back(fun::VarStr("  Wendland.awen", kc.awen));
+			lines.push_back(fun::VarStr("  Wendland.bwen", kc.bwen));
+			}
+			break;
+		default:
+			Run_ExceptioonFun("Kernel unknown.");
+	}
 }
 
 

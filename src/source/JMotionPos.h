@@ -32,28 +32,36 @@
 //##############################################################################
 /// \brief Manages the position of objects.
 
-class JMotionPos
-{
-private:
-  tdouble3 PosSimple;
-  JMatrix4d PosMatrix;
-  bool TypeSimple;
+class JMotionPos{
+	private:
 
-public:
+		tdouble3 PosSimple;
+		JMatrix4d PosMatrix;
+		bool TypeSimple;
 
-  JMotionPos();
-  void Reset();
-  void Move(const tdouble3 &dis);
-  void Rotate(double ang,const tdouble3 &axisp1,const tdouble3 &axisp2);
-  void MoveMix(const JMotionPos &modpos);
-  void ToMatrix();
+	public:
 
-  tdouble3 PointMove(const tdouble3 &p) const;
-  void PointsMove(tdouble3 &p1,tdouble3 &p2) const{ p1=PointMove(p1); p2=PointMove(p2); }
+		JMotionPos();
+		void Reset();
+		void Move(const tdouble3 &dis);
+		void Rotate(double ang, const tdouble3 &axisp1, const tdouble3 &axisp2);
+		void MoveMix(const JMotionPos &modpos);
+		void ToMatrix();
 
-  bool IsSimple()const{ return(TypeSimple); }
-  tdouble3 GetSimple()const{ return(PosSimple); }
-  JMatrix4d GetMatrix()const{ return(PosMatrix); }
+		tdouble3 PointMove(const tdouble3 &p) const;
+		void PointsMove(tdouble3 &p1, tdouble3 &p2) const{
+			p1=PointMove(p1); p2=PointMove(p2);
+		}
+
+		bool IsSimple() const{
+			return(TypeSimple);
+		}
+		tdouble3 GetSimple() const{
+			return(PosSimple);
+		}
+		JMatrix4d GetMatrix() const{
+			return(PosMatrix);
+		}
 };
 
 

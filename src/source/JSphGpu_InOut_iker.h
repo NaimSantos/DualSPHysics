@@ -38,80 +38,49 @@ namespace cusphinout{
 
 //-Kernels for inlet/outlet (JSphInOut).
 void InOutIgnoreFluidDef(unsigned n,typecode cod,typecode codnew,typecode *code);
-void UpdatePosFluid(byte periactive,unsigned n,unsigned pini
-  ,double2 *posxy,double *posz,unsigned *dcell,typecode *code);
-unsigned InOutCreateListSimple(bool stable,unsigned n,unsigned pini
-  ,const typecode *code,unsigned *listp);
-unsigned InOutCreateList(bool stable,unsigned n,unsigned pini
-  ,byte chkinputmask,byte nzone,const byte *cfgzone,const float4 *planes
-  ,tfloat3 freemin,tfloat3 freemax
-  ,const float2 *boxlimit,const double2 *posxy,const double *posz
-  ,typecode *code,unsigned *listp);
-void InOutUpdateData(unsigned n,const unsigned *listp
-  ,byte izone,byte rmode,byte vmode,byte vprof,byte refillspfull
-  ,float timestep,float zsurf,tfloat4 veldata,tfloat4 veldata2,tfloat3 dirdata
-  ,float coefhydro,float rhopzero,float gamma
-  ,const typecode *code,const double *posz,float4 *velrhop);
+void UpdatePosFluid(byte periactive,unsigned n,unsigned pini,double2 *posxy,double *posz,unsigned *dcell,typecode *code);
+unsigned InOutCreateListSimple(bool stable,unsigned n,unsigned pini,const typecode *code,unsigned *listp);
+unsigned InOutCreateList(bool stable,unsigned n,unsigned pini,byte chkinputmask,byte nzone,const byte *cfgzone,const float4 *planes,
+	tfloat3 freemin,tfloat3 freemax,const float2 *boxlimit,const double2 *posxy,const double *posz,typecode *code,unsigned *listp);
+void InOutUpdateData(unsigned n,const unsigned *listp,byte izone,byte rmode,byte vmode,byte vprof,byte refillspfull,float timestep,float zsurf,
+tfloat4 veldata,tfloat4 veldata2,tfloat3 dirdata,float coefhydro,float rhopzero,float gamma,const typecode *code,const double *posz,float4 *velrhop);
 
-void InoutClearInteractionVars(unsigned npf,unsigned pini,const typecode *code
-    ,float3 *ace,float *ar,float *viscdt,float4 *shiftposfs);
+void InoutClearInteractionVars(unsigned npf,unsigned pini,const typecode *code,float3 *ace,float *ar,float *viscdt,float4 *shiftposfs);
 
-void InOutUpdateVelrhopM1(unsigned n,const int *inoutpart
-    ,const float4 *velrhop,float4 *velrhopm1);
+void InOutUpdateVelrhopM1(unsigned n,const int *inoutpart,const float4 *velrhop,float4 *velrhopm1);
 
-void InOutComputeStep(unsigned n,int *inoutpart,const float4 *planes
-  ,const float *width,const byte *cfgupdate,const float *zsurf,typecode codenewpart
-  ,const double2 *posxy,const double *posz,typecode *code,byte *newizone);
+void InOutComputeStep(unsigned n,int *inoutpart,const float4 *planes,const float *width,const byte *cfgupdate,
+	const float *zsurf,typecode codenewpart,const double2 *posxy,const double *posz,typecode *code,byte *newizone);
 unsigned InOutListCreate(bool stable,unsigned n,unsigned nmax,const byte *newizone,int *inoutpart);
-void InOutCreateNewInlet(byte periactive,unsigned newn
-  ,const unsigned *inoutpart,unsigned inoutcount,const byte *newizone
-  ,unsigned np,unsigned idnext,typecode codenewpart,const float3 *dirdata,const float *width
-  ,double2 *posxy,double *posz,unsigned *dcell,typecode *code,unsigned *idp,float4 *velrhop);
+void InOutCreateNewInlet(byte periactive,unsigned newn,const unsigned *inoutpart,unsigned inoutcount,const byte *newizone,unsigned np,unsigned idnext,
+	typecode codenewpart,const float3 *dirdata,const float *width,double2 *posxy,double *posz,unsigned *dcell,typecode *code,unsigned *idp,float4 *velrhop);
 
 //-Kernels for inlet/outlet filling (JSphInOut).
-void InOutFillMove(byte periactive,unsigned n,const unsigned *inoutpart
-  ,double dt,const float4 *velrhop
-  ,double2 *posxy,double *posz,unsigned *dcell,typecode *code);
-void InOutFillProjection(unsigned n,const unsigned *inoutpart
-  ,const byte *cfgupdate,const float4 *planes,const double2 *posxy,const double *posz
-  ,const typecode *code,float *prodist,double2 *proposxy,double *proposz);
-unsigned InOutFillListCreate(bool stable,unsigned npt
-  ,const double2 *ptposxy,const double *ptposz
-  ,const byte *ptzone,const byte *cfgupdate,const float *zsurf,const float *width
-  ,unsigned npropt,const float *prodist,const double2 *proposxy,const double *proposz
-  ,float dpmin,float dpmin2,float dp,float *ptdist,unsigned nmax,unsigned *inoutpart);
-void InOutFillCreate(byte periactive,unsigned newn,const unsigned *newinoutpart
-  ,const double2 *ptposxy,const double *ptposz,const byte *ptzone,const float *ptauxdist
-  ,unsigned np,unsigned idnext,typecode codenewpart,const float3 *dirdata
-  ,double2 *posxy,double *posz,unsigned *dcell,typecode *code,unsigned *idp,float4 *velrhop);
+void InOutFillMove(byte periactive,unsigned n,const unsigned *inoutpart,double dt,const float4 *velrhop,double2 *posxy,double *posz,unsigned *dcell,typecode *code);
+void InOutFillProjection(unsigned n,const unsigned *inoutpart,const byte *cfgupdate,const float4 *planes,const double2 *posxy,
+	const double *posz,const typecode *code,float *prodist,double2 *proposxy,double *proposz);
+unsigned InOutFillListCreate(bool stable,unsigned npt,const double2 *ptposxy,const double *ptposz,const byte *ptzone,const byte *cfgupdate,const float *zsurf,const float *width,
+	unsigned npropt,const float *prodist,const double2 *proposxy,const double *proposz,float dpmin,float dpmin2,float dp,float *ptdist,unsigned nmax,unsigned *inoutpart);
+void InOutFillCreate(byte periactive,unsigned newn,const unsigned *newinoutpart,const double2 *ptposxy,const double *ptposz,const byte *ptzone,const float *ptauxdist,
+unsigned np,unsigned idnext,typecode codenewpart,const float3 *dirdata,double2 *posxy,double *posz,unsigned *dcell,typecode *code,unsigned *idp,float4 *velrhop);
 
 //-Kernels for Zsurf calculation (JSphInOut).
-float InOutComputeZsurf(unsigned nptz,const float3 *ptzpos,float maxdist,float zbottom
-  ,const StDivDataGpu &dvd,const double2 *posxy,const double *posz,const typecode *code
-  ,float *resg,float *resh);
+float InOutComputeZsurf(unsigned nptz,const float3 *ptzpos,float maxdist,float zbottom,const StDivDataGpu &dvd,
+	const double2 *posxy,const double *posz,const typecode *code,float *resg,float *resh);
 
 //-Kernels to extrapolate rhop and velocity (JSphInOut).
-void Interaction_InOutExtrap(byte doublemode,bool simulate2d,TpKernel tkernel
-  ,unsigned inoutcount,const int *inoutpart,const byte *cfgzone,byte computerhopmask,byte computevelmask
-  ,const float4 *planes,const float* width,const float3 *dirdata,float determlimit
-  ,const StDivDataGpu &dvd,const double2 *posxy,const double *posz,const typecode *code
-  ,const unsigned *idp,float4 *velrhop);
+void Interaction_InOutExtrap(byte doublemode,bool simulate2d,TpKernel tkernel,unsigned inoutcount,const int *inoutpart,const byte *cfgzone,
+	byte computerhopmask,byte computevelmask,const float4 *planes,const float* width,const float3 *dirdata,float determlimit,
+	const StDivDataGpu &dvd,const double2 *posxy,const double *posz,const typecode *code,const unsigned *idp,float4 *velrhop);
 
 //-Kernels to extrapolate rhop on boundary particles (JSphBoundCorr).
-void Interaction_BoundCorr(byte doublemode,bool simulate2d,TpKernel tkernel
-  ,unsigned npbok,typecode boundcode,tfloat4 plane,tfloat3 direction,float determlimit
-  ,const StDivDataGpu &dvd,const double2 *posxy,const double *posz
-  ,const typecode *code,const unsigned *idp,float4 *velrhop);
+void Interaction_BoundCorr(byte doublemode,bool simulate2d,TpKernel tkernel,unsigned npbok,typecode boundcode,tfloat4 plane,tfloat3 direction,
+	float determlimit,const StDivDataGpu &dvd,const double2 *posxy,const double *posz,const typecode *code,const unsigned *idp,float4 *velrhop);
 
 //-Kernels to interpolate velocity (JSphInOutGridDataTime).
-void InOutInterpolateTime(unsigned npt,double time,double t0,double t1
-  ,const float *velx0,const float *velx1,float *velx
-  ,const float *velz0,const float *velz1,float *velz);
-void InOutInterpolateZVel(unsigned izone,double posminz,double dpz,int nz1
-  ,const float *velx,const float *velz,unsigned np,const int *plist
-  ,const double *posz,const typecode *code,float4 *velrhop,float velcorr);
-void InOutInterpolateResetZVel(unsigned izone,unsigned np,const int *plist
-  ,const typecode *code,float4 *velrhop);
+void InOutInterpolateTime(unsigned npt,double time,double t0,double t1,const float *velx0,const float *velx1,float *velx,const float *velz0,const float *velz1,float *velz);
+void InOutInterpolateZVel(unsigned izone,double posminz,double dpz,int nz1,const float *velx,const float *velz,unsigned np,const int *plist,const double *posz,const typecode *code,float4 *velrhop,float velcorr);
+void InOutInterpolateResetZVel(unsigned izone,unsigned np,const int *plist,const typecode *code,float4 *velrhop);
 
 }
 

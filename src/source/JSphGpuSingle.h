@@ -34,61 +34,63 @@ class JCellDivGpuSingle;
 
 class JSphGpuSingle : public JSphGpu
 {
-protected:
-  JCellDivGpuSingle* CellDivSingle;
+	protected:
+		JCellDivGpuSingle* CellDivSingle;
 
-  llong GetAllocMemoryCpu()const;  
-  llong GetAllocMemoryGpu()const;  
-  llong GetMemoryGpuNp()const;
-  llong GetMemoryGpuNct()const;
-  void UpdateMaxValues();
-  void LoadConfig(JSphCfgRun *cfg);
-  void ConfigDomain();
+		llong GetAllocMemoryCpu()const;
+		llong GetAllocMemoryGpu()const;
+		llong GetMemoryGpuNp()const;
+		llong GetMemoryGpuNct()const;
+		void UpdateMaxValues();
+		void LoadConfig(JSphCfgRun *cfg);
+		void ConfigDomain();
 
-  void ResizeParticlesSize(unsigned newsize,float oversize,bool updatedivide);
-  void RunPeriodic();
-  void RunCellDivide(bool updateperiodic);
-  void AbortBoundOut();
+		void ResizeParticlesSize(unsigned newsize, float oversize, bool updatedivide);
+		void RunPeriodic();
+		void RunCellDivide(bool updateperiodic);
+		void AbortBoundOut();
 
-  void Interaction_Forces(TpInterStep interstep);
-  void MdbcBoundCorrection(); //<vs_mddbc>
+		void Interaction_Forces(TpInterStep interstep);
+		void MdbcBoundCorrection(); //<vs_mddbc>
 
-  double ComputeAceMax(float *auxmem);
+		double ComputeAceMax(float *auxmem);
 
-  double ComputeStep(){ return(TStep==STEP_Verlet? ComputeStep_Ver(): ComputeStep_Sym()); }
+		double ComputeStep(){
+			return(TStep==STEP_Verlet? ComputeStep_Ver(): ComputeStep_Sym());
+		}
 
-  double ComputeStep_Ver();
-  double ComputeStep_Sym();
+		double ComputeStep_Ver();
+		double ComputeStep_Sym();
 
-  void UpdateFtObjs();
-  void FtApplyImposedVel(float3 *ftoforcesresg)const; //<vs_fttvel>
-  void FtCopyExternalForces(); //<vs_fttvel>
-  void RunFloating(double dt,bool predictor);
-  void RunGaugeSystem(double timestep);
+		void UpdateFtObjs();
+		void FtApplyImposedVel(float3 *ftoforcesresg)const; //<vs_fttvel>
+		void FtCopyExternalForces(); //<vs_fttvel>
+		void RunFloating(double dt,bool predictor);
+		void RunGaugeSystem(double timestep);
 
-  void ComputePips(bool run);
+		void ComputePips(bool run);
 
-  void SaveData();
-  void FinishRun(bool stop);
+		void SaveData();
+		void FinishRun(bool stop);
 
-public:
-  JSphGpuSingle();
-  ~JSphGpuSingle();
-  void Run(std::string appname,JSphCfgRun *cfg,JLog2 *log);
+	public:
+		JSphGpuSingle();
+		~JSphGpuSingle();
+		void Run(std::string appname,JSphCfgRun *cfg,JLog2 *log);
 
 //<vs_innlet_ini>
 //-Code for InOut in JSphGpuSingle_InOut.cpp
 //--------------------------------------------
-protected:
-  void InOutInit(double timestepini);
-  void InOutIgnoreFluidDef(const std::vector<unsigned> &mkfluidlist);
-  void InOutCheckProximity(unsigned newnp);
-  void InOutComputeStep(double stepdt);
-  void InOutCalculeZsurf();
-  void InOutExtrapolateData(unsigned inoutcount,const int *inoutpart);
+	protected:
+		void InOutInit(double timestepini);
+		void InOutIgnoreFluidDef(const std::vector<unsigned> &mkfluidlist);
+		void InOutCheckProximity(unsigned newnp);
+		void InOutComputeStep(double stepdt);
+		void InOutCalculeZsurf();
+		void InOutExtrapolateData(unsigned inoutcount, const int *inoutpart);
 
-  void BoundCorrectionData();
-//<vs_innlet_end>
+		void BoundCorrectionData();
+		//<vs_innlet_end>
 };
 
 #endif

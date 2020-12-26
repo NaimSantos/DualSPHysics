@@ -44,27 +44,31 @@ class JPartDataHead;
 /// \brief Manages the info of each block of particles.
 class JSphMkBlock : public JObject
 {
-private:
-  bool PosDefined;
-  tdouble3 PosMin;
-  tdouble3 PosMax;
+	private:
+		bool PosDefined;
+		tdouble3 PosMin;
+		tdouble3 PosMax;
 
-public:
-  const bool Bound;       ///<Indicates whether a particle is boundary or not.
-  const TpParticles Type; ///<Type of particle.
-  const unsigned MkType;  ///<Label of block fluid or bound.
-  const unsigned Mk;      ///<Absolute label.
-  const typecode Code;
-  const unsigned Begin;   ///<Id of the first particle of the block.
-  const unsigned Count;   ///<Number of particles.
+	public:
+		const bool Bound;       ///<Indicates whether a particle is boundary or not.
+		const TpParticles Type; ///<Type of particle.
+		const unsigned MkType;  ///<Label of block fluid or bound.
+		const unsigned Mk;      ///<Absolute label.
+		const typecode Code;
+		const unsigned Begin;   ///<Id of the first particle of the block.
+		const unsigned Count;   ///<Number of particles.
 
-  JSphMkBlock(TpParticles type,unsigned mktype,unsigned mk,typecode code,unsigned begin,unsigned count);
-  void Reset();
+		JSphMkBlock(TpParticles type, unsigned mktype, unsigned mk, typecode code, unsigned begin, unsigned count);
+		void Reset();
 
-  bool GetPosDefined()const{ return(PosDefined); }
-  tdouble3 GetPosMin()const{ return(PosMin); }
-  tdouble3 GetPosMax()const{ return(PosMax); }
-  void SetPosMinMax(const tdouble3 &pmin,const tdouble3 &pmax){ PosDefined=true; PosMin=pmin; PosMax=pmax; }
+		bool GetPosDefined()const{ return(PosDefined); }
+		tdouble3 GetPosMin()const{ return(PosMin); }
+		tdouble3 GetPosMax()const{ return(PosMax); }
+		void SetPosMinMax(const tdouble3 &pmin, const tdouble3 &pmax){
+			PosDefined=true;
+			PosMin=pmin;
+			PosMax=pmax;
+		}
 };
 
 
@@ -75,73 +79,75 @@ public:
 
 class JSphMk : protected JObject
 {
-private:
-  word MkBoundFirst;     ///<First Mk for boundary blocks (Mk=MkBound+MkBoundFirst).
-  word MkFluidFirst;     ///<First Mk for fluid blocks (Mk=MkFluid+MkFluidFirst).
+	private:
+		word MkBoundFirst;     ///<First Mk for boundary blocks (Mk=MkBound+MkBoundFirst).
+		word MkFluidFirst;     ///<First Mk for fluid blocks (Mk=MkFluid+MkFluidFirst).
 
-  std::vector<JSphMkBlock*> MkList;
+		std::vector<JSphMkBlock*> MkList;
 
-  unsigned MkListSize;       ///<Total number of Mk blocks.
-  unsigned MkListFixed;      ///<Number of Mk blocks of fixed type.
-  unsigned MkListMoving;     ///<Number of Mk blocks of moving type.
-  unsigned MkListFloat;      ///<Number of Mk blocks of floating type.
-  unsigned MkListBound;      ///<Number of Mk blocks of boundary types. MkListBound=MkListFixed+MkListMoving+MkListFloat
-  unsigned MkListFluid;      ///<Number of Mk blocks of fluid type.
+		unsigned MkListSize;       ///<Total number of Mk blocks.
+		unsigned MkListFixed;      ///<Number of Mk blocks of fixed type.
+		unsigned MkListMoving;     ///<Number of Mk blocks of moving type.
+		unsigned MkListFloat;      ///<Number of Mk blocks of floating type.
+		unsigned MkListBound;      ///<Number of Mk blocks of boundary types. MkListBound=MkListFixed+MkListMoving+MkListFloat
+		unsigned MkListFluid;      ///<Number of Mk blocks of fluid type.
 
-  typecode CodeNewFluid;     ///<Code for new fluid particles created during the simulation.
+		typecode CodeNewFluid;     ///<Code for new fluid particles created during the simulation.
 
-public:
-  JSphMk();
-  ~JSphMk();
-  void Reset();
-  void Config(const JCaseParts *parts);
+	public:
+		JSphMk();
+		~JSphMk();
+		void Reset();
+		void Config(const JCaseParts *parts);
 
-  unsigned Size()const{ return(MkListSize); }
-  const JSphMkBlock* Mkblock(unsigned c)const{ return(MkList[c]); }
+		unsigned Size()const{ return(MkListSize); }
+		const JSphMkBlock* Mkblock(unsigned c)const{ return(MkList[c]); }
 
-  unsigned CountBlockType(TpParticles type)const;
-  unsigned GetFirstBlockType(TpParticles type)const;
+		unsigned CountBlockType(TpParticles type)const;
+		unsigned GetFirstBlockType(TpParticles type)const;
 
-  typecode GetCodeNewFluid()const{ return(CodeNewFluid); }
+		typecode GetCodeNewFluid()const{ return(CodeNewFluid); }
 
-  unsigned GetMkBlockById(unsigned id)const;
-  typecode GetCodeById(unsigned id)const;
+		unsigned GetMkBlockById(unsigned id)const;
+		typecode GetCodeById(unsigned id)const;
 
-  word GetMkBoundFirst()const{ return(MkBoundFirst); }
-  word GetMkFluidFirst()const{ return(MkFluidFirst); }
+		word GetMkBoundFirst()const{ return(MkBoundFirst); }
+		word GetMkFluidFirst()const{ return(MkFluidFirst); }
 
-  unsigned GetMkBlockByMk(word mk)const;
-  unsigned GetMkBlockByMkBound(word mkbound)const;
-  unsigned GetMkBlockByMkFluid(word mkfluid)const;
+		unsigned GetMkBlockByMk(word mk)const;
+		unsigned GetMkBlockByMkBound(word mkbound)const;
+		unsigned GetMkBlockByMkFluid(word mkfluid)const;
 
-  unsigned GetMkBlockByCode(typecode code)const;
+		unsigned GetMkBlockByCode(typecode code)const;
 
-  /// Returns Mk according to a given Idp (returns 0 when idp is invalid).
-  word GetMkById(unsigned idp)const{
-    const unsigned cb=GetMkBlockById(idp);
-    return(cb<Size()? MkList[cb]->Mk: 0);
-  }
-  /// Returns Mk values according to a given Idp values (returns 0 when idp is invalid).
-  void GetMkByIds(unsigned n,const unsigned *idp,word *mk)const{
-    for(unsigned p=0;p<n;p++)mk[p]=GetMkById(idp[p]);
-  }
+		/// Returns Mk according to a given Idp (returns 0 when idp is invalid).
+		word GetMkById(unsigned idp)const{
+			const unsigned cb=GetMkBlockById(idp);
+			return(cb<Size()? MkList[cb]->Mk: 0);
+		}
+		/// Returns Mk values according to a given Idp values (returns 0 when idp is invalid).
+		void GetMkByIds(unsigned n, const unsigned *idp, word *mk)const{
+			for(unsigned p=0;p<n;p++)
+				mk[p]=GetMkById(idp[p]);
+		}
 
-  /// Returns Mk according to a given Code (returns 0 when code is invalid).
-  word GetMkByCode(typecode code)const{
-    const unsigned cb=GetMkBlockByCode(code);
-    return(cb<Size()? MkList[cb]->Mk: 0);
-  }
-  /// Returns Mk values according to a given Code values (returns 0 when code is invalid).
-  void GetMkByCodes(unsigned n,const typecode *code,word *mk)const{
-    for(unsigned p=0;p<n;p++)mk[p]=GetMkByCode(code[p]);
-  }
+		/// Returns Mk according to a given Code (returns 0 when code is invalid).
+		word GetMkByCode(typecode code)const{
+			const unsigned cb=GetMkBlockByCode(code);
+			return(cb<Size()? MkList[cb]->Mk: 0);
+		}
+		/// Returns Mk values according to a given Code values (returns 0 when code is invalid).
+		void GetMkByCodes(unsigned n, const typecode *code, word *mk)const{
+			for(unsigned p=0;p<n;p++)
+				mk[p]=GetMkByCode(code[p]);
+		}
 
-  typecode CodeSetType(typecode code,TpParticles type,unsigned value)const;
+		typecode CodeSetType(typecode code, TpParticles type, unsigned value)const;
 
-  //void ComputeMkDomains(bool bound,const std::vector<unsigned> &mklist,unsigned np,const tdouble3 *pos,const typecode *code);
-  void ComputeMkDomains(unsigned np,const tdouble3 *pos,const typecode *code);
+		//void ComputeMkDomains(bool bound, const std::vector<unsigned> &mklist, unsigned np, const tdouble3 *pos, const typecode *code);
+		void ComputeMkDomains(unsigned np, const tdouble3 *pos, const typecode *code);
 
-  void ConfigPartDataHead(JPartDataHead *parthead)const;
+		void ConfigPartDataHead(JPartDataHead *parthead)const;
 };
 
 

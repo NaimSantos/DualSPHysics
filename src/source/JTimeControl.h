@@ -44,57 +44,60 @@
 
 class JTimeControl : protected JObject
 {
-protected:
-  bool Active;
+	protected:
+		bool Active;
 
-  JTimer Timer;
+		JTimer Timer;
 
-  double NextTime;
+		double NextTime;
 
-  bool Periodic;        ///<For periodic intervals of TimeOut. | Para intervalos periodicos de TimeOut.
-  double FirstTime;     ///<First time to evaluate (when it is less than timeout and not zero). | Primer instante a evaluar (cuando es menor que timeout y no es cero).
-  double TimeOut;       ///<Periodic interval duration (in seconds). | Duracion de intervalo periodico (en segundos).
+		bool Periodic;        ///<For periodic intervals of TimeOut. | Para intervalos periodicos de TimeOut.
+		double FirstTime;     ///<First time to evaluate (when it is less than timeout and not zero). | Primer instante a evaluar (cuando es menor que timeout y no es cero).
+		double TimeOut;       ///<Periodic interval duration (in seconds). | Duracion de intervalo periodico (en segundos).
 
-  unsigned TimeOutNum;  //<Number of intervals processed with Periodic or Times. | Numero de intervalos procesados con Periodic o Times.
+		unsigned TimeOutNum;  //<Number of intervals processed with Periodic or Times. | Numero de intervalos procesados con Periodic o Times.
 
-  unsigned TimesSize;        ///<Number of elements of Times. | Numero de elementos de Times. 
-  std::vector<double> Times; ///<List of times when it is not periodic. | Lista de tiempos cuando no es Periodic.
+		unsigned TimesSize;        ///<Number of elements of Times. | Numero de elementos de Times. 
+		std::vector<double> Times; ///<List of times when it is not periodic. | Lista de tiempos cuando no es Periodic.
 
-  double IteStart;  ///<Instant to start (IteNum is initialized). | Instante en que empieza (se inicializa IteNum).
-  unsigned IteNum;  ///<Number of iterations. | Numero de iteraciones.
-  unsigned NextIte; ///<Next iteration to check. | Siguiente iteracion a comprobar.
+		double IteStart;  ///<Instant to start (IteNum is initialized). | Instante en que empieza (se inicializa IteNum).
+		unsigned IteNum;  ///<Number of iterations. | Numero de iteraciones.
+		unsigned NextIte; ///<Next iteration to check. | Siguiente iteracion a comprobar.
 
-  double LastTime;
-
-
-  void ConfigPeriodic(double tfirst,double tout);
-  void ConfigTimes(unsigned ntimes,const double *vtimes);
-  void ConfigTimes(std::string times);
-  void PrepareTimes();
+		double LastTime;
 
 
-  double CalcNextTime();
-  bool CheckRealTime();
+		void ConfigPeriodic(double tfirst, double tout);
+		void ConfigTimes(unsigned ntimes, const double *vtimes);
+		void ConfigTimes(std::string times);
+		void PrepareTimes();
 
-public:
-  JTimeControl(double tout);
-  JTimeControl(double tfirst,double tout);
-  JTimeControl(unsigned ntimes,const double *vtimes);
-  JTimeControl(const std::string &times);
-  //~JTimeControl();
 
-  void Reset();
+		double CalcNextTime();
+		bool CheckRealTime();
 
-  bool CheckTime(){
-    if(Active){
-      IteNum++;
-      if(IteNum>=NextIte)return(CheckRealTime());
-    }
-    return(false);
-  }
+	public:
+		JTimeControl(double tout);
+		JTimeControl(double tfirst, double tout);
+		JTimeControl(unsigned ntimes, const double *vtimes);
+		JTimeControl(const std::string &times);
+		//~JTimeControl();
 
-  double GetLastTime()const{ return(LastTime); }
-  std::string GetInfoFinish(double done);
+		void Reset();
+
+		bool CheckTime(){
+			if(Active){
+					IteNum++;
+					if(IteNum>=NextIte)
+						return(CheckRealTime());
+			}
+			return(false);
+		}
+
+		double GetLastTime()const{
+			return(LastTime);
+		}
+		std::string GetInfoFinish(double done);
 };
 
 #endif

@@ -41,22 +41,28 @@
 
 class JDsphConfig : protected JObject
 {
-protected:
-  std::string FileCfg;
+	protected:
+		std::string FileCfg;
 
-  int CreateDirs;   ///<Creates full path for output files (-1=undefined, 0=no, 1=yes).
-  int CsvSeparator; ///<Separator character in CSV files (-1=undefined, 0=semicolon, 1=coma).
+		int CreateDirs;   ///<Creates full path for output files (-1=undefined, 0=no, 1=yes).
+		int CsvSeparator; ///<Separator character in CSV files (-1=undefined, 0=semicolon, 1=coma).
 
-public:
-  JDsphConfig();
-  ~JDsphConfig();
-  void Reset();
-  void Init(std::string path);
+	public:
+		JDsphConfig();
+		~JDsphConfig();
+		void Reset();
+		void Init(std::string path);
 
-  std::string GetFileCfg()const{ return(FileCfg); }
+		std::string GetFileCfg()const{
+			return(FileCfg);
+		}
 
-  int GetCreateDirs()const{ return(CreateDirs); }
-  int GetCsvSeparator()const{ return(CsvSeparator); }
+		int GetCreateDirs()const{
+			return(CreateDirs);
+		}
+		int GetCsvSeparator()const{
+			return(CsvSeparator);
+		}
 };
 
 #endif

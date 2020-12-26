@@ -42,47 +42,50 @@
 //==============================================================================
 class JCfgRunBase : protected JObject
 {
-protected:
-  int ParmDef;
-  void LoadDsphConfig(std::string path);
+	protected:
+		int ParmDef;
+		void LoadDsphConfig(std::string path);
 
-  static unsigned LoadFloat3 (std::string txopt,float def,unsigned nv,tfloat3 *v);
-  static unsigned LoadDouble3(std::string txopt,double def,unsigned nv,tdouble3 *v);
-  static void LoadFloat3(std::string txopt,float def,tfloat3 &v1);
-  static void LoadFloat6(std::string txopt,float def,tfloat3 &v1,tfloat3 &v2);
-  static void LoadDouble3(std::string txopt,double def,tdouble3 &v1);
-  static void LoadDouble6(std::string txopt,double def,tdouble3 &v1,tdouble3 &v2);
+		static unsigned LoadFloat3 (std::string txopt, float def, unsigned nv, tfloat3 *v);
+		static unsigned LoadDouble3(std::string txopt, double def, unsigned nv, tdouble3 *v);
+		static void LoadFloat3(std::string txopt, float def, tfloat3 &v1);
+		static void LoadFloat6(std::string txopt, float def, tfloat3 &v1, tfloat3 &v2);
+		static void LoadDouble3(std::string txopt, double def, tdouble3 &v1);
+		static void LoadDouble6(std::string txopt, double def, tdouble3 &v1, tdouble3 &v2);
 
-  void SplitsOpts(const std::string &opt,std::string &txword,std::string &txoptfull,std::string &txopt1,std::string &txopt2,std::string &txopt3,std::string &txopt4)const;
-  void SplitsOpts(const std::string &opt,std::string &txword,std::string &txoptfull,std::string &txopt1,std::string &txopt2,std::string &txopt3)const{
-    std::string tx4; SplitsOpts(opt,txword,txoptfull,txopt1,txopt2,txopt3,tx4);
-  }
-  void SplitsOpts(const std::string &opt,std::string &txword,std::string &txoptfull,std::string &txopt1,std::string &txopt2)const{
-    std::string tx3,tx4; SplitsOpts(opt,txword,txoptfull,txopt1,txopt2,tx3,tx4);
-  }
-  void SplitsOpts(const std::string &opt,std::string &txword,std::string &txoptfull)const{
-    std::string tx1,tx2,tx3,tx4; SplitsOpts(opt,txword,txoptfull,tx1,tx2,tx3,tx4);
-  }
+		void SplitsOpts(const std::string &opt, std::string &txword, std::string &txoptfull, std::string &txopt1, std::string &txopt2, std::string &txopt3, std::string &txopt4)const;
+		void SplitsOpts(const std::string &opt, std::string &txword, std::string &txoptfull, std::string &txopt1, std::string &txopt2, std::string &txopt3)const{
+			std::string tx4;
+			SplitsOpts(opt, txword, txoptfull, txopt1, txopt2, txopt3, tx4);
+		}
+		void SplitsOpts(const std::string &opt, std::string &txword, std::string &txoptfull, std::string &txopt1, std::string &txopt2)const{
+			std::string tx3, tx4;
+			SplitsOpts(opt, txword, txoptfull, txopt1, txopt2, tx3, tx4);
+		}
+		void SplitsOpts(const std::string &opt, std::string &txword, std::string &txoptfull)const{
+			std::string tx1, tx2, tx3, tx4;
+			SplitsOpts(opt, txword, txoptfull, tx1, tx2, tx3, tx4);
+		}
 
-public:
-  bool PrintInfo;
+	public:
+		bool PrintInfo;
 
-  //-General configuration from DsphConfig.xml
-  bool CreateDirs;   ///<Creates full path for output files (true by default).
-  bool CsvSepComa;   ///<Separator character in CSV files (false=semicolon, true=coma).
+		//-General configuration from DsphConfig.xml
+		bool CreateDirs;   ///<Creates full path for output files (true by default).
+		bool CsvSepComa;   ///<Separator character in CSV files (false=semicolon,  true=coma).
 
-public:
-  JCfgRunBase();
-  void Reset();
+	public:
+		JCfgRunBase();
+		void Reset();
 
-  void LoadArgv(int argc,char** argv);
-  void LoadFile(std::string fname,int lv);
-  void ErrorParm(const std::string &opt,int optc,int lv,const std::string &file)const;
+		void LoadArgv(int argc, char** argv);
+		void LoadFile(std::string fname, int lv);
+		void ErrorParm(const std::string &opt, int optc, int lv, const std::string &file)const;
 
-  virtual void VisuInfo()const=0;
-  virtual void VisuConfig()const=0;
-  virtual void LoadOpts(std::string *optlis,int optn,int lv,const std::string &file)=0;
-  virtual void ValidaCfg()=0;
+		virtual void VisuInfo()const=0;
+		virtual void VisuConfig()const=0;
+		virtual void LoadOpts(std::string *optlis, int optn, int lv, const std::string &file)=0;
+		virtual void ValidaCfg()=0;
 };
 
 #endif

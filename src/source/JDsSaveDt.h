@@ -56,65 +56,69 @@ class JLog2;
 
 class JDsSaveDt : protected JObject
 {
-public:
+	public:
 
-/// Structure with dt information.
-  typedef struct {
-    double tini;
-    unsigned num;
-    double vmean;
-    double vmin;
-    double vmax;
-  }StValue;
+		/// Structure with dt information.
+		typedef struct {
+			double tini;
+			unsigned num;
+			double vmean;
+			double vmin;
+			double vmax;
+		}StValue;
 
-private:
-  JLog2* Log;
-  std::string FileDtInfo;
-  std::string FileDtAllInfo;
-  double TimeStart;    ///<Time from which information about the DT begins to be collected. | Instante a partir del cual se empieza a recopilar informacion del dt.
-  double TimeFinish;   ///<Time from which dt information is not collected. | Instante a partir del cual se deja de recopilar informacion del dt.
-  double TimeInterval; ///<Time lapse every time dt information is saved. | Cada cuanto se guarda info del dt.
-  bool FullInfo;       ///<Saves AceMax, ViscDtMax and VelMax.
-  bool AllDt;
-  unsigned SizeValuesSave;
+	private:
+		JLog2* Log;
+		std::string FileDtInfo;
+		std::string FileDtAllInfo;
+		double TimeStart;    ///<Time from which information about the DT begins to be collected. | Instante a partir del cual se empieza a recopilar informacion del dt.
+		double TimeFinish;   ///<Time from which dt information is not collected. | Instante a partir del cual se deja de recopilar informacion del dt.
+		double TimeInterval; ///<Time lapse every time dt information is saved. | Cada cuanto se guarda info del dt.
+		bool FullInfo;       ///<Saves AceMax, ViscDtMax and VelMax.
+		bool AllDt;
+		unsigned SizeValuesSave;
 
-  StValue ValueNull;
+		StValue ValueNull;
 
-  unsigned Count;                       ///<Number of stored intervals. | Numero de intervalos almacenados.
-  static const unsigned SizeValues=100; ///<Maximum number of intervals to be buffered. | Numero maximo de intervalos a almacenar en buffer.
-  StValue DtFinal[SizeValues];          ///<Resultant minimum Dt [SizeValues]. | Dt minimo resultante [SizeValues].
-  StValue Dt1[SizeValues];              ///<Dt1 [SizeValues].
-  StValue Dt2[SizeValues];              ///<Dt2 [SizeValues].
-  StValue AceMax[SizeValues];           ///<AceMax [SizeValues].
-  StValue ViscDtMax[SizeValues];        ///<ViscDtMax [SizeValues].
-  StValue VelMax[SizeValues];           ///<VelMax [SizeValues].
+		unsigned Count;                       ///<Number of stored intervals. | Numero de intervalos almacenados.
+		static const unsigned SizeValues=100; ///<Maximum number of intervals to be buffered. | Numero maximo de intervalos a almacenar en buffer.
+		StValue DtFinal[SizeValues];          ///<Resultant minimum Dt [SizeValues]. | Dt minimo resultante [SizeValues].
+		StValue Dt1[SizeValues];              ///<Dt1 [SizeValues].
+		StValue Dt2[SizeValues];              ///<Dt2 [SizeValues].
+		StValue AceMax[SizeValues];           ///<AceMax [SizeValues].
+		StValue ViscDtMax[SizeValues];        ///<ViscDtMax [SizeValues].
+		StValue VelMax[SizeValues];           ///<VelMax [SizeValues].
 
-  unsigned GetSizeValues()const{ return(SizeValues); }
+		unsigned GetSizeValues()const{
+			return(SizeValues);
+		}
 
-  static const unsigned SizeAllDts=1000;
-  tdouble2 AllDts[SizeAllDts];           
-  unsigned CountAllDts;
+		static const unsigned SizeAllDts=1000;
+		tdouble2 AllDts[SizeAllDts];
+		unsigned CountAllDts;
 
-  unsigned LastInterval;
-  StValue LastDtf,LastDt1,LastDt2;
-  StValue LastAceMax,LastViscDtMax,LastVelMax;
+		unsigned LastInterval;
+		StValue LastDtf, LastDt1, LastDt2;
+		StValue LastAceMax, LastViscDtMax, LastVelMax;
 
-  void ReadXml(const JXml *sxml,TiXmlElement* ele);
-  void LoadXml(const JXml *sxml,const std::string &place);
-  void SaveFileValues();
-  void SaveFileValuesEnd();
-  void SaveFileAllDts();
-  void AddValueData(double timestep,double dt,StValue &value);
-  void AddLastValues();
-public:
-  JDsSaveDt(JLog2* log);
-  ~JDsSaveDt();
-  void Reset();
-  void Config(const JXml *sxml,const std::string &place,double timemax,double timeout);
-  void VisuConfig(std::string txhead,std::string txfoot);
-  void AddValues(double timestep,double dtfinal,double dt1,double dt2,double acemax,double viscdtmax,double velmax);
-  bool GetFullInfo()const{ return(FullInfo); }
-  void SaveData();
+		void ReadXml(const JXml *sxml, TiXmlElement* ele);
+		void LoadXml(const JXml *sxml, const std::string &place);
+		void SaveFileValues();
+		void SaveFileValuesEnd();
+		void SaveFileAllDts();
+		void AddValueData(double timestep, double dt, StValue &value);
+		void AddLastValues();
+		public:
+		JDsSaveDt(JLog2* log);
+		~JDsSaveDt();
+		void Reset();
+		void Config(const JXml *sxml, const std::string &place, double timemax, double timeout);
+		void VisuConfig(std::string txhead, std::string txfoot);
+		void AddValues(double timestep, double dtfinal, double dt1, double dt2, double acemax, double viscdtmax, double velmax);
+		bool GetFullInfo()const{
+			return(FullInfo);
+		}
+		void SaveData();
 };
 
 

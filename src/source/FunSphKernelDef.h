@@ -35,8 +35,8 @@ namespace fsph{
 //##############################################################################
 ///Structure with constants for the Cubic Spline kernel.
 typedef struct {
-  float a1,a2,aa,a24,c1,d1,c2;
-  float od_wdeltap;        ///<Parameter for tensile instability correction.  
+	float a1, a2, aa, a24, c1, d1, c2;
+	float od_wdeltap;        ///<Parameter for tensile instability correction.
 }StKCubicCte;
 
 //##############################################################################
@@ -44,8 +44,8 @@ typedef struct {
 //##############################################################################
 ///Structure with constants for the Wendland kernel.
 typedef struct {
-  float awen;  ///<Constant to compute wab.
-  float bwen;  ///<Constant to compute fac (kernel derivative).
+	float awen;  ///<Constant to compute wab.
+	float bwen;  ///<Constant to compute fac (kernel derivative).
 }StKWendlandCte;
 
 }

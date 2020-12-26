@@ -29,7 +29,7 @@
 #define _DSphMoorDyn_
 
 #ifndef DISABLE_DSPH
-#include "DualSphDef.h"
+	#include "DualSphDef.h"
 #endif // !DISABLE_DSPH
 
 #include "TypesDef.h"
@@ -39,14 +39,13 @@
 //#define DISABLE_MOORDYN     ///<It allows compile without DSphMoorDyn library.
 
 #ifdef DISABLE_MOORDYN
-#include "DSphMoorDynUndef.h"
+	#include "DSphMoorDynUndef.h"
 #else
 //==============================================================================
 /// Initializes MoorDyn and returns true in case of error.
 //==============================================================================
-bool MoorDyn_LinesInit(const std::string filexml,const std::string nodexml
-  ,const std::string dirout,const unsigned numFts,const unsigned ftmkbound[]
-  ,const tdouble3 vellin[],const tdouble3 velang[],const tfloat3 gravity);
+bool MoorDyn_LinesInit(const std::string filexml, const std::string nodexml, const std::string dirout, const unsigned numFts,
+	const unsigned ftmkbound[], const tdouble3 vellin[], const tdouble3 velang[], const tfloat3 gravity);
 
 //==============================================================================
 /// Deallocates the variables used by MoorDyn (returns true in case of error).
@@ -56,7 +55,7 @@ bool MoorDyn_LinesClose();
 //==============================================================================
 /// Force calculation of moorings by MoorDyn (returns true in case of error).
 //==============================================================================
-bool MoorDyn_FairleadsCalc(const unsigned numFts, double*** fairpos, double*** fairvel, double*** fairforce, double t, double dt);
+bool MoorDyn_FairleadsCalc(const unsigned numFts,  double*** fairpos, double*** fairvel, double*** fairforce, double t, double dt);
 
 //==============================================================================
 /// Returns the tension at the fairlead of a given line. (line=0...)

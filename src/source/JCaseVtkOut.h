@@ -45,17 +45,19 @@ class TiXmlElement;
 
 class JCaseVtkOutFile
 {
-protected:
-  std::string ListMk;
-public:
-  const std::string File;
+	protected:
+		std::string ListMk;
+	public:
+		const std::string File;
 
-  JCaseVtkOutFile(const std::string &file,const std::string &mks);
-  ~JCaseVtkOutFile();
-  void Reset();
+		JCaseVtkOutFile(const std::string &file, const std::string &mks);
+		~JCaseVtkOutFile();
+		void Reset();
 
-  void SetMks(const std::string &mks);
-  std::string GetMks()const{ return(ListMk); }
+		void SetMks(const std::string &mks);
+		std::string GetMks()const{
+			return(ListMk);
+		}
 };
 
 
@@ -66,38 +68,40 @@ public:
 
 class JCaseVtkOut : protected JObject
 {
-private:
-  word MkBoundFirst;
-  word MkFluidFirst;
+	private:
+		word MkBoundFirst;
+		word MkFluidFirst;
 
-  std::vector<JCaseVtkOutFile*> Files;
+		std::vector<JCaseVtkOutFile*> Files;
 
-  void ReadXml(const JXml *sxml,TiXmlElement* lis);
-  void WriteXml(JXml *sxml,TiXmlElement* lis)const;
+		void ReadXml(const JXml *sxml, TiXmlElement* lis);
+		void WriteXml(JXml *sxml, TiXmlElement* lis)const;
 
-public:
-  JCaseVtkOut();
-  ~JCaseVtkOut();
-  void Reset();
+	public:
+		JCaseVtkOut();
+		~JCaseVtkOut();
+		void Reset();
 
-  void ConfigMkFirst(word mkboundfirst,word mkfluidfirst);
-  void AddFile(const std::string &fname,const std::string &mks);
+		void ConfigMkFirst(word mkboundfirst, word mkfluidfirst);
+		void AddFile(const std::string &fname, const std::string &mks);
 
-  unsigned Count()const{ return(unsigned(Files.size())); }
-  unsigned GetByFileName(std::string fname)const;
+		unsigned Count()const{
+			return(unsigned(Files.size()));
+		}
+		unsigned GetByFileName(std::string fname)const;
 
-  std::string GetFile(unsigned idx)const;
-  std::string GetFileListMk(unsigned idx)const;
+		std::string GetFile(unsigned idx)const;
+		std::string GetFileListMk(unsigned idx)const;
 
-  unsigned GetFiles(std::string key,std::vector<std::string> &list)const;
-  unsigned GetFilesByMk(bool bound,word mk,std::vector<std::string> &list)const;
+		unsigned GetFiles(std::string key, std::vector<std::string> &list)const;
+		unsigned GetFilesByMk(bool bound, word mk, std::vector<std::string> &list)const;
 
-  std::string GetListMkType(bool bound,const std::string &mks)const;
+		std::string GetListMkType(bool bound, const std::string &mks)const;
 
-  void LoadFileXml(const std::string &file,const std::string &path);
+		void LoadFileXml(const std::string &file, const std::string &path);
 
-  void LoadXml(const JXml *sxml,const std::string &place,bool optional);
-  void SaveXml(JXml *sxml,const std::string &place)const;
+		void LoadXml(const JXml *sxml, const std::string &place, bool optional);
+		void SaveXml(JXml *sxml, const std::string &place)const;
 };
 
 #endif

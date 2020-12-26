@@ -57,92 +57,93 @@ class DSPHChronoLib;
 /// \brief Manages Chrono objects.
 
 #ifdef DISABLE_CHRONO
-#include "JChronoObjectsUndef.h"
+	#include "JChronoObjectsUndef.h"
 #else
 class JChronoObjects : protected JObject
 {
-protected:
-  JLog2 *Log;
-  std::string DirData;
-  std::string CaseName;
-  const double Dp;
-  const word MkBoundFirst;
+	protected:
+		JLog2 *Log;
+		std::string DirData;
+		std::string CaseName;
+		const double Dp;
+		const word MkBoundFirst;
 
-  unsigned Solver; 
-  int OmpThreads;     ///<Max number of OpenMP threads in execution on CPU host (minimum 1).
-  const bool UseDVI;  ///<Uses Differential Variational Inequality (DVI) method.
-  bool UseChronoSMC;  ///<Uses Smooth Contacts for collisions.
-  bool UseCollision;  ///<Activates collisions between chrono objects.
-  
-  bool WithMotion;   ///<Some Chrono object with geometry is a moving object.
-  
-  void* Ptr_VtkSimple_AutoActual;
-  void* Ptr_VtkSimple_AutoDp;
+		unsigned Solver; 
+		int OmpThreads;     ///<Max number of OpenMP threads in execution on CPU host (minimum 1).
+		const bool UseDVI;  ///<Uses Differential Variational Inequality (DVI) method.
+		bool UseChronoSMC;  ///<Uses Smooth Contacts for collisions.
+		bool UseCollision;  ///<Activates collisions between chrono objects.
 
-  JChronoData *ChronoDataXml; ///<Datos de Chrono cargados del XML.
-  
-  DSPHChronoLib *ChronoLib;   ///<Objeto para integracion con libreria de Chrono Engine.
+		bool WithMotion;   ///<Some Chrono object with geometry is a moving object.
 
-  float CollisionDp;   ///<Allowed collision overlap according Dp (default=0.5).
-  double SchemeScale;  ///<Scale value to create initial scheme of configuration.
+		void* Ptr_VtkSimple_AutoActual;
+		void* Ptr_VtkSimple_AutoDp;
 
-  double SaveDataTime;  ///<Saves CSV with data exchange (0=all steps, <0:none).
-  double NextTime;
-  double LastTimeOk;
+		JChronoData *ChronoDataXml; ///<Datos de Chrono cargados del XML.
 
-  void LoadPtrAutoActual(const JXml *sxml,std::string xmlrow);
-  void LoadPtrAutoDp(const JXml *sxml,std::string xmlrow);
-  
-  void CreateObjFiles(std::string idname,const std::vector<unsigned> &mkbounds
-    ,std::string datadir,std::string mfile,byte normalmode,std::string diroutobj,std::string xmlrow);
+		DSPHChronoLib *ChronoLib;   ///<Objeto para integracion con libreria de Chrono Engine.
 
-  void LoadXml(const JXml *sxml, const std::string &place);
-  void ReadXml(const JXml *sxml, TiXmlElement* lis);
-  void ReadXmlValues(const JXml *sxml,TiXmlElement* lis,JChValues* values);
-  std::string ReadXmlModelFile(const JXml *sxml,TiXmlElement* ele)const;
-  void ConfigMovingBodies(const JSphMk* mkinfo);
-  void ConfigOmp();
+		float CollisionDp;   ///<Allowed collision overlap according Dp (default=0.5).
+		double SchemeScale;  ///<Scale value to create initial scheme of configuration.
 
-  void CheckParams(const JChBody *body)const;
-  void VisuValues(const JChValues *values)const;
-  void VisuBody(const JChBody *body)const;
-  void VisuLink(const JChLink *link)const;
-  void SaveVtkScheme_Spring(JVtkLib *sh,word mk,word mk1,tdouble3 pt0,tdouble3 pt1
-    ,double restlength,double radius,double revlength,int nside)const;
-  void SaveVtkScheme()const;
+		double SaveDataTime;  ///<Saves CSV with data exchange (0=all steps, <0:none).
+		double NextTime;
+		double LastTimeOk;
 
-public:
-  JChronoObjects(JLog2* log,const std::string &dirdata,const std::string &casename
-    ,const JXml *sxml,const std::string &place,double dp,word mkboundfirst);
-  ~JChronoObjects();
-  void Reset();
-  static bool Available(){ return(true); }
+		void LoadPtrAutoActual(const JXml *sxml, std::string xmlrow);
+		void LoadPtrAutoDp(const JXml *sxml, std::string xmlrow);
 
-  bool UseDataDVI(word mkbound)const;
-  bool GetUseCollision()const{ return(UseCollision); }
+		void CreateObjFiles(std::string idname, const std::vector<unsigned> &mkbounds, std::string datadir, std::string mfile, byte normalmode, std::string diroutobj, std::string xmlrow);
 
-  bool ConfigBodyFloating(word mkbound,double mass,const tdouble3 &center
-    ,const tmatrix3d &inertia,const tint3 &translationfree,const tint3 &rotationfree
-    ,const tfloat3 &linvelini,const tfloat3 &angvelini);
+		void LoadXml(const JXml *sxml,  const std::string &place);
+		void ReadXml(const JXml *sxml,  TiXmlElement* lis);
+		void ReadXmlValues(const JXml *sxml, TiXmlElement* lis, JChValues* values);
+		std::string ReadXmlModelFile(const JXml *sxml, TiXmlElement* ele)const;
+		void ConfigMovingBodies(const JSphMk* mkinfo);
+		void ConfigOmp();
 
-  void ConfigDataBodyFloating(word mkbound,float kfric,float restitu,float young,float poisson);
-  void ConfigDataBodyMoving  (word mkbound,float kfric,float restitu,float young,float poisson);
-  void ConfigDataBodyFixed   (word mkbound,float kfric,float restitu,float young,float poisson);
+		void CheckParams(const JChBody *body)const;
+		void VisuValues(const JChValues *values)const;
+		void VisuBody(const JChBody *body)const;
+		void VisuLink(const JChLink *link)const;
+		void SaveVtkScheme_Spring(JVtkLib *sh, word mk, word mk1, tdouble3 pt0, tdouble3 pt1, double restlength, double radius, double revlength, int nside)const;
+		void SaveVtkScheme()const;
 
-  void Init(bool simulate2d,const JSphMk* mkinfo);
-  void VisuConfig(std::string txhead, std::string txfoot)const;
+	public:
+		JChronoObjects(JLog2* log, const std::string &dirdata, const std::string &casename, const JXml *sxml, const std::string &place, double dp, word mkboundfirst);
+		~JChronoObjects();
+		void Reset();
+		static bool Available(){
+			return(true);
+		}
 
-  bool GetWithMotion()const{ return(WithMotion); }
+		bool UseDataDVI(word mkbound)const;
+		bool GetUseCollision()const{
+			return(UseCollision);
+		}
 
-  void SetFtData(word mkbound,const tfloat3 &face,const tfloat3 &fomegaace);
-  void SetFtDataVel(word mkbound,const tfloat3 &vlin,const tfloat3 &vang);  //<vs_fttvel>
-  void GetFtData(word mkbound,tdouble3 &fcenter,tfloat3 &fvel,tfloat3 &fomega)const;
+		bool ConfigBodyFloating(word mkbound, double mass, const tdouble3 &center, const tmatrix3d &inertia, const tint3 &translationfree, const tint3 &rotationfree, const tfloat3 &linvelini, const tfloat3 &angvelini);
 
-  void SetMovingData(word mkbound,bool simple,const tdouble3 &msimple,const tmatrix4d &mmatrix,double stepdt);
+		void ConfigDataBodyFloating(word mkbound, float kfric, float restitu, float young, float poisson);
+		void ConfigDataBodyMoving(word mkbound, float kfric, float restitu, float young, float poisson);
+		void ConfigDataBodyFixed(word mkbound, float kfric, float restitu, float young, float poisson);
 
-  void RunChrono(unsigned nstep,double timestep,double dt,bool predictor);
+		void Init(bool simulate2d, const JSphMk* mkinfo);
+		void VisuConfig(std::string txhead,  std::string txfoot)const;
 
-  void SavePart(int part);
+		bool GetWithMotion()const{
+			return(WithMotion);
+		}
+
+		void SetFtData(word mkbound, const tfloat3 &face, const tfloat3 &fomegaace);
+		void SetFtDataVel(word mkbound, const tfloat3 &vlin, const tfloat3 &vang);  //<vs_fttvel>
+		void GetFtData(word mkbound, tdouble3 &fcenter, tfloat3 &fvel, tfloat3 &fomega)const;
+
+		void SetMovingData(word mkbound, bool simple, const tdouble3 &msimple, const tmatrix4d &mmatrix, double stepdt);
+
+		void RunChrono(unsigned nstep, double timestep, double dt, bool predictor);
+
+		void SavePart(int part);
 };
 #endif
 

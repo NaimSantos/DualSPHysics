@@ -55,10 +55,10 @@
 #include <cstdlib>
 #include <string>
 
-class JReadDatafile;
+	class JReadDatafile;
 #ifdef JLinearValue_UseJXml
-class JXml;
-class TiXmlElement;
+	class JXml;
+	class TiXmlElement;
 #endif
 
 //##############################################################################
@@ -68,88 +68,86 @@ class TiXmlElement;
 
 class JLinearValue : protected JObject
 {
-protected:
-  static const unsigned SIZEMAX=20000000;
-  static const unsigned SIZEINITIAL=500;
+	protected:
+		static const unsigned SIZEMAX=20000000;
+		static const unsigned SIZEINITIAL=500;
 
-  std::string File;
-  unsigned Size;
-  unsigned Count;
-  double *Times;
-  double *Values;
+		std::string File;
+		unsigned Size;
+		unsigned Count;
+		double *Times;
+		double *Values;
 
-  bool NewInterval;
+		bool NewInterval;
 
-  //-Variables with last search.
-  double TimeStep;
-  unsigned Position;
-  unsigned PositionNext;
-  double TimePre;
-  double TimeNext;
-  double TimeFactor;
+		//-Variables with last search.
+		double TimeStep;
+		unsigned Position;
+		unsigned PositionNext;
+		double TimePre;
+		double TimeNext;
+		double TimeFactor;
 
-public:
-  const unsigned Nvalues;
-  const bool SpecialValues;  //<Uses the special value DBL_MAX. Missing values in XML configuration are considered as DBL_MAX.
-  const bool OptionalValues; //<Only in ReadXmlValues() when SpecialValues=false, missing values are considered as zero. 
+	public:
+		const unsigned Nvalues;
+		const bool SpecialValues;  //<Uses the special value DBL_MAX. Missing values in XML configuration are considered as DBL_MAX.
+		const bool OptionalValues; //<Only in ReadXmlValues() when SpecialValues=false, missing values are considered as zero. 
 
-  JLinearValue(unsigned nvalues=1,bool specialvalues=false,bool optionalvalues=false);
-  JLinearValue(const std::string &inputfile,unsigned nvalues=1,bool specialvalues=false,bool optionalvalues=false);
-  JLinearValue(const JLinearValue &obj);
-  ~JLinearValue();
-  void Reset();
-  void CopyFrom(const JLinearValue &obj);
-  unsigned GetAllocMemory()const;
+		JLinearValue(unsigned nvalues=1,bool specialvalues=false,bool optionalvalues=false);
+		JLinearValue(const std::string &inputfile,unsigned nvalues=1,bool specialvalues=false,bool optionalvalues=false);
+		JLinearValue(const JLinearValue &obj);
+		~JLinearValue();
+		void Reset();
+		void CopyFrom(const JLinearValue &obj);
+		unsigned GetAllocMemory()const;
 
-  void SetSize(unsigned size);
-  unsigned GetSize()const{ return(Size); }
+		void SetSize(unsigned size);
+		unsigned GetSize()const{ return(Size); }
 
-  unsigned AddTimeValue(double time,double value);
-  unsigned AddTimeValue(double time,double value,double value2){ const unsigned idx=AddTimeValue(time,value); SetValue(idx,1,value2); return(idx); }
-  unsigned AddTimeValue(double time,double value,double value2,double value3){ const unsigned idx=AddTimeValue(time,value,value2); SetValue(idx,2,value3); return(idx); }
-  unsigned AddTimeValue(double time,double value,double value2,double value3,double value4){ const unsigned idx=AddTimeValue(time,value,value2,value3); SetValue(idx,3,value4); return(idx); }
-  unsigned AddTimeValue(double time,double value,double value2,double value3,double value4,double value5){ const unsigned idx=AddTimeValue(time,value,value2,value3,value4); SetValue(idx,4,value5); return(idx); }
-  unsigned AddTimeValue(double time,double value,double value2,double value3,double value4,double value5,double value6){ const unsigned idx=AddTimeValue(time,value,value2,value3,value4,value5); SetValue(idx,5,value6); return(idx); }
-  void SetValue(unsigned idx,unsigned cvalue,double value);
+		unsigned AddTimeValue(double time,double value);
+		unsigned AddTimeValue(double time,double value,double value2){ const unsigned idx=AddTimeValue(time,value); SetValue(idx,1,value2); return(idx); }
+		unsigned AddTimeValue(double time,double value,double value2,double value3){ const unsigned idx=AddTimeValue(time,value,value2); SetValue(idx,2,value3); return(idx); }
+		unsigned AddTimeValue(double time,double value,double value2,double value3,double value4){ const unsigned idx=AddTimeValue(time,value,value2,value3); SetValue(idx,3,value4); return(idx); }
+		unsigned AddTimeValue(double time,double value,double value2,double value3,double value4,double value5){ const unsigned idx=AddTimeValue(time,value,value2,value3,value4); SetValue(idx,4,value5); return(idx); }
+		unsigned AddTimeValue(double time,double value,double value2,double value3,double value4,double value5,double value6){ const unsigned idx=AddTimeValue(time,value,value2,value3,value4,value5); SetValue(idx,5,value6); return(idx); }
+		void SetValue(unsigned idx,unsigned cvalue,double value);
 
-  void SetTimeValue(unsigned idx,double time,double value);
-  void SetTimeValue(unsigned idx,double time,double value,double value2){  SetTimeValue(idx,time,value); SetValue(idx,1,value2);  }
-  void SetTimeValue(unsigned idx,double time,double value,double value2,double value3){  SetTimeValue(idx,time,value,value2); SetValue(idx,2,value3);  }
-  void SetTimeValue(unsigned idx,double time,double value,double value2,double value3,double value4){  SetTimeValue(idx,time,value,value2,value3); SetValue(idx,3,value4);  }
-  void SetTimeValue(unsigned idx,double time,double value,double value2,double value3,double value4,double value5){  SetTimeValue(idx,time,value,value2,value3,value4); SetValue(idx,4,value5);  }
-  void SetTimeValue(unsigned idx,double time,double value,double value2,double value3,double value4,double value5,double value6){  SetTimeValue(idx,time,value,value2,value3,value4,value5); SetValue(idx,5,value6);  }
+		void SetTimeValue(unsigned idx,double time,double value);
+		void SetTimeValue(unsigned idx,double time,double value,double value2){  SetTimeValue(idx,time,value); SetValue(idx,1,value2);  }
+		void SetTimeValue(unsigned idx,double time,double value,double value2,double value3){  SetTimeValue(idx,time,value,value2); SetValue(idx,2,value3);  }
+		void SetTimeValue(unsigned idx,double time,double value,double value2,double value3,double value4){  SetTimeValue(idx,time,value,value2,value3); SetValue(idx,3,value4);  }
+		void SetTimeValue(unsigned idx,double time,double value,double value2,double value3,double value4,double value5){  SetTimeValue(idx,time,value,value2,value3,value4); SetValue(idx,4,value5);  }
+		void SetTimeValue(unsigned idx,double time,double value,double value2,double value3,double value4,double value5,double value6){  SetTimeValue(idx,time,value,value2,value3,value4,value5); SetValue(idx,5,value6);  }
 
-  double ReadNextDouble(JReadDatafile &rdat,bool in_line=false);
-  void LoadFile(std::string file);
-  std::string GetFile()const{ return(File); };
+		double ReadNextDouble(JReadDatafile &rdat,bool in_line=false);
+		void LoadFile(std::string file);
+		std::string GetFile()const{ return(File); };
 
-  unsigned GetCount()const{ return(Count); }
-  void VisuData();
+		unsigned GetCount()const{ return(Count); }
+		void VisuData();
 
-  //-For simple use.
-  double GetValue(double timestep,unsigned cvalue=0);
-  float GetValuef(double timestep,unsigned cvalue=0);
-  tdouble3 GetValue3d(double timestep);
-  tfloat3  GetValue3f(double timestep);
-  void     GetValue3d3d(double timestep,tdouble3 &v1,tdouble3 &v2);
+		//-For simple use.
+		double GetValue(double timestep,unsigned cvalue=0);
+		float GetValuef(double timestep,unsigned cvalue=0);
+		tdouble3 GetValue3d(double timestep);
+		tfloat3  GetValue3f(double timestep);
+		void     GetValue3d3d(double timestep,tdouble3 &v1,tdouble3 &v2);
 
-  bool GetNewInterval()const{ return(NewInterval); }
+		bool GetNewInterval()const{ return(NewInterval); }
 
-  //-For external use.
-  void FindTime(double timestep);
-  unsigned GetPos()const{ return(Position); };
-  unsigned GetPosNext()const{ return(PositionNext); };
-  double GetTimeByIdx(unsigned idx)const;
-  double GetValueByIdx(unsigned idx,unsigned cvalue=0)const;
-  tdouble3 GetValue3ByIdx(unsigned idx,unsigned cvalue=0)const;
+		//-For external use.
+		void FindTime(double timestep);
+		unsigned GetPos()const{ return(Position); };
+		unsigned GetPosNext()const{ return(PositionNext); };
+		double GetTimeByIdx(unsigned idx)const;
+		double GetValueByIdx(unsigned idx,unsigned cvalue=0)const;
+		tdouble3 GetValue3ByIdx(unsigned idx,unsigned cvalue=0)const;
 
-  //-Loads or saves on XML file.
-#ifdef JLinearValue_UseJXml
-  void ReadXmlValues(const JXml *sxml,TiXmlElement* ele,std::string name
-    ,std::string subname,std::string attributes);
-  TiXmlElement* WriteXmlValues(JXml *sxml,TiXmlElement* ele,std::string name
-    ,std::string subname,std::string attributes)const;
-#endif
+		//-Loads or saves on XML file.
+		#ifdef JLinearValue_UseJXml
+			void ReadXmlValues(const JXml *sxml,TiXmlElement* ele,std::string name,std::string subname,std::string attributes);
+			TiXmlElement* WriteXmlValues(JXml *sxml,TiXmlElement* ele,std::string name,std::string subname,std::string attributes)const;
+		#endif
 };
 
 #endif

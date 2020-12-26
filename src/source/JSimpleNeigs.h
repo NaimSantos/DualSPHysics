@@ -40,40 +40,48 @@
 
 class JSimpleNeigs : protected JObject
 {
-protected:
-  const unsigned Np;
-  const tdouble3 *Pos;
-  const double Scell;
+	protected:
+		const unsigned Np;
+		const tdouble3 *Pos;
+		const double Scell;
 
-  tdouble3 PosMin;
-  tdouble3 PosMax;
-  int Ncx,Ncy,Ncz,Nsheet,Nct;
+		tdouble3 PosMin;
+		tdouble3 PosMax;
+		int Ncx, Ncy, Ncz, Nsheet, Nct;
 
-  unsigned *PosInCell; //-Positions in cells [Np].
-  unsigned *BeginCell; //-First positions in each cell [Nct+1].
+		unsigned *PosInCell; //-Positions in cells [Np].
+		unsigned *BeginCell; //-First positions in each cell [Nct+1].
 
-  unsigned CountSelect;
-  unsigned SizeSelect;
-  unsigned *SelectPos; //-Selected positions [SizeSelect].
+		unsigned CountSelect;
+		unsigned SizeSelect;
+		unsigned *SelectPos; //-Selected positions [SizeSelect].
 
-  void DefineMapCells();
-  void CreateMapCells();
+		void DefineMapCells();
+		void CreateMapCells();
 
-  tint3 GetCell3(const tdouble3 &ps)const{ return(TInt3(int((ps.x-PosMin.x)/Scell),int((ps.y-PosMin.y)/Scell),int((ps.z-PosMin.z)/Scell))); }
-  unsigned GetCell(const tint3 &cel)const{ return(cel.x<0 || cel.y<0 || cel.z<0 || cel.x>=Ncx || cel.y>=Ncy || cel.z>=Ncz? UINT_MAX: unsigned(cel.x+cel.y*Ncx+cel.z*Nsheet)); }
-  void GetNearbyCells(const tdouble3 &ps,double dist,tint3 &celmin,tint3 &celmax)const;
-  void SelectAdd(unsigned p);
+		tint3 GetCell3(const tdouble3 &ps)const{
+			return(TInt3(int((ps.x-PosMin.x)/Scell), int((ps.y-PosMin.y)/Scell), int((ps.z-PosMin.z)/Scell)));
+		}
+		unsigned GetCell(const tint3 &cel)const{
+			return(cel.x<0 || cel.y<0 || cel.z<0 || cel.x>=Ncx || cel.y>=Ncy || cel.z>=Ncz? UINT_MAX: unsigned(cel.x+cel.y*Ncx+cel.z*Nsheet));
+		}
+		void GetNearbyCells(const tdouble3 &ps, double dist, tint3 &celmin, tint3 &celmax)const;
+		void SelectAdd(unsigned p);
 
-public:
-  JSimpleNeigs(unsigned np,const tdouble3* pos,double scell);
-  ~JSimpleNeigs();
-  void Reset();
-  unsigned GetAllocMemory()const;
+	public:
+		JSimpleNeigs(unsigned np, const tdouble3* pos, double scell);
+		~JSimpleNeigs();
+		void Reset();
+		unsigned GetAllocMemory()const;
 
-  unsigned NearbyPositions(const tdouble3 &ps,unsigned pignore,double dist);
+		unsigned NearbyPositions(const tdouble3 &ps, unsigned pignore, double dist);
 
-  unsigned GetCountSelect()const{ return(CountSelect); }
-  const unsigned* GetSelectPos()const{ return(SelectPos); }
+		unsigned GetCountSelect()const{
+			return(CountSelect);
+		}
+		const unsigned* GetSelectPos()const{
+			return(SelectPos);
+		}
 
 };
 

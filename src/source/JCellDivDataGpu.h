@@ -26,56 +26,55 @@
 
 ///Structure with data of cell division for neighborhood search on GPU.
 typedef struct{
-  TpMgDivMode axis;
-  tuint3 ncells;
-  int scelldiv;         ///<Value to divide KernelSize (1 or 2).
-  int4 nc;
-  unsigned cellfluid;
-  int3 cellzero;
-  const int2* beginendcell; //- int2*
-  float scell;
-  unsigned domcellcode;
-  double3 domposmin;
-  float kernelsize2;   ///<Maximum interaction distance squared (KernelSize^2).
-  float poscellsize;   ///<Size of cells used for coding PosCell (it is usually KernelSize).
+	TpMgDivMode axis;
+	tuint3 ncells;
+	int scelldiv;         ///<Value to divide KernelSize (1 or 2).
+	int4 nc;
+	unsigned cellfluid;
+	int3 cellzero;
+	const int2* beginendcell; //- int2*
+	float scell;
+	unsigned domcellcode;
+	double3 domposmin;
+	float kernelsize2;   ///<Maximum interaction distance squared (KernelSize^2).
+	float poscellsize;   ///<Size of cells used for coding PosCell (it is usually KernelSize).
 }StDivDataGpu;
 
 //==============================================================================
 ///Returns empty StDivDataGpu structure.
 //==============================================================================
 inline StDivDataGpu DivDataGpuNull(){
-  StDivDataGpu c={MGDIV_None,TUint3(0),0,{0,0,0,0},0,{0,0,0},NULL,0,0,{0,0,0},0,0};
-  return(c);
+	StDivDataGpu c={MGDIV_None,TUint3(0),0,{0,0,0,0},0,{0,0,0},NULL,0,0,{0,0,0},0,0};
+	return(c);
 }
 
 //==============================================================================
 /// Returns structure with data for neighborhood search on Single-GPU.
 //==============================================================================
-inline StDivDataGpu MakeDivDataGpu(int scelldiv,const tuint3 &ncells
-  ,const tuint3 &cellmin,const int2* beginendcell,float scell,unsigned domcellcode
-  ,const tdouble3 &domposmin,float kernelsize2,float poscellsize)
+inline StDivDataGpu MakeDivDataGpu(int scelldiv, const tuint3 &ncells, const tuint3 &cellmin, const int2* beginendcell, float scell,
+	unsigned domcellcode, const tdouble3 &domposmin, float kernelsize2, float poscellsize)
 {
-  StDivDataGpu ret;
-  ret.axis=MGDIV_Z;
-  ret.scelldiv=scelldiv;
-  ret.ncells=ncells;
-  ret.nc.x=int(ncells.x);
-  ret.nc.y=int(ncells.y);
-  ret.nc.z=int(ncells.z);
-  ret.nc.w=int(ncells.x*ncells.y);//-For Single-GPU.
-  ret.cellfluid=ret.nc.w*ret.nc.z+1;
-  ret.cellzero.x=int(cellmin.x);
-  ret.cellzero.y=int(cellmin.y);
-  ret.cellzero.z=int(cellmin.z);
-  ret.beginendcell=beginendcell;
-  ret.scell=scell;
-  ret.domcellcode=domcellcode;
-  ret.domposmin.x=domposmin.x;
-  ret.domposmin.y=domposmin.y;
-  ret.domposmin.z=domposmin.z;
-  ret.kernelsize2=kernelsize2;
-  ret.poscellsize=poscellsize;
-  return(ret);
+	StDivDataGpu ret;
+	ret.axis=MGDIV_Z;
+	ret.scelldiv=scelldiv;
+	ret.ncells=ncells;
+	ret.nc.x=int(ncells.x);
+	ret.nc.y=int(ncells.y);
+	ret.nc.z=int(ncells.z);
+	ret.nc.w=int(ncells.x*ncells.y);//-For Single-GPU.
+	ret.cellfluid=ret.nc.w*ret.nc.z+1;
+	ret.cellzero.x=int(cellmin.x);
+	ret.cellzero.y=int(cellmin.y);
+	ret.cellzero.z=int(cellmin.z);
+	ret.beginendcell=beginendcell;
+	ret.scell=scell;
+	ret.domcellcode=domcellcode;
+	ret.domposmin.x=domposmin.x;
+	ret.domposmin.y=domposmin.y;
+	ret.domposmin.z=domposmin.z;
+	ret.kernelsize2=kernelsize2;
+	ret.poscellsize=poscellsize;
+	return(ret);
 }
 
 

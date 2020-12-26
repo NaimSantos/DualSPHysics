@@ -49,63 +49,61 @@ class JLog2;
 
 class JDsPips : protected JObject
 {
-public:
-///Structure with the information of an interval.
-typedef struct{
-  unsigned nstep;  ///<Number of simulation step.
-  double tstep;    ///<Physical time of simulation.
-  double tsim;     ///<Runtime of simulation.
-  ullong pirf;     ///<Real particle interactions between fluid particles with other particles.
-  ullong pirb;     ///<Real particle interactions between bound particles with other particles.
-  ullong picf;     ///<Checked particle interactions between fluid particles with other particles.
-  ullong picb;     ///<Checked particle interactions between bound particles with other particles.
-}StPipsInfo;
+	public:
+		///Structure with the information of an interval.
+		typedef struct{
+			unsigned nstep;  ///<Number of simulation step.
+			double tstep;    ///<Physical time of simulation.
+			double tsim;     ///<Runtime of simulation.
+			ullong pirf;     ///<Real particle interactions between fluid particles with other particles.
+			ullong pirb;     ///<Real particle interactions between bound particles with other particles.
+			ullong picf;     ///<Checked particle interactions between fluid particles with other particles.
+			ullong picb;     ///<Checked particle interactions between bound particles with other particles.
+		}StPipsInfo;
 
-protected:
-  JLog2* Log;
+	protected:
+		JLog2* Log;
 
-  unsigned NextNstep;
-  std::vector<StPipsInfo> Data;
-  unsigned NewData;
+		unsigned NextNstep;
+		std::vector<StPipsInfo> Data;
+		unsigned NewData;
 
-  unsigned SizeResultAux;
-  ullong* ResultAux;  //-To copy final result from GPU memory. [SizeResultAux]
+		unsigned SizeResultAux;
+		ullong* ResultAux;  //-To copy final result from GPU memory. [SizeResultAux]
 
 
-  double GetGPIs(unsigned cdata)const;
-  double GetGPIsType(unsigned cdata,bool fluid)const;
-  double GetCheckGPIsType(unsigned cdata,bool fluid)const;
-  tdouble2 GetTotalPIs()const;
+		double GetGPIs(unsigned cdata)const;
+		double GetGPIsType(unsigned cdata, bool fluid)const;
+		double GetCheckGPIsType(unsigned cdata, bool fluid)const;
+		tdouble2 GetTotalPIs()const;
 
-public:
-  const bool Cpu;
-  const unsigned StepsNum;  ///<Number of steps per interval to compute PIPS.
-  const bool SvData;        ///<Store and save all data.
-  const unsigned Ntimes;    ///<Interaction number per step (Verlet:1, Symplectic:2).
+	public:
+		const bool Cpu;
+		const unsigned StepsNum;  ///<Number of steps per interval to compute PIPS.
+		const bool SvData;        ///<Store and save all data.
+		const unsigned Ntimes;    ///<Interaction number per step (Verlet:1, Symplectic:2).
 
-public:
-  JDsPips(bool cpu,unsigned stepsnum,bool svdata,unsigned ntimes,JLog2* log);
-  ~JDsPips();
-  long long GetAllocMemory()const;
+		public:
+		JDsPips(bool cpu, unsigned stepsnum, bool svdata, unsigned ntimes, JLog2* log);
+		~JDsPips();
+		long long GetAllocMemory()const;
 
-  void SaveData();
+		void SaveData();
 
-  double GetGPIPS(double tsim)const;
-  std::string GetTotalPIsInfo()const;
+		double GetGPIPS(double tsim)const;
+		std::string GetTotalPIsInfo()const;
 
-  bool CheckRun(unsigned nstep)const{ return(nstep>=NextNstep); }
+		bool CheckRun(unsigned nstep)const{
+			return(nstep>=NextNstep);
+		}
 
-  void ComputeCpu(unsigned nstep,double tstep,double tsim
-    ,const StCteSph &csp,int ompthreads
-    ,unsigned np,unsigned npb,unsigned npbok
-    ,const StDivDataCpu &dvd,const unsigned *dcell,const tdouble3 *pos);
+		void ComputeCpu(unsigned nstep, double tstep, double tsim, const StCteSph &csp, int ompthreads, unsigned np,
+			unsigned npb, unsigned npbok, const StDivDataCpu &dvd, const unsigned *dcell, const tdouble3 *pos);
 
-#ifdef _WITHGPU
-  void ComputeGpu(unsigned nstep,double tstep,double tsim
-    ,unsigned np,unsigned npb,unsigned npbok
-    ,const StDivDataGpu &dvd,const unsigned *dcell,const float4 *poscell
-    ,unsigned sauxmem,unsigned *auxmem);
-#endif
+	#ifdef _WITHGPU
+		void ComputeGpu(unsigned nstep, double tstep, double tsim, unsigned np, unsigned npb, unsigned npbok, const StDivDataGpu &dvd,
+			const unsigned *dcell, const float4 *poscell, unsigned sauxmem, unsigned *auxmem);
+	#endif
 
 };
 

@@ -34,16 +34,16 @@ namespace cufsph{
 /// Returns pressure starting from density using equation of state 
 /// based on [Monaghan, 1994].
 //------------------------------------------------------------------------------
-__device__ float ComputePressMonaghanCte(float rhop){ 
-  return(CTE.cteb*(pow(rhop*CTE.ovrhopzero,CTE.gamma)-1.0f));
+__device__ float ComputePressMonaghanCte(float rhop){
+	return(CTE.cteb*(pow(rhop*CTE.ovrhopzero, CTE.gamma)-1.0f));
 }
 #endif
 //------------------------------------------------------------------------------
 /// Returns pressure starting from density using equation of state 
 /// based on [Monaghan, 1994].
 //------------------------------------------------------------------------------
-__device__ float ComputePressMonaghan(float rhop,float rhop0,float b,float gamma){ 
-  return(b*(pow(rhop/rhop0,gamma)-1.0f));
+__device__ float ComputePressMonaghan(float rhop, float rhop0, float b, float gamma){
+	return(b*(pow(rhop/rhop0,gamma)-1.0f));
 }
 
 
@@ -54,15 +54,15 @@ __device__ float ComputePressMonaghan(float rhop,float rhop0,float b,float gamma
 //------------------------------------------------------------------------------
 /// Returns pressure starting from density using default equation of state.
 //------------------------------------------------------------------------------
-__device__ float ComputePressCte(float rhop){ 
-  return(ComputePressMonaghanCte(rhop));
+__device__ float ComputePressCte(float rhop){
+	return(ComputePressMonaghanCte(rhop));
 }
 #endif
 //------------------------------------------------------------------------------
 /// Returns pressure starting from density using default equation of state.
 //------------------------------------------------------------------------------
-__device__ float ComputePress(float rhop,float rhop0,float b,float gamma,float cs0){ 
-  return(ComputePressMonaghan(rhop,rhop0,b,gamma));
+__device__ float ComputePress(float rhop, float rhop0, float b, float gamma, float cs0){
+	return(ComputePressMonaghan(rhop,rhop0,b,gamma));
 }
 
 

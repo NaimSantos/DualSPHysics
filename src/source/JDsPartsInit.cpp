@@ -36,57 +36,56 @@ using namespace std;
 //==============================================================================
 /// Constructor.
 //==============================================================================
-JDsPartsInit::JDsPartsInit(bool simulate2d,double simulate2dposy,double dp
-  ,const JSphMk* mkinfo,unsigned np,const tdouble3 *pos,const typecode *code)
-  :Simulate2D(simulate2d),Simulate2DPosY(simulate2dposy),Dp(dp)
+JDsPartsInit::JDsPartsInit(bool simulate2d, double simulate2dposy, double dp, const JSphMk* mkinfo, unsigned np, const tdouble3 *pos, const typecode *code)
+	: Simulate2D(simulate2d), Simulate2DPosY(simulate2dposy), Dp(dp)
 {
-  ClassName="JDsPartsInit";
-  Pos=NULL; Code=NULL;
-  Reset();
-  MkInfo=mkinfo;
-  LoadParticleData(np,pos,code);
+	ClassName="JDsPartsInit";
+	Pos=NULL; Code=NULL;
+	Reset();
+	MkInfo=mkinfo;
+	LoadParticleData(np,pos,code);
 }
 
 //==============================================================================
 /// Destructor.
 //==============================================================================
 JDsPartsInit::~JDsPartsInit(){
-  DestructorActive=true;
-  Reset();
+	DestructorActive=true;
+	Reset();
 }
 
 //==============================================================================
 /// Initialisation of variables.
 //==============================================================================
 void JDsPartsInit::Reset(){
-  MkInfo=NULL;
-  FreeParticleData();
+	MkInfo=NULL;
+	FreeParticleData();
 }
 
 //==============================================================================
 /// Free memory for particle data.
 //==============================================================================
 void JDsPartsInit::FreeParticleData(){
-  Np=0;
-  delete[] Pos;  Pos=NULL;
-  delete[] Code; Code=NULL;
+	Np=0;
+	delete[] Pos;  Pos=NULL;
+	delete[] Code; Code=NULL;
 }
 
 //==============================================================================
 /// Allocates dynamic memory and loads particle data.
 //==============================================================================
-void JDsPartsInit::LoadParticleData(unsigned np,const tdouble3 *pos,const typecode *code){
-  FreeParticleData();
-  Np=np;
-  try{
-    Pos=new tdouble3[Np];
-    Code=new typecode[Np];
-    memcpy(Pos,pos,sizeof(tdouble3)*Np);
-    memcpy(Code,code,sizeof(typecode)*Np);
-  }
-  catch(const std::bad_alloc){
-    Run_Exceptioon("Could not allocate the requested memory.");
-  }
+void JDsPartsInit::LoadParticleData(unsigned np, const tdouble3 *pos, const typecode *code){
+	FreeParticleData();
+	Np=np;
+	try{
+		Pos=new tdouble3[Np];
+		Code=new typecode[Np];
+		memcpy(Pos, pos, sizeof(tdouble3)*Np);
+		memcpy(Code, code, sizeof(typecode)*Np);
+	}
+	catch(const std::bad_alloc){
+		Run_Exceptioon("Could not allocate the requested memory.");
+	}
 }
 
 

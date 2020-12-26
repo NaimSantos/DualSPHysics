@@ -57,78 +57,88 @@ class JRelaxZoneUniform;
 //##############################################################################
 
 #ifdef DISABLE_RZ
-class JRelaxZones : protected JObject
-{
-public:
-  JRelaxZones(bool useomp,bool usegpu,JLog2* log,std::string dirdata
-    ,bool withfloatings,unsigned fluidbeginidp,tdouble3 gravity3){}
-  ~JRelaxZones(){}
-  void Reset(){}
-  static bool Available(){ return(false); }
+	class JRelaxZones : protected JObject
+	{
+		public:
+			JRelaxZones(bool useomp, bool usegpu, JLog2* log, std::string dirdata, bool withfloatings, unsigned fluidbeginidp, tdouble3 gravity3){}
+			~JRelaxZones(){}
+			void Reset(){}
+			static bool Available(){
+				return(false);
+			}
 
-  void LoadFileXml(const std::string &filexml,const std::string &place){}
-  void LoadXml(const JXml *sxml,const std::string &place){}
+			void LoadFileXml(const std::string &filexml, const std::string &place){}
+			void LoadXml(const JXml *sxml, const std::string &place){}
 
-  void Init(std::string dircase,double timemax,double dp){}
+			void Init(std::string dircase, double timemax, double dp){}
 
-  void VisuConfig(std::string txhead,std::string txfoot){}
+			void VisuConfig(std::string txhead, std::string txfoot){}
 
-  unsigned GetCount()const{ return(0); }
-  unsigned GetCountExternal()const{ return(0); }
-  unsigned GetCountUniform()const{ return(0); }
+			unsigned GetCount()const{
+				return(0);
+			}
+			unsigned GetCountExternal()const{
+				return(0);
+			}
+			unsigned GetCountUniform()const{
+				return(0);
+			}
 
-  void SetFluidVel(double timestep,double dt,unsigned n,unsigned pini
-    ,const tdouble3 *pos,const unsigned *idp,tfloat4 *velrhop)const{}
-  void SetFluidVelGpu(double timestep,double dt,unsigned n,unsigned pini
-    ,const tdouble2 *posxy,const double *posz,const unsigned *idp,tfloat4 *velrhop)const{}
-};
+			void SetFluidVel(double timestep, double dt, unsigned n, unsigned pini, const tdouble3 *pos, const unsigned *idp, tfloat4 *velrhop)const{}
+			void SetFluidVelGpu(double timestep, double dt, unsigned n, unsigned pini, const tdouble2 *posxy, const double *posz, const unsigned *idp, tfloat4 *velrhop)const{}
+	};
 
 
 #else
-class JRelaxZones : protected JObject
-{
-private:
-  const bool UseOmp;
-  const bool UseGpu;
-  JLog2 *Log;
-  const std::string DirData;
-  const bool WithFloatings;
-  const unsigned FluidBeginIdp; ///<Idp for first fluid particle.
-  const double Gravity;    ///<Gravity value (always positive).
+	class JRelaxZones : protected JObject
+	{
+		private:
+			const bool UseOmp;
+			const bool UseGpu;
+			JLog2 *Log;
+			const std::string DirData;
+			const bool WithFloatings;
+			const unsigned FluidBeginIdp; ///<Idp for first fluid particle.
+			const double Gravity;    ///<Gravity value (always positive).
 
-  std::vector<JRelaxZone*> List;
-  std::vector<JRelaxZoneExternal*> ListExternal; //-For external velocity (SWASH).
-  std::vector<JRelaxZoneUniform*> ListUniform;   //-For uniform velocity.
-  
-  void ReadXml_RelaxZone(bool wavereg,const JXml *sxml,TiXmlElement* ele);
-  void ReadXml_RelaxZoneExternal(bool onedim,const JXml *sxml,TiXmlElement* ele);
-  void ReadXml_RelaxZoneUniform(const JXml *sxml,TiXmlElement* ele);
-  void ReadXml(const JXml *sxml,TiXmlElement* lis);
-  void SaveDomainVtk(std::string fname,tdouble3 center,float width,double swl,double depth);
+			std::vector<JRelaxZone*> List;
+			std::vector<JRelaxZoneExternal*> ListExternal; //-For external velocity (SWASH).
+			std::vector<JRelaxZoneUniform*> ListUniform;   //-For uniform velocity.
 
-public:
-  JRelaxZones(bool useomp,bool usegpu,JLog2* log,std::string dirdata
-    ,bool withfloatings,unsigned fluidbeginidp,tdouble3 gravity3);
-  ~JRelaxZones();
-  void Reset();
-  static bool Available(){ return(true); }
+			void ReadXml_RelaxZone(bool wavereg, const JXml *sxml, TiXmlElement* ele);
+			void ReadXml_RelaxZoneExternal(bool onedim, const JXml *sxml, TiXmlElement* ele);
+			void ReadXml_RelaxZoneUniform(const JXml *sxml, TiXmlElement* ele);
+			void ReadXml(const JXml *sxml, TiXmlElement* lis);
+			void SaveDomainVtk(std::string fname, tdouble3 center, float width, double swl, double depth);
 
-  void LoadFileXml(const std::string &filexml,const std::string &place);
-  void LoadXml(const JXml *sxml,const std::string &place);
+		public:
+			JRelaxZones(bool useomp, bool usegpu, JLog2* log, std::string dirdata, bool withfloatings, unsigned fluidbeginidp, tdouble3 gravity3);
+			~JRelaxZones();
+			void Reset();
+			static bool Available(){
+				return(true);
+			}
 
-  void Init(std::string dircase,double timemax,double dp);
+			void LoadFileXml(const std::string &filexml, const std::string &place);
+			void LoadXml(const JXml *sxml, const std::string &place);
 
-  void VisuConfig(std::string txhead,std::string txfoot);
+			void Init(std::string dircase, double timemax, double dp);
 
-  unsigned GetCount()const{ return(unsigned(List.size())); }
-  unsigned GetCountExternal()const{ return(unsigned(ListExternal.size())); }
-  unsigned GetCountUniform()const{ return(unsigned(ListUniform.size())); }
+			void VisuConfig(std::string txhead, std::string txfoot);
 
-  void SetFluidVel(double timestep,double dt,unsigned n,unsigned pini
-    ,const tdouble3 *pos,const unsigned *idp,tfloat4 *velrhop)const;
-  void SetFluidVelGpu(double timestep,double dt,unsigned n,unsigned pini
-    ,const tdouble2 *posxy,const double *posz,const unsigned *idp,tfloat4 *velrhop)const;
-};
+			unsigned GetCount()const{
+				return(unsigned(List.size()));
+			}
+			unsigned GetCountExternal()const{
+				return(unsigned(ListExternal.size()));
+			}
+			unsigned GetCountUniform()const{
+				return(unsigned(ListUniform.size()));
+			}
+
+			void SetFluidVel(double timestep, double dt, unsigned n, unsigned pini, const tdouble3 *pos, const unsigned *idp, tfloat4 *velrhop)const;
+			void SetFluidVelGpu(double timestep, double dt, unsigned n, unsigned pini, const tdouble2 *posxy, const double *posz, const unsigned *idp, tfloat4 *velrhop)const;
+	};
 #endif
 
 #endif

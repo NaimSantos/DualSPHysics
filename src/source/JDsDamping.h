@@ -55,52 +55,56 @@ class JLog2;
 
 class JDsDamping : protected JObject
 {
-public:
-/// Structure with damping information.
-  typedef struct {
-    tdouble3 limitmin;  ///<Minimal reduction position. | Posicion de reduccion minima.
-    tdouble3 limitmax;  ///<Miximum reduction position. | Posicion de reduccion maxima.
-    float overlimit;    ///<Distance after limit with maximum reduction. | Distancia despues de limite con reduccion maxima.
-    float redumax;      ///<Percentage of maximum reduction. | Porcentaje de reduccion maxima.
-    tfloat3 factorxyz;  ///<Factor applied on each axis. | Factor de aplicacion en cada eje.
-    bool usedomain;     ///<Indicates use of domain planes. | Indica uso de planos del dominio.
-    double domzmin;     ///<Domain definition - Z minimum. | Definicion de dominio - Z minima.
-    double domzmax;     ///<Domain definition - Z maximum. | Definicion de dominio - Z maxima.
-    tdouble2 dompt0;    ///<Domain point.
-    tdouble2 dompt1;    ///<Domain point.
-    tdouble2 dompt2;    ///<Domain point.
-    tdouble2 dompt3;    ///<Domain point.
-    tplane3d dompla0;   ///<Domain definition - plane 0.
-    tplane3d dompla1;   ///<Domain definition - plane 1.
-    tplane3d dompla2;   ///<Domain definition - plane 2.
-    tplane3d dompla3;   ///<Domain definition - plane 3.
-    tplane3d plane;     ///<Plane at the limitmin point. | Plano en el punto limitmin.
-    float dist;         ///<Distance between limitmin and limitmax points. | Distancia entre puntos limitmin y limitmax.
-  }StDamping;
+	public:
+		/// Structure with damping information.
+		typedef struct {
+			tdouble3 limitmin;  ///<Minimal reduction position. | Posicion de reduccion minima.
+			tdouble3 limitmax;  ///<Miximum reduction position. | Posicion de reduccion maxima.
+			float overlimit;    ///<Distance after limit with maximum reduction. | Distancia despues de limite con reduccion maxima.
+			float redumax;      ///<Percentage of maximum reduction. | Porcentaje de reduccion maxima.
+			tfloat3 factorxyz;  ///<Factor applied on each axis. | Factor de aplicacion en cada eje.
+			bool usedomain;     ///<Indicates use of domain planes. | Indica uso de planos del dominio.
+			double domzmin;     ///<Domain definition - Z minimum. | Definicion de dominio - Z minima.
+			double domzmax;     ///<Domain definition - Z maximum. | Definicion de dominio - Z maxima.
+			tdouble2 dompt0;    ///<Domain point.
+			tdouble2 dompt1;    ///<Domain point.
+			tdouble2 dompt2;    ///<Domain point.
+			tdouble2 dompt3;    ///<Domain point.
+			tplane3d dompla0;   ///<Domain definition - plane 0.
+			tplane3d dompla1;   ///<Domain definition - plane 1.
+			tplane3d dompla2;   ///<Domain definition - plane 2.
+			tplane3d dompla3;   ///<Domain definition - plane 3.
+			tplane3d plane;     ///<Plane at the limitmin point. | Plano en el punto limitmin.
+			float dist;         ///<Distance between limitmin and limitmax points. | Distancia entre puntos limitmin y limitmax.
+		}StDamping;
 
-private:
-  JLog2* Log;
-  const double Dp;      ///<Initial distance between particles [m].
-  std::vector<StDamping> List;
+	private:
+		JLog2* Log;
+		const double Dp;      ///<Initial distance between particles [m].
+		std::vector<StDamping> List;
 
-  void ReadXml(const JXml *sxml,TiXmlElement* ele);
-  void ComputeDamping(const JDsDamping::StDamping &da,double dt,unsigned n,unsigned pini,const tdouble3 *pos,const typecode *code,tfloat4 *velrhop)const;
-  void ComputeDampingPla(const JDsDamping::StDamping &da,double dt,unsigned n,unsigned pini,const tdouble3 *pos,const typecode *code,tfloat4 *velrhop)const;
-  void SaveVtkConfig(double dp)const;
+		void ReadXml(const JXml *sxml,TiXmlElement* ele);
+		void ComputeDamping(const JDsDamping::StDamping &da, double dt, unsigned n, unsigned pini, const tdouble3 *pos, const typecode *code, tfloat4 *velrhop)const;
+		void ComputeDampingPla(const JDsDamping::StDamping &da, double dt, unsigned n, unsigned pini, const tdouble3 *pos, const typecode *code, tfloat4 *velrhop)const;
+		void SaveVtkConfig(double dp)const;
 
-public:
-  JDsDamping(double dp,JLog2* log);
-  ~JDsDamping();
-  void Reset();
+	public:
+		JDsDamping(double dp, JLog2* log);
+		~JDsDamping();
+		void Reset();
 
-  void LoadXml(const JXml *sxml,const std::string &place);
-  void VisuConfig(std::string txhead,std::string txfoot);
+		void LoadXml(const JXml *sxml, const std::string &place);
+		void VisuConfig(std::string txhead, std::string txfoot);
 
-  unsigned GetCount()const{ return(unsigned(List.size())); }
-  const JDsDamping::StDamping* GetDampingZone(unsigned c)const;
+		unsigned GetCount()const{
+			return(unsigned(List.size()));
+		}
+		const JDsDamping::StDamping* GetDampingZone(unsigned c)const;
 
-  void ComputeDamping(double timestep,double dt,unsigned n,unsigned pini,const tdouble3 *pos,const typecode *code,tfloat4 *velrhop)const;
-  void ComputeDamping(double timestep,double dt,unsigned n,unsigned pini,const tdouble3 *pos,tfloat4 *velrhop)const{ ComputeDamping(timestep,dt,n,pini,pos,NULL,velrhop); }
+		void ComputeDamping(double timestep, double dt, unsigned n, unsigned pini, const tdouble3 *pos, const typecode *code, tfloat4 *velrhop)const;
+		void ComputeDamping(double timestep, double dt, unsigned n, unsigned pini, const tdouble3 *pos, tfloat4 *velrhop)const{
+			ComputeDamping(timestep, dt, n, pini, pos, NULL, velrhop);
+		}
 };
 
 

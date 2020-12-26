@@ -31,9 +31,9 @@
 #include "JDataArrays.h"
 #include "JVtkLib.h"
 #ifdef _WITHGPU
-  #include "FunctionsCuda.h"
-  #include "JDsGauge_ker.h"
-  #include "JReduSum_ker.h"
+	#include "FunctionsCuda.h"
+	#include "JDsGauge_ker.h"
+	#include "JReduSum_ker.h"
 #endif
 #include <cmath>
 #include <cfloat>
@@ -48,35 +48,31 @@ using namespace std;
 //==============================================================================
 /// Constructor.
 //==============================================================================
-JGaugeItem::JGaugeItem(TpGauge type,unsigned idx,std::string name,bool cpu,JLog2* log)
-  :Type(type),Idx(idx),Name(name),Cpu(cpu),Log(log)
+JGaugeItem::JGaugeItem(TpGauge type, unsigned idx, std::string name, bool cpu, JLog2* log):Type(type), Idx(idx), Name(name), Cpu(cpu), Log(log)
 {
-  ClassName="JGaugeItem";
-  Reset();
+	ClassName="JGaugeItem";
+	Reset();
 }
 
 #ifdef _WITHGPU
 //==============================================================================
 /// Throws exception related to a CUDA error.
 //==============================================================================
-void JGaugeItem::RunExceptioonCuda(const std::string &srcfile,int srcline
-  ,const std::string &classname,const std::string &method
-  ,cudaError_t cuerr,std::string msg)const
+void JGaugeItem::RunExceptioonCuda(const std::string &srcfile, int srcline, const std::string &classname, const std::string &method, cudaError_t cuerr, std::string msg)const
 {
-  msg=msg+fun::PrintStr(" (CUDA error %d (%s)).\n",cuerr,cudaGetErrorString(cuerr));
-  throw JException(srcfile,srcline,classname,method,msg,"");
+	msg=msg+fun::PrintStr(" (CUDA error %d (%s)).\n", cuerr,cudaGetErrorString(cuerr));
+	throw JException(srcfile, srcline, classname, method, msg,"");
 }
 
 //==============================================================================
 /// Checks CUDA error and throws exception.
 /// Comprueba error de CUDA y lanza excepcion si lo hubiera.
 //==============================================================================
-void JGaugeItem::CheckCudaErroor(const std::string &srcfile,int srcline
-  ,const std::string &classname,const std::string &method
-  ,std::string msg)const
+void JGaugeItem::CheckCudaErroor(const std::string &srcfile, int srcline, const std::string &classname, const std::string &method, std::string msg)const
 {
-  cudaError_t cuerr=cudaGetLastError();
-  if(cuerr!=cudaSuccess)RunExceptioonCuda(srcfile,srcline,classname,method,cuerr,msg);
+	cudaError_t cuerr=cudaGetLastError();
+	if(cuerr!=cudaSuccess)
+		RunExceptioonCuda(srcfile, srcline, classname, method, cuerr, msg);
 }
 #endif
 
@@ -84,61 +80,64 @@ void JGaugeItem::CheckCudaErroor(const std::string &srcfile,int srcline
 /// Initialisation of variables.
 //==============================================================================
 void JGaugeItem::Reset(){
-  Config(CteSphNull(),false,TDouble3(0),TDouble3(0),0,0);
-  SaveVtkPart=false;
-  ConfigComputeTiming(0,0,0);
-  ConfigOutputTiming(false,0,0,0);
-  TimeStep=0;
-  OutCount=0;
-  OutFile="";
+	Config(CteSphNull(), false, TDouble3(0), TDouble3(0), 0,0);
+	SaveVtkPart=false;
+	ConfigComputeTiming(0,0,0);
+	ConfigOutputTiming(false,0,0,0);
+	TimeStep=0;
+	OutCount=0;
+	OutFile="";
 }
 
 //==============================================================================
 /// Configures object.
 //==============================================================================
-void JGaugeItem::Config(const StCteSph & csp,bool symmetry,tdouble3 domposmin
-    ,tdouble3 domposmax,float scell,int scelldiv)
+void JGaugeItem::Config(const StCteSph & csp, bool symmetry, tdouble3 domposmin, tdouble3 domposmax, float scell, int scelldiv)
 {
-  CSP=csp;
-  Symmetry=symmetry;
-  DomPosMin=domposmin;
-  DomPosMax=domposmax;
-  Scell=scell;
-  ScellDiv=scelldiv;
+	CSP=csp;
+	Symmetry=symmetry;
+	DomPosMin=domposmin;
+	DomPosMax=domposmax;
+	Scell=scell;
+	ScellDiv=scelldiv;
 }
 
 //==============================================================================
 /// Configures compute timing.
 //==============================================================================
-void JGaugeItem::ConfigComputeTiming(double start,double end,double dt){
-  ComputeDt=dt;
-  ComputeStart=start;
-  ComputeEnd=end;
-  ComputeNext=0;
+void JGaugeItem::ConfigComputeTiming(double start, double end, double dt){
+	ComputeDt=dt;
+	ComputeStart=start;
+	ComputeEnd=end;
+	ComputeNext=0;
 }
 
 //==============================================================================
 /// Configures output timing.
 //==============================================================================
-void JGaugeItem::ConfigOutputTiming(bool save,double start,double end,double dt){
-  OutputSave=save;
-  OutputDt=dt;
-  OutputStart=start;
-  OutputEnd=end;
-  OutputNext=0;
+void JGaugeItem::ConfigOutputTiming(bool save, double start, double end, double dt){
+	OutputSave=save;
+	OutputDt=dt;
+	OutputStart=start;
+	OutputEnd=end;
+	OutputNext=0;
 }
 
 //==============================================================================
 /// Returns type in string.
 //==============================================================================
 std::string JGaugeItem::GetNameType(TpGauge type){
-  switch(type){
-    case GAUGE_Vel:   return("Vel");
-    case GAUGE_Swl:   return("SWL");
-    case GAUGE_MaxZ:  return("MaxZ");
-    case GAUGE_Force: return("Force");
-  }
-  return("???");
+	switch(type){
+		case GAUGE_Vel:
+			return("Vel");
+		case GAUGE_Swl:
+			return("SWL");
+		case GAUGE_MaxZ:
+			return("MaxZ");
+		case GAUGE_Force:
+			return("Force");
+	}
+	return("???");
 }
 
 //==============================================================================
@@ -178,34 +177,36 @@ void JGaugeItem::GetConfig(std::vector<std::string> &lines)const{
 /// Returns filename for output results for CSV files.
 //==============================================================================
 std::string JGaugeItem::GetResultsFileCsv()const{
-  return(AppInfo.GetDirOut()+"Gauges"+GetNameType(Type)+"_"+Name)+".csv";
+	return(AppInfo.GetDirOut()+"Gauges"+GetNameType(Type)+"_"+Name)+".csv";
 }
 
 //==============================================================================
 /// Returns filename for output results for VTK files.
 //==============================================================================
 std::string JGaugeItem::GetResultsFileVtk()const{
-  return(AppInfo.GetDirDataOut()+"Gauges"+GetNameType(Type)+"_"+Name+".vtk");
+	return(AppInfo.GetDirDataOut()+"Gauges"+GetNameType(Type)+"_"+Name+".vtk");
 }
 
 //==============================================================================
 /// Updates TimeStep and calculates ComputeNext.
 //==============================================================================
 void JGaugeItem::SetTimeStep(double timestep){
-  if(ComputeDt){
-    unsigned nt=unsigned(timestep/ComputeDt);
-    ComputeNext=ComputeDt*nt;
-    if(ComputeNext<=timestep)ComputeNext=ComputeDt*(nt+1);
-  }
-  TimeStep=timestep;
+	if(ComputeDt){
+		unsigned nt=unsigned(timestep/ComputeDt);
+		ComputeNext=ComputeDt*nt;
+		if(ComputeNext<=timestep)
+			ComputeNext=ComputeDt*(nt+1);
+	}
+	TimeStep=timestep;
 }
 
 //==============================================================================
 /// Saves results in VTK and/or CSV file.
 //==============================================================================
 void JGaugeItem::SaveResults(unsigned cpart){
-  SaveResults();
-  if(SaveVtkPart)SaveVtkResult(cpart);
+	SaveResults();
+	if(SaveVtkPart)
+		SaveVtkResult(cpart);
 }
 
 
@@ -215,50 +216,52 @@ void JGaugeItem::SaveResults(unsigned cpart){
 //==============================================================================
 /// Constructor.
 //==============================================================================
-JGaugeVelocity::JGaugeVelocity(unsigned idx,std::string name,tdouble3 point,bool cpu,JLog2* log)
-  :JGaugeItem(GAUGE_Vel,idx,name,cpu,log)
+JGaugeVelocity::JGaugeVelocity(unsigned idx, std::string name, tdouble3 point, bool cpu, JLog2* log):JGaugeItem(GAUGE_Vel, idx, name, cpu, log)
 {
-  ClassName="JGaugeVel";
-  FileInfo=string("Saves velocity data measured from fluid particles (by ")+ClassName+").";
-  Reset();
-  SetPoint(point);
+	ClassName="JGaugeVel";
+	FileInfo=string("Saves velocity data measured from fluid particles (by ")+ClassName+").";
+	Reset();
+	SetPoint(point);
 }
 
 //==============================================================================
 /// Destructor.
 //==============================================================================
 JGaugeVelocity::~JGaugeVelocity(){
-  DestructorActive=true;
-  Reset();
+	DestructorActive=true;
+	Reset();
 }
 
 //==============================================================================
 /// Initialisation of variables.
 //==============================================================================
 void JGaugeVelocity::Reset(){
-  SetPoint(TDouble3(0));
-  JGaugeItem::Reset();
+	SetPoint(TDouble3(0));
+	JGaugeItem::Reset();
 }
 
 //==============================================================================
 /// Record the last measure result.
 //==============================================================================
 void JGaugeVelocity::StoreResult(){
-  if(OutputSave){
-    //-Allocates memory.
-    while(unsigned(OutBuff.size())<OutSize)OutBuff.push_back(StrGaugeVelRes());
-    //-Empty buffer.
-    if(OutCount+1>=OutSize)SaveResults();
-    //-Stores last results.
-    OutBuff[OutCount]=Result;
-    OutCount++;
-    //-Updates OutputNext.
-    if(OutputDt){
-      const unsigned nt=unsigned(TimeStep/OutputDt);
-      OutputNext=OutputDt*nt;
-      if(OutputNext<=TimeStep)OutputNext=OutputDt*(nt+1);
-    }
-  }
+	if(OutputSave){
+		//-Allocates memory.
+		while(unsigned(OutBuff.size())<OutSize)
+			OutBuff.push_back(StrGaugeVelRes());
+		//-Empty buffer.
+		if(OutCount+1>=OutSize)
+			SaveResults();
+		//-Stores last results.
+		OutBuff[OutCount]=Result;
+		OutCount++;
+		//-Updates OutputNext.
+		if(OutputDt){
+			const unsigned nt=unsigned(TimeStep/OutputDt);
+			OutputNext=OutputDt*nt;
+			if(OutputNext<=TimeStep)
+				OutputNext=OutputDt*(nt+1);
+		}
+	}
 }
 
 //==============================================================================
@@ -291,22 +294,22 @@ void JGaugeVelocity::SaveResults(){
 /// Saves last result in VTK file.
 //==============================================================================
 void JGaugeVelocity::SaveVtkResult(unsigned cpart){
-  if(JVtkLib::Available()){
-    //-Prepares data.
-    JDataArrays arrays;
-    arrays.AddArray("Pos",1,&(Result.point),false);
-    arrays.AddArray("Vel",1,&(Result.vel),false);
-    Log->AddFileInfo(fun::FileNameSec(GetResultsFileVtk(),UINT_MAX),FileInfo);
-    JVtkLib::SaveVtkData(fun::FileNameSec(GetResultsFileVtk(),cpart),arrays,"Pos");
-  }
+	if(JVtkLib::Available()){
+		//-Prepares data.
+		JDataArrays arrays;
+		arrays.AddArray("Pos",1,&(Result.point),false);
+		arrays.AddArray("Vel",1,&(Result.vel),false);
+		Log->AddFileInfo(fun::FileNameSec(GetResultsFileVtk(),UINT_MAX),FileInfo);
+		JVtkLib::SaveVtkData(fun::FileNameSec(GetResultsFileVtk(),cpart),arrays,"Pos");
+	}
 }
 
 //==============================================================================
 /// Loads and returns number definition points.
 //==============================================================================
 unsigned JGaugeVelocity::GetPointDef(std::vector<tfloat3> &points)const{
-  points.push_back(ToTFloat3(Point));
-  return(1);
+	points.push_back(ToTFloat3(Point));
+	return(1);
 }
 
 //==============================================================================
@@ -360,15 +363,14 @@ template<TpKernel tker> void JGaugeVelocity::CalculeCpuT(double timestep
 //==============================================================================
 /// Calculates velocity at indicated points (on CPU).
 //==============================================================================
-void JGaugeVelocity::CalculeCpu(double timestep,const StDivDataCpu &dvd
-  ,unsigned npbok,unsigned npb,unsigned np,const tdouble3 *pos
-  ,const typecode *code,const unsigned *idp,const tfloat4 *velrhop)
+void JGaugeVelocity::CalculeCpu(double timestep,const StDivDataCpu &dvd,unsigned npbok,unsigned npb,unsigned np,const tdouble3 *pos ,const typecode *code,const unsigned *idp,const tfloat4 *velrhop)
 {
-  switch(CSP.tkernel){
-    case KERNEL_Cubic:       //Kernel Wendland is used since Cubic is not available.
-    case KERNEL_Wendland:    CalculeCpuT<KERNEL_Wendland>  (timestep,dvd,npbok,npb,np,pos,code,idp,velrhop);  break;
-    default: Run_Exceptioon("Kernel unknown.");
-  }
+	switch(CSP.tkernel){
+		case KERNEL_Cubic:       //Kernel Wendland is used since Cubic is not available.
+		case KERNEL_Wendland:    CalculeCpuT<KERNEL_Wendland>  (timestep,dvd,npbok,npb,np,pos,code,idp,velrhop);  break;
+		default:
+			Run_Exceptioon("Kernel unknown.");
+	}
 }
 
 #ifdef _WITHGPU
@@ -402,76 +404,77 @@ void JGaugeVelocity::CalculeGpu(double timestep,const StDivDataGpu &dvd
 //==============================================================================
 /// Constructor.
 //==============================================================================
-JGaugeSwl::JGaugeSwl(unsigned idx,std::string name,tdouble3 point0,tdouble3 point2,double pointdp,float masslimit,bool cpu,JLog2* log)
-  :JGaugeItem(GAUGE_Swl,idx,name,cpu,log)
+JGaugeSwl::JGaugeSwl(unsigned idx, std::string name, tdouble3 point0, tdouble3 point2, double pointdp, float masslimit, bool cpu, JLog2* log):JGaugeItem(GAUGE_Swl,idx,name,cpu,log)
 {
-  ClassName="JGaugeSwl";
-  FileInfo=string("Saves SWL data measured from fluid particles (by ")+ClassName+").";
-  Reset();
-  SetPoints(point0,point2,pointdp);
-  MassLimit=masslimit;
-
+	ClassName="JGaugeSwl";
+	FileInfo=string("Saves SWL data measured from fluid particles (by ")+ClassName+").";
+	Reset();
+	SetPoints(point0,point2,pointdp);
+	MassLimit=masslimit;
 }
 
 //==============================================================================
 /// Destructor.
 //==============================================================================
 JGaugeSwl::~JGaugeSwl(){
-  DestructorActive=true;
-  Reset();
+	DestructorActive=true;
+	Reset();
 }
 
 //==============================================================================
 /// Initialisation of variables.
 //==============================================================================
 void JGaugeSwl::Reset(){
-  SetPoints(TDouble3(0),TDouble3(0),0);
-  MassLimit=0;
-  JGaugeItem::Reset();
+	SetPoints(TDouble3(0),TDouble3(0),0);
+	MassLimit=0;
+	JGaugeItem::Reset();
 }
 
 //==============================================================================
 /// Changes points definition.
 //==============================================================================
 void JGaugeSwl::SetPoints(const tdouble3 &point0,const tdouble3 &point2,double pointdp){
-  //if(PointDp<=0)Run_Exceptioon(fun::PrintStr("The value of PointDp is <= zero in gauge \'%s\'.",Name.c_str()));
-  Point0=point0;
-  Point2=point2;
-  PointDp=pointdp;
-  const double dis=fgeo::PointsDist(Point0,Point2);
-  if(dis>0 && PointDp>0){
-    PointNp=unsigned(dis/PointDp);
-    if(dis-(PointDp*PointNp)>=PointDp*0.1)PointNp++;
-    if(PointNp<1)PointNp++;
-    const double dp=dis/PointNp;
-    //printf("------> PointNp:%d dp:%f\n",PointNp,dp);
-    PointDir=fgeo::VecUnitary(Point2-Point0)*dp;
-  }
-  else{
-    PointNp=0;
-    PointDir=TDouble3(0);
-  } 
+	//if(PointDp<=0)Run_Exceptioon(fun::PrintStr("The value of PointDp is <= zero in gauge \'%s\'.",Name.c_str()));
+	Point0=point0;
+	Point2=point2;
+	PointDp=pointdp;
+	const double dis=fgeo::PointsDist(Point0,Point2);
+	if(dis>0 && PointDp>0){
+		PointNp=unsigned(dis/PointDp);
+		if(dis-(PointDp*PointNp)>=PointDp*0.1)PointNp++;
+		if(PointNp<1)PointNp++;
+		const double dp=dis/PointNp;
+		//printf("------> PointNp:%d dp:%f\n",PointNp,dp);
+		PointDir=fgeo::VecUnitary(Point2-Point0)*dp;
+	}
+	else{
+		PointNp=0;
+		PointDir=TDouble3(0);
+	}
 }
 
 //==============================================================================
 /// Record the last measure result.
 //==============================================================================
 void JGaugeSwl::StoreResult(){
-  if(OutputSave){
-    //-Allocates memory.
-    while(unsigned(OutBuff.size())<OutSize)OutBuff.push_back(StrGaugeSwlRes());
-    //-Empty buffer.
-    if(OutCount+1>=OutSize)SaveResults();
-    //-Stores last results.
-    OutBuff[OutCount]=Result;
-    OutCount++;
-    //-Updates OutputNext.
-    if(OutputDt){
-      const unsigned nt=unsigned(TimeStep/OutputDt);
-      OutputNext=OutputDt*nt;
-      if(OutputNext<=TimeStep)OutputNext=OutputDt*(nt+1);
-    }
-  }
+	if(OutputSave){
+		//-Allocates memory.
+		while(unsigned(OutBuff.size())<OutSize)
+			OutBuff.push_back(StrGaugeSwlRes());
+		//-Empty buffer.
+		if(OutCount+1>=OutSize)
+			SaveResults();
+		//-Stores last results.
+		OutBuff[OutCount]=Result;
+		OutCount++;
+		//-Updates OutputNext.
+		if(OutputDt){
+			const unsigned nt=unsigned(TimeStep/OutputDt);
+			OutputNext=OutputDt*nt;
+			if(OutputNext<=TimeStep)
+				OutputNext=OutputDt*(nt+1);
+		}
+	}
 }
 
 //==============================================================================
@@ -505,24 +508,24 @@ void JGaugeSwl::SaveResults(){
 /// Saves last result in VTK file.
 //==============================================================================
 void JGaugeSwl::SaveVtkResult(unsigned cpart){
-  if(JVtkLib::Available()){
-    JDataArrays arrays;
-    arrays.AddArray("Pos",1,&(Result.posswl),false);
-    Log->AddFileInfo(fun::FileNameSec(GetResultsFileVtk(),UINT_MAX),FileInfo);
-    JVtkLib::SaveVtkData(fun::FileNameSec(GetResultsFileVtk(),cpart),arrays,"Pos");
-  }
+	if(JVtkLib::Available()){
+		JDataArrays arrays;
+		arrays.AddArray("Pos",1,&(Result.posswl),false);
+		Log->AddFileInfo(fun::FileNameSec(GetResultsFileVtk(),UINT_MAX),FileInfo);
+		JVtkLib::SaveVtkData(fun::FileNameSec(GetResultsFileVtk(),cpart),arrays,"Pos");
+	}
 }
 
 //==============================================================================
 /// Loads and returns number definition points.
 //==============================================================================
 unsigned JGaugeSwl::GetPointDef(std::vector<tfloat3> &points)const{
-  tdouble3 ps=Point0;
-  for(unsigned p=0;p<=PointNp;p++){
-    points.push_back(ToTFloat3(ps));
-    ps=ps+PointDir;
-  }
-  return(PointNp+1);
+	tdouble3 ps=Point0;
+	for(unsigned p=0;p<=PointNp;p++){
+		points.push_back(ToTFloat3(ps));
+		ps=ps+PointDir;
+	}
+	return(PointNp+1);
 }
 
 //==============================================================================
@@ -590,35 +593,31 @@ template<TpKernel tker> void JGaugeSwl::CalculeCpuT(double timestep
 //==============================================================================
 /// Calculates surface water level at indicated points (on CPU).
 //==============================================================================
-void JGaugeSwl::CalculeCpu(double timestep,const StDivDataCpu &dvd
-  ,unsigned npbok,unsigned npb,unsigned np,const tdouble3 *pos
-  ,const typecode *code,const unsigned *idp,const tfloat4 *velrhop)
+void JGaugeSwl::CalculeCpu(double timestep,const StDivDataCpu &dvd,unsigned npbok,unsigned npb,unsigned np,const tdouble3 *pos,const typecode *code,const unsigned *idp,const tfloat4 *velrhop)
 {
-  switch(CSP.tkernel){
-    case KERNEL_Cubic:       //Kernel Wendland is used since Cubic is not available.
-    case KERNEL_Wendland:    CalculeCpuT<KERNEL_Wendland>  (timestep,dvd,npbok,npb,np,pos,code,idp,velrhop);  break;
-    default: Run_Exceptioon("Kernel unknown.");
-  }
+	switch(CSP.tkernel){
+		case KERNEL_Cubic:       //Kernel Wendland is used since Cubic is not available.
+		case KERNEL_Wendland:    CalculeCpuT<KERNEL_Wendland>  (timestep,dvd,npbok,npb,np,pos,code,idp,velrhop);  break;
+		default: Run_Exceptioon("Kernel unknown.");
+	}
 }
 #ifdef _WITHGPU
 //==============================================================================
 /// Calculates surface water level at indicated points (on GPU).
 //==============================================================================
-void JGaugeSwl::CalculeGpu(double timestep,const StDivDataGpu &dvd
-  ,unsigned npbok,unsigned npb,unsigned np,const double2 *posxy,const double *posz
-  ,const typecode *code,const unsigned *idp,const float4 *velrhop,float3 *aux)
+void JGaugeSwl::CalculeGpu(double timestep,const StDivDataGpu &dvd,unsigned npbok,unsigned npb,unsigned np,const double2 *posxy,const double *posz ,const typecode *code,const unsigned *idp,const float4 *velrhop,float3 *aux)
 {
-  SetTimeStep(timestep);
-  //-Start measure.
-  cugauge::Interaction_GaugeSwl(CSP,dvd,Point0,PointDir,PointNp,MassLimit
-    ,posxy,posz,code,velrhop,aux);
-  tfloat3 ptsurf=TFloat3(0);
-  cudaMemcpy(&ptsurf,aux,sizeof(float3),cudaMemcpyDeviceToHost);
-  Check_CudaErroor("Failed in Swl calculation.");
-  //-Stores result. | Guarda resultado.
-  Result.Set(timestep,ToTFloat3(Point0),ToTFloat3(Point2),ptsurf);
-  //Log->Printf("------> t:%f",TimeStep);
-  if(Output(timestep))StoreResult();
+	SetTimeStep(timestep);
+	//-Start measure.
+	cugauge::Interaction_GaugeSwl(CSP,dvd,Point0,PointDir,PointNp,MassLimit,posxy,posz,code,velrhop,aux);
+	tfloat3 ptsurf=TFloat3(0);
+	cudaMemcpy(&ptsurf,aux,sizeof(float3),cudaMemcpyDeviceToHost);
+	Check_CudaErroor("Failed in Swl calculation.");
+	//-Stores result. | Guarda resultado.
+	Result.Set(timestep,ToTFloat3(Point0),ToTFloat3(Point2),ptsurf);
+	//Log->Printf("------> t:%f",TimeStep);
+	if(Output(timestep))
+		StoreResult();
 }
 #endif
 
@@ -629,146 +628,147 @@ void JGaugeSwl::CalculeGpu(double timestep,const StDivDataGpu &dvd
 //==============================================================================
 /// Constructor.
 //==============================================================================
-JGaugeMaxZ::JGaugeMaxZ(unsigned idx,std::string name,tdouble3 point0,double height,float distlimit,bool cpu,JLog2* log)
-  :JGaugeItem(GAUGE_MaxZ,idx,name,cpu,log)
+JGaugeMaxZ::JGaugeMaxZ(unsigned idx,std::string name,tdouble3 point0,double height,float distlimit,bool cpu,JLog2* log):JGaugeItem(GAUGE_MaxZ,idx,name,cpu,log)
 {
-  ClassName="JGaugeMaxZ";
-  FileInfo=string("Saves maximum Z position of fluid particles (by ")+ClassName+").";
-  Reset();
-  SetPoint0(point0);
-  SetHeight(height);
-  SetDistLimit(distlimit);
+	ClassName="JGaugeMaxZ";
+	FileInfo=string("Saves maximum Z position of fluid particles (by ")+ClassName+").";
+	Reset();
+	SetPoint0(point0);
+	SetHeight(height);
+	SetDistLimit(distlimit);
 }
 
 //==============================================================================
 /// Destructor.
 //==============================================================================
 JGaugeMaxZ::~JGaugeMaxZ(){
-  DestructorActive=true;
-  Reset();
+	DestructorActive=true;
+	Reset();
 }
 
 //==============================================================================
 /// Initialisation of variables.
 //==============================================================================
 void JGaugeMaxZ::Reset(){
-  SetPoint0(TDouble3(0));
-  SetHeight(0);
-  SetDistLimit(0);
-  JGaugeItem::Reset();
+	SetPoint0(TDouble3(0));
+	SetHeight(0);
+	SetDistLimit(0);
+	JGaugeItem::Reset();
 }
 
 //==============================================================================
 /// Record the last measure result.
 //==============================================================================
 void JGaugeMaxZ::StoreResult(){
-  if(OutputSave){
-    //-Allocates memory.
-    while(unsigned(OutBuff.size())<OutSize)OutBuff.push_back(StrGaugeMaxzRes());
-    //-Empty buffer.
-    if(OutCount+1>=OutSize)SaveResults();
-    //-Stores last results.
-    OutBuff[OutCount]=Result;
-    OutCount++;
-    //-Updates OutputNext.
-    if(OutputDt){
-      const unsigned nt=unsigned(TimeStep/OutputDt);
-      OutputNext=OutputDt*nt;
-      if(OutputNext<=TimeStep)OutputNext=OutputDt*(nt+1);
-    }
-  }
+	if(OutputSave){
+		//-Allocates memory.
+		while(unsigned(OutBuff.size())<OutSize)
+			OutBuff.push_back(StrGaugeMaxzRes());
+		//-Empty buffer.
+		if(OutCount+1>=OutSize)
+			SaveResults();
+		//-Stores last results.
+		OutBuff[OutCount]=Result;
+		OutCount++;
+		//-Updates OutputNext.
+		if(OutputDt){
+			const unsigned nt=unsigned(TimeStep/OutputDt);
+			OutputNext=OutputDt*nt;
+			if(OutputNext<=TimeStep)
+				OutputNext=OutputDt*(nt+1);
+		}
+	}
 }
 
 //==============================================================================
 /// Saves stored results in CSV file.
 //==============================================================================
 void JGaugeMaxZ::SaveResults(){
-  if(OutCount){
-    const bool first=OutFile.empty();
-    if(first){
-      OutFile=GetResultsFileCsv();
-      Log->AddFileInfo(OutFile,FileInfo);
-    }
-    jcsv::JSaveCsv2 scsv(OutFile,!first,AppInfo.GetCsvSepComa());
-    //-Saves head.
-    if(first){
-      scsv.SetHead();
-      scsv << "time [s];zmax [m];posx [m];posy [m];posz [m]" << jcsv::Endl();
-    }
-    //-Saves data.
-    scsv.SetData();
-    scsv << jcsv::Fmt(jcsv::TpFloat1,"%g") << jcsv::Fmt(jcsv::TpFloat3,"%g;%g;%g");
-    for(unsigned c=0;c<OutCount;c++){
-      scsv << OutBuff[c].timestep << OutBuff[c].zmax << OutBuff[c].point0 << jcsv::Endl();
-    }
-    OutCount=0;
-  }
+	if(OutCount){
+		const bool first=OutFile.empty();
+		if(first){
+			OutFile=GetResultsFileCsv();
+			Log->AddFileInfo(OutFile,FileInfo);
+		}
+		jcsv::JSaveCsv2 scsv(OutFile,!first,AppInfo.GetCsvSepComa());
+		//-Saves head.
+		if(first){
+			scsv.SetHead();
+			scsv << "time [s];zmax [m];posx [m];posy [m];posz [m]" << jcsv::Endl();
+		}
+		//-Saves data.
+		scsv.SetData();
+		scsv << jcsv::Fmt(jcsv::TpFloat1,"%g") << jcsv::Fmt(jcsv::TpFloat3,"%g;%g;%g");
+		for(unsigned c=0;c<OutCount;c++){
+			scsv << OutBuff[c].timestep << OutBuff[c].zmax << OutBuff[c].point0 << jcsv::Endl();
+		}
+		OutCount=0;
+	}
 }
 
 //==============================================================================
 /// Saves last result in VTK file.
 //==============================================================================
 void JGaugeMaxZ::SaveVtkResult(unsigned cpart){
-  if(JVtkLib::Available()){
-    //-Prepares data.
-    const tfloat3 pt0=Result.point0;
-    const tfloat3 ptz=TFloat3(pt0.x,pt0.y,Result.zmax);
-    const float height=ptz.z-pt0.z;
-    //Log->Printf("---->ptz:(%g,%g,%g)  h:%g",ptz.x,ptz.y,ptz.z,height);
-    JDataArrays arrays;
-    arrays.AddArray("Pos",1,&ptz,false);
-    arrays.AddArray("Height",1,&height,false);
-    Log->AddFileInfo(fun::FileNameSec(GetResultsFileVtk(),UINT_MAX),FileInfo);
-    JVtkLib::SaveVtkData(fun::FileNameSec(GetResultsFileVtk(),cpart),arrays,"Pos");
-  }
+	if(JVtkLib::Available()){
+		//-Prepares data.
+		const tfloat3 pt0=Result.point0;
+		const tfloat3 ptz=TFloat3(pt0.x,pt0.y,Result.zmax);
+		const float height=ptz.z-pt0.z;
+		//Log->Printf("---->ptz:(%g,%g,%g)  h:%g",ptz.x,ptz.y,ptz.z,height);
+		JDataArrays arrays;
+		arrays.AddArray("Pos",1,&ptz,false);
+		arrays.AddArray("Height",1,&height,false);
+		Log->AddFileInfo(fun::FileNameSec(GetResultsFileVtk(),UINT_MAX),FileInfo);
+		JVtkLib::SaveVtkData(fun::FileNameSec(GetResultsFileVtk(),cpart),arrays,"Pos");
+	}
 }
 
 //==============================================================================
 /// Loads and returns number definition points.
 //==============================================================================
 unsigned JGaugeMaxZ::GetPointDef(std::vector<tfloat3> &points)const{
-  const float dp0=Scell/2;
-  unsigned np=unsigned(Height/dp0);
-  if(Height-(dp0*np)>=dp0*0.1)np++;
-  if(np<1)np++;
-  const double dp=Height/np;
-  const tdouble3 dir=TDouble3(0,0,dp);
-  tdouble3 ps=Point0;
-  for(unsigned p=0;p<=np;p++){
-    points.push_back(ToTFloat3(ps));
-    ps=ps+dir;
-  }
-  return(np+1);
+	const float dp0=Scell/2;
+	unsigned np=unsigned(Height/dp0);
+	if(Height-(dp0*np)>=dp0*0.1)
+		np++;
+	if(np<1)
+		np++;
+	const double dp=Height/np;
+	const tdouble3 dir=TDouble3(0,0,dp);
+	tdouble3 ps=Point0;
+	for(unsigned p=0;p<=np;p++){
+		points.push_back(ToTFloat3(ps));
+		ps=ps+dir;
+	}
+	return(np+1);
 }
 
 //==============================================================================
 /// Return cell limits for interaction starting from position.
 /// Devuelve limites de celdas para interaccion a partir de posicion.
 //==============================================================================
-void JGaugeMaxZ::GetInteractionCellsMaxZ(const tdouble3 &pos,const tint4 &nc,const tint3 &cellzero
-  ,int &cxini,int &cxfin,int &yini,int &yfin,int &zini,int &zfin)const
+void JGaugeMaxZ::GetInteractionCellsMaxZ(const tdouble3 &pos,const tint4 &nc,const tint3 &cellzero,int &cxini,int &cxfin,int &yini,int &yfin,int &zini,int &zfin)const
 {
-  //-Get cell coordinates of position pos.
-  const int cx=int((pos.x-DomPosMin.x)/Scell)-cellzero.x;
-  const int cy=int((pos.y-DomPosMin.y)/Scell)-cellzero.y;
-  const int cz=int((pos.z-DomPosMin.z)/Scell)-cellzero.z;
-  const int cz2=int((pos.z+Height-DomPosMin.z)/Scell)-cellzero.z;
-  //-Calculates range of cells to check.
-  const int ncel=int(ceil(DistLimit/Scell));
-  cxini=max(cx-ncel,0);
-  cxfin=min(cx+ncel+1,nc.x);
-  yini=max(cy-ncel,0);
-  yfin=min(cy+ncel+1,nc.y);
-  zini=max(cz-ncel,0);
-  zfin=min(cz2+ncel+1,nc.z);
+	//-Get cell coordinates of position pos.
+	const int cx=int((pos.x-DomPosMin.x)/Scell)-cellzero.x;
+	const int cy=int((pos.y-DomPosMin.y)/Scell)-cellzero.y;
+	const int cz=int((pos.z-DomPosMin.z)/Scell)-cellzero.z;
+	const int cz2=int((pos.z+Height-DomPosMin.z)/Scell)-cellzero.z;
+	//-Calculates range of cells to check.
+	const int ncel=int(ceil(DistLimit/Scell));
+	cxini=max(cx-ncel,0);
+	cxfin=min(cx+ncel+1,nc.x);
+	yini=max(cy-ncel,0);
+	yfin=min(cy+ncel+1,nc.y);
+	zini=max(cz-ncel,0);
+	zfin=min(cz2+ncel+1,nc.z);
 }
 
 //==============================================================================
 /// Calculates maximum z of fluid at distance of a vertical line (on CPU).
 //==============================================================================
-void JGaugeMaxZ::CalculeCpu(double timestep,const StDivDataCpu &dvd
-  ,unsigned npbok,unsigned npb,unsigned np,const tdouble3 *pos
-  ,const typecode *code,const unsigned *idp,const tfloat4 *velrhop)
+void JGaugeMaxZ::CalculeCpu(double timestep,const StDivDataCpu &dvd,unsigned npbok,unsigned npb,unsigned np,const tdouble3 *pos,const typecode *code,const unsigned *idp,const tfloat4 *velrhop)
 {
   //Log->Printf("JGaugeMaxZ----> timestep:%g  (%d)",timestep,(DG?1:0));
   SetTimeStep(timestep);
@@ -876,102 +876,108 @@ JGaugeForce::JGaugeForce(unsigned idx,std::string name,word mkbound
 /// Destructor.
 //==============================================================================
 JGaugeForce::~JGaugeForce(){
-  DestructorActive=true;
-  Reset();
+	DestructorActive=true;
+	Reset();
 }
 
 //==============================================================================
 /// Initialisation of variables.
 //==============================================================================
 void JGaugeForce::Reset(){
-  delete[] PartAcec; PartAcec=NULL;
- #ifdef _WITHGPU
-  if(PartAceg)cudaFree(PartAceg); PartAceg=NULL;
-  if(Auxg)    cudaFree(Auxg);     Auxg=NULL;
- #endif
-  MkBound=0;
-  TypeParts=TpPartUnknown;
-  IdBegin=Count=0;
-  Code=0;
-  InitialCenter=TFloat3(0);
-  JGaugeItem::Reset();
+	delete[] PartAcec;
+	PartAcec=NULL;
+	#ifdef _WITHGPU
+		if(PartAceg)
+			cudaFree(PartAceg);
+		PartAceg=NULL;
+		if(Auxg)
+			cudaFree(Auxg);
+		Auxg=NULL;
+	#endif
+	MkBound=0;
+	TypeParts=TpPartUnknown;
+	IdBegin=Count=0;
+	Code=0;
+	InitialCenter=TFloat3(0);
+	JGaugeItem::Reset();
 }
 
 //==============================================================================
 /// Record the last measure result.
 //==============================================================================
 void JGaugeForce::StoreResult(){
-  if(OutputSave){
-    //-Allocates memory.
-    while(unsigned(OutBuff.size())<OutSize)OutBuff.push_back(StrGaugeForceRes());
-    //-Empty buffer.
-    if(OutCount+1>=OutSize)SaveResults();
-    //-Stores last results.
-    OutBuff[OutCount]=Result;
-    OutCount++;
-    //-Updates OutputNext.
-    if(OutputDt){
-      const unsigned nt=unsigned(TimeStep/OutputDt);
-      OutputNext=OutputDt*nt;
-      if(OutputNext<=TimeStep)OutputNext=OutputDt*(nt+1);
-    }
-  }
+	if(OutputSave){
+		//-Allocates memory.
+		while(unsigned(OutBuff.size())<OutSize)OutBuff.push_back(StrGaugeForceRes());
+		//-Empty buffer.
+		if(OutCount+1>=OutSize)
+			SaveResults();
+		//-Stores last results.
+		OutBuff[OutCount]=Result;
+		OutCount++;
+		//-Updates OutputNext.
+		if(OutputDt){
+		const unsigned nt=unsigned(TimeStep/OutputDt);
+		OutputNext=OutputDt*nt;
+		if(OutputNext<=TimeStep)
+			OutputNext=OutputDt*(nt+1);
+		}
+	}
 }
 
 //==============================================================================
 /// Saves stored results in CSV file.
 //==============================================================================
 void JGaugeForce::SaveResults(){
-  if(OutCount){
-    const bool first=OutFile.empty();
-    if(first){
-      OutFile=GetResultsFileCsv();
-      Log->AddFileInfo(OutFile,FileInfo);
-    }
-    jcsv::JSaveCsv2 scsv(OutFile,!first,AppInfo.GetCsvSepComa());
-    //-Saves head.
-    if(first){
-      //-Head of values.
-      scsv.SetHead();
-      scsv <<"time [s];force [N];forcex [N];forcey [N];forcez [N]" << jcsv::Endl();
-    }
-    //-Saves data.
-    scsv.SetData();
-    scsv << jcsv::Fmt(jcsv::TpFloat1,"%g") << jcsv::Fmt(jcsv::TpFloat3,"%g;%g;%g");
-    for(unsigned c=0;c<OutCount;c++){
-      scsv << OutBuff[c].timestep << fgeo::PointDist(OutBuff[c].force) << OutBuff[c].force << jcsv::Endl();
-    }
-    OutCount=0;
-  }
+	if(OutCount){
+		const bool first=OutFile.empty();
+		if(first){
+			OutFile=GetResultsFileCsv();
+			Log->AddFileInfo(OutFile,FileInfo);
+		}
+		jcsv::JSaveCsv2 scsv(OutFile,!first,AppInfo.GetCsvSepComa());
+		//-Saves head.
+		if(first){
+			//-Head of values.
+			scsv.SetHead();
+			scsv <<"time [s];force [N];forcex [N];forcey [N];forcez [N]" << jcsv::Endl();
+		}
+		//-Saves data.
+		scsv.SetData();
+		scsv << jcsv::Fmt(jcsv::TpFloat1,"%g") << jcsv::Fmt(jcsv::TpFloat3,"%g;%g;%g");
+		for(unsigned c=0;c<OutCount;c++){
+			scsv << OutBuff[c].timestep << fgeo::PointDist(OutBuff[c].force) << OutBuff[c].force << jcsv::Endl();
+		}
+		OutCount=0;
+	}
 }
 
 //==============================================================================
 /// Saves last result in VTK file.
 //==============================================================================
 void JGaugeForce::SaveVtkResult(unsigned cpart){
-  if(JVtkLib::Available()){
-    JDataArrays arrays;
-    arrays.AddArray("Pos",1,&InitialCenter,false);
-    arrays.AddArray("Force",1,&(Result.force),false);
-    Log->AddFileInfo(fun::FileNameSec(GetResultsFileVtk(),UINT_MAX),FileInfo);
-    JVtkLib::SaveVtkData(fun::FileNameSec(GetResultsFileVtk(),cpart),arrays,"Pos");
-  }
+	if(JVtkLib::Available()){
+		JDataArrays arrays;
+		arrays.AddArray("Pos",1,&InitialCenter,false);
+		arrays.AddArray("Force",1,&(Result.force),false);
+		Log->AddFileInfo(fun::FileNameSec(GetResultsFileVtk(),UINT_MAX),FileInfo);
+		JVtkLib::SaveVtkData(fun::FileNameSec(GetResultsFileVtk(),cpart),arrays,"Pos");
+	}
 }
 
 //==============================================================================
 /// Loads and returns number definition points.
 //==============================================================================
 unsigned JGaugeForce::GetPointDef(std::vector<tfloat3> &points)const{
-  points.push_back(InitialCenter);
-  return(1);
+	points.push_back(InitialCenter);
+	return(1);
 }
 
 //==============================================================================
 /// Calculates force sumation on selected fixed or moving particles using only fluid particles (on CPU).
 /// Ignores periodic boundary particles to avoid race condition problems.
 //==============================================================================
-template<TpKernel tker> void JGaugeForce::CalculeCpuT(double timestep
-  ,const StDivDataCpu &dvd,unsigned npbok,unsigned npb,unsigned np,const tdouble3 *pos
+template<TpKernel tker> void JGaugeForce::CalculeCpuT(double timestep,const StDivDataCpu &dvd,unsigned npbok,unsigned npb,unsigned np,const tdouble3 *pos
   ,const typecode *code,const unsigned *idp,const tfloat4 *velrhop)
 {
   SetTimeStep(timestep);
@@ -1030,15 +1036,13 @@ template<TpKernel tker> void JGaugeForce::CalculeCpuT(double timestep
 /// Calculates force sumation on selected fixed or moving particles using only fluid particles (on CPU).
 /// Ignores periodic boundary particles to avoid race condition problems.
 //==============================================================================
-void JGaugeForce::CalculeCpu(double timestep,const StDivDataCpu &dvd
-  ,unsigned npbok,unsigned npb,unsigned np,const tdouble3 *pos
-  ,const typecode *code,const unsigned *idp,const tfloat4 *velrhop)
+void JGaugeForce::CalculeCpu(double timestep,const StDivDataCpu &dvd,unsigned npbok,unsigned npb,unsigned np,const tdouble3 *pos,const typecode *code,const unsigned *idp,const tfloat4 *velrhop)
 {
-  switch(CSP.tkernel){
-    case KERNEL_Cubic:       //Kernel Wendland is used since Cubic is not available.
-    case KERNEL_Wendland:    CalculeCpuT<KERNEL_Wendland>  (timestep,dvd,npbok,npb,np,pos,code,idp,velrhop);  break;
-    default: Run_Exceptioon("Kernel unknown.");
-  }
+	switch(CSP.tkernel){
+		case KERNEL_Cubic:       //Kernel Wendland is used since Cubic is not available.
+		case KERNEL_Wendland:    CalculeCpuT<KERNEL_Wendland>  (timestep,dvd,npbok,npb,np,pos,code,idp,velrhop);  break;
+		default: Run_Exceptioon("Kernel unknown.");
+	}
 }
 
 #ifdef _WITHGPU
@@ -1046,35 +1050,36 @@ void JGaugeForce::CalculeCpu(double timestep,const StDivDataCpu &dvd
 /// Calculates force sumation on selected fixed or moving particles using only fluid particles (on GPU).
 /// Ignores periodic boundary particles.
 //==============================================================================
-void JGaugeForce::CalculeGpu(double timestep,const StDivDataGpu &dvd
-  ,unsigned npbok,unsigned npb,unsigned np,const double2 *posxy,const double *posz
-  ,const typecode *code,const unsigned *idp,const float4 *velrhop,float3 *aux)
+void JGaugeForce::CalculeGpu(double timestep,const StDivDataGpu &dvd,unsigned npbok,unsigned npb,unsigned np,
+	const double2 *posxy,const double *posz,const typecode *code,const unsigned *idp,const float4 *velrhop,float3 *aux)
 {
-  SetTimeStep(timestep);
-  //-Initializes acceleration array to zero.
-  cudaMemset(PartAceg,0,sizeof(float3)*Count);
-  const int n=int(TypeParts==TpPartFixed || TypeParts==TpPartMoving? npbok: np);
-  //-Computes acceleration in selected boundary particles.
-  cugauge::Interaction_GaugeForce(CSP,dvd,n,IdBegin,Code
-    ,posxy,posz,code,idp,velrhop,PartAceg);
+	SetTimeStep(timestep);
+	//-Initializes acceleration array to zero.
+	cudaMemset(PartAceg,0,sizeof(float3)*Count);
+	const int n=int(TypeParts==TpPartFixed || TypeParts==TpPartMoving? npbok: np);
+	//-Computes acceleration in selected boundary particles.
+	cugauge::Interaction_GaugeForce(CSP,dvd,n,IdBegin,Code,posxy,posz,code,idp,velrhop,PartAceg);
 
-  //-Computes total ace.
-  tfloat3 acesum=TFloat3(0);
-  if(1){//-Computes total ace on GPU.
-    const float3 result=curedus::ReduSumFloat3(Count,0,PartAceg,Auxg);
-    acesum=TFloat3(result.x,result.y,result.z);
-    Check_CudaErroor("Failed in Force calculation.");
-  }
-  else{//-Computes total ace on CPU.
-    tfloat3* aceh=fcuda::ToHostFloat3(0,Count,PartAceg);
-    for(unsigned p=0;p<Count;p++)acesum=acesum+aceh[p];
-    delete[] aceh; aceh=NULL;
-  }
+	//-Computes total ace.
+	tfloat3 acesum=TFloat3(0);
+	if(1){//-Computes total ace on GPU.
+		const float3 result=curedus::ReduSumFloat3(Count,0,PartAceg,Auxg);
+		acesum=TFloat3(result.x,result.y,result.z);
+		Check_CudaErroor("Failed in Force calculation.");
+	}
+	else{//-Computes total ace on CPU.
+		tfloat3* aceh=fcuda::ToHostFloat3(0,Count,PartAceg);
+		for(unsigned p=0;p<Count;p++)
+			acesum=acesum+aceh[p];
+		delete[] aceh;
+		aceh=NULL;
+	}
 
-  //-Stores result. | Guarda resultado.
-  Result.Set(timestep,acesum*CSP.massbound);
-  //Log->Printf("------> t:%f",TimeStep);
-  if(Output(timestep))StoreResult();
+	//-Stores result. | Guarda resultado.
+	Result.Set(timestep,acesum*CSP.massbound);
+	//Log->Printf("------> t:%f",TimeStep);
+	if(Output(timestep))
+		StoreResult();
 }
 #endif
 

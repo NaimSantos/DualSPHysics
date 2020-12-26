@@ -50,56 +50,62 @@ class JCaseParts;
 
 class JDsMotion : protected JObject
 {
-public:
+	public:
 
-  ///Controls the output of information on the screen and/or log.
-  typedef enum{ 
-    MOMT_Simple=0,  ///<Simple mode for only forward.
-    MOMT_Ace2dt=1   ///<Calculates acceleration using one dt in the future (always from the beginning).
-  }TpMotionMode;   
+		///Controls the output of information on the screen and/or log.
+		typedef enum{
+			MOMT_Simple=0,  ///<Simple mode for only forward.
+			MOMT_Ace2dt=1   ///<Calculates acceleration using one dt in the future (always from the beginning).
+		}TpMotionMode;
 
-private:
-  const bool Simulate2D;   ///<Toggles 2D simulation (cancels motion in Y axis).
+	private:
+		const bool Simulate2D;   ///<Toggles 2D simulation (cancels motion in Y axis).
 
-  double TimeMod;          ///<Modifies the timestep for motion | Modificador del TimeStep para Motion.
-  unsigned ObjCount;       ///<Number of moving objects.
-  StMotionData *ObjMotion; ///<Motion data of moving objects.
-  StMotionData MotionNull;
+		double TimeMod;          ///<Modifies the timestep for motion | Modificador del TimeStep para Motion.
+		unsigned ObjCount;       ///<Number of moving objects.
+		StMotionData *ObjMotion; ///<Motion data of moving objects.
+		StMotionData MotionNull;
 
-  //unsigned *ObjBegin;   ///<Initial particle of each moving object. [ObjCount+1]
-  //word     *ObjMkBound; ///<MkBound of each moving object. [ObjCount]
+		//unsigned *ObjBegin;   ///<Initial particle of each moving object. [ObjCount+1]
+		//word     *ObjMkBound; ///<MkBound of each moving object. [ObjCount]
 
-  //byte      *ObjTpmov;     ///<Type of motion (0:none, 1:linear, 2:matrix, 3:ignore). [ObjCount]
-  //tdouble3  *ObjLinMov;    ///<Linear motion. [ObjCount]
-  //tmatrix4d *ObjMatMov;    ///<Matrix motion. [ObjCount]
+		//byte      *ObjTpmov;     ///<Type of motion (0:none, 1:linear, 2:matrix, 3:ignore). [ObjCount]
+		//tdouble3  *ObjLinMov;    ///<Linear motion. [ObjCount]
+		//tmatrix4d *ObjMatMov;    ///<Matrix motion. [ObjCount]
 
-  JMotion *Mot;
-  bool ActiveMotion;    ///<Indicates active motions after executing ProcesTime().
-  double LastDt;        ///<Dt used in last call to ProcesTime().
-  void ConfigObjects(const JCaseParts *parts);
+		JMotion *Mot;
+		bool ActiveMotion;    ///<Indicates active motions after executing ProcesTime().
+		double LastDt;        ///<Dt used in last call to ProcesTime().
+		void ConfigObjects(const JCaseParts *parts);
 
-public:
-  JDsMotion(bool simulate2d);
-  ~JDsMotion();
-  void Reset();
-  void Init(const JCaseParts *parts,JXml *jxml,const std::string &path,const std::string &dirdata);
+	public:
+		JDsMotion(bool simulate2d);
+		~JDsMotion();
+		void Reset();
+		void Init(const JCaseParts *parts, JXml *jxml, const std::string &path, const std::string &dirdata);
 
-  unsigned GetNumObjects()const{ return(ObjCount); };
+		unsigned GetNumObjects()const{
+			return(ObjCount);
+		};
 
-  unsigned GetObjIdxByMkBound(word mkbound)const;
+		unsigned GetObjIdxByMkBound(word mkbound)const;
 
-  void SetTimeMod(double timemod){ TimeMod=timemod; };
-  bool ProcesTime(TpMotionMode mode,double timestep,double dt);
-  bool GetActiveMotion()const{ return(ActiveMotion); }
+		void SetTimeMod(double timemod){
+			TimeMod=timemod;
+		};
+		bool ProcesTime(TpMotionMode mode, double timestep, double dt);
+		bool GetActiveMotion()const{
+			return(ActiveMotion);
+		}
 
-  const StMotionData& GetMotionData(unsigned ref)const;
+		const StMotionData& GetMotionData(unsigned ref)const;
 
-  void SetMotionData   (const StMotionData& d);
-  void SetMotionDataAce(const StMotionData& d);
+		void SetMotionData(const StMotionData& d);
+		void SetMotionDataAce(const StMotionData& d);
 
-  void SetMotionDataNone(unsigned idx);
-  void SetMotionDataLin (unsigned idx,const tdouble3 &linmov);
-  void SetMotionDataMat (unsigned idx,const tmatrix4d &matmov);
+		void SetMotionDataNone(unsigned idx);
+		void SetMotionDataLin (unsigned idx, const tdouble3 &linmov);
+		void SetMotionDataMat (unsigned idx, const tmatrix4d &matmov);
 
 };
 

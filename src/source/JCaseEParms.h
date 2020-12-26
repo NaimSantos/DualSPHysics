@@ -54,81 +54,95 @@ class TiXmlElement;
 
 class JCaseEParms : protected JObject
 {
-public:
-  /// Structure used to store information about each parameter.
-  typedef struct{
-    std::string key;
-    std::string value;
-    std::string comment;
-    std::string unitscomment;
-  }JCaseEParmsItem;
+	public:
+		/// Structure used to store information about each parameter.
+		typedef struct{
+			std::string key;
+			std::string value;
+			std::string comment;
+			std::string unitscomment;
+		}JCaseEParmsItem;
 
-  /// Domain configuration mode.
-  typedef enum{ 
-    DC_Fixed=0    ///< Fixed value.
-   ,DC_Default=1  ///< Default.
-   ,DC_DefValue=2 ///< Default +/- value.
-   ,DC_DefPrc=3   ///< Default +/- % of size.
-  }TpDomainMode;
+		/// Domain configuration mode.
+		typedef enum{
+			DC_Fixed=0    ///< Fixed value.
+			,DC_Default=1  ///< Default.
+			,DC_DefValue=2 ///< Default +/- value.
+			,DC_DefPrc=3   ///< Default +/- % of size.
+		}TpDomainMode;
 
-  /// Structure used to store information about default domain position.
-  typedef struct{
-    TpDomainMode mode;
-    double value;
-    std::string textmod;
-  }JCaseEParmsPos;
+		/// Structure used to store information about default domain position.
+		typedef struct{
+			TpDomainMode mode;
+			double value;
+			std::string textmod;
+		}JCaseEParmsPos;
 
-private:
-  typedef std::vector<JCaseEParmsItem> VecList;
-  typedef std::vector<JCaseEParmsItem>::iterator VecListIt;
-  
-  VecList List;
-  //-Defines simulation domain.
-  std::string Posminx,Posminy,Posminz;
-  std::string Posmaxx,Posmaxy,Posmaxz;
+	private:
+		typedef std::vector<JCaseEParmsItem> VecList;
+		typedef std::vector<JCaseEParmsItem>::iterator VecListIt;
 
-  int CheckPosValue(const std::string &value,bool isposmin,JCaseEParmsPos &ps)const;
-  std::string ReadPosValue(const JXml *sxml,TiXmlElement* ele,const std::string &name,const std::string &subname)const;
+		VecList List;
+		//-Defines simulation domain.
+		std::string Posminx, Posminy, Posminz;
+		std::string Posmaxx, Posmaxy, Posmaxz;
 
-  JCaseEParmsItem* GetItemPointer(const std::string &key);
-  std::string GetValueNum(const std::string &key,int num);
-  std::string GetValue(const std::string &key);
-  void ReadXml(const JXml *sxml,TiXmlElement* lis);
-  void WriteXml(JXml *sxml,TiXmlElement* lis)const;
-public:
-  JCaseEParms();
-  ~JCaseEParms();
-  void Reset();
+		int CheckPosValue(const std::string &value, bool isposmin, JCaseEParmsPos &ps)const;
+		std::string ReadPosValue(const JXml *sxml, TiXmlElement* ele, const std::string &name, const std::string &subname)const;
 
-  void Add(const std::string &key,const std::string &value,const std::string &comment,const std::string &unitscomment="");
-  void SetValue(const std::string &key,const std::string &value);
-  void SetComment(const std::string &key,const std::string &comment);
-  bool Exists(const std::string &key){ return(GetItemPointer(key)!=NULL); }
+		JCaseEParmsItem* GetItemPointer(const std::string &key);
+		std::string GetValueNum(const std::string &key, int num);
+		std::string GetValue(const std::string &key);
+		void ReadXml(const JXml *sxml, TiXmlElement* lis);
+		void WriteXml(JXml *sxml, TiXmlElement* lis)const;
+	public:
+		JCaseEParms();
+		~JCaseEParms();
+		void Reset();
 
-  void SetPosmin(std::string x,std::string y,std::string z);
-  void SetPosmax(std::string x,std::string y,std::string z);
-  JCaseEParmsPos GetPosminValue(char key)const;
-  JCaseEParmsPos GetPosmaxValue(char key)const;
-  bool IsPosDefault()const{ return(Posminx=="default" && Posminy=="default" && Posminz=="default" && Posmaxx=="default" && Posmaxy=="default" && Posmaxz=="default"); }
+		void Add(const std::string &key, const std::string &value, const std::string &comment, const std::string &unitscomment="");
+		void SetValue(const std::string &key, const std::string &value);
+		void SetComment(const std::string &key, const std::string &comment);
+		bool Exists(const std::string &key){ return(GetItemPointer(key)!=NULL); }
 
-  int GetValueNumInt(const std::string &key,int num,bool optional=false,int valdef=0);
-  double GetValueNumDouble(const std::string &key,int num,bool optional=false,double valdef=0);
-  float GetValueNumFloat(const std::string &key,int num,bool optional=false,float valdef=0){ return(float(GetValueNumDouble(key,num,optional,valdef))); }
-  std::string GetValueNumStr(const std::string &key,int num,bool optional=false,std::string valdef="");
-  
-  int GetValueInt(const std::string &key,bool optional=false,int valdef=0){ return(GetValueNumInt(key,0,optional,valdef)); }
-  double GetValueDouble(const std::string &key,bool optional=false,double valdef=0){ return(GetValueNumDouble(key,0,optional,valdef)); }
-  float GetValueFloat(const std::string &key,bool optional=false,float valdef=0){ return(GetValueNumFloat(key,0,optional,valdef)); }
-  std::string GetValueStr(const std::string &key,bool optional=false,std::string valdef=""){ return(GetValueNumStr(key,0,optional,valdef)); }
-  tdouble3 GetValueDouble3(const std::string &key,bool optional=false,tdouble3 valdef=TDouble3(0)){ return(TDouble3(GetValueNumDouble(key,0,optional,valdef.x),GetValueNumDouble(key,1,optional,valdef.y),GetValueNumDouble(key,2,optional,valdef.z))); }
+		void SetPosmin(std::string x, std::string y, std::string z);
+		void SetPosmax(std::string x, std::string y, std::string z);
+		JCaseEParmsPos GetPosminValue(char key)const;
+		JCaseEParmsPos GetPosmaxValue(char key)const;
+		bool IsPosDefault()const{
+			return(Posminx=="default" && Posminy=="default" && Posminz=="default" && Posmaxx=="default" && Posmaxy=="default" && Posmaxz=="default");
+		}
 
-  unsigned Count()const{ return(unsigned(List.size())); }
-  std::string ToString(unsigned pos)const;
-  JCaseEParmsItem GetParm(unsigned pos)const;
-  void LoadFileXml(const std::string &file,const std::string &path);
-  void SaveFileXml(const std::string &file,const std::string &path,bool newfile=true)const;
-  void LoadXml(const JXml *sxml,const std::string &place);
-  void SaveXml(JXml *sxml,const std::string &place)const;
+		int GetValueNumInt(const std::string &key, int num, bool optional=false, int valdef=0);
+		double GetValueNumDouble(const std::string &key, int num, bool optional=false, double valdef=0);
+		float GetValueNumFloat(const std::string &key, int num, bool optional=false, float valdef=0){
+			return(float(GetValueNumDouble(key, num, optional, valdef)));
+		}
+		std::string GetValueNumStr(const std::string &key, int num, bool optional=false, std::string valdef="");
+
+		int GetValueInt(const std::string &key, bool optional=false, int valdef=0){
+			return(GetValueNumInt(key, 0, optional, valdef));
+		}
+		double GetValueDouble(const std::string &key, bool optional=false, double valdef=0){
+			return(GetValueNumDouble(key, 0, optional, valdef));
+			}
+		float GetValueFloat(const std::string &key, bool optional=false, float valdef=0){
+			return(GetValueNumFloat(key, 0, optional, valdef));
+			}
+		std::string GetValueStr(const std::string &key, bool optional=false, std::string valdef=""){
+			return(GetValueNumStr(key, 0, optional, valdef));
+			}
+		tdouble3 GetValueDouble3(const std::string &key, bool optional=false, tdouble3 valdef=TDouble3(0)){
+			return(TDouble3(GetValueNumDouble(key, 0, optional, valdef.x), GetValueNumDouble(key, 1, optional, valdef.y), GetValueNumDouble(key, 2, optional, valdef.z)));
+		}
+
+		unsigned Count()const{ return(unsigned(List.size())); }
+		std::string ToString(unsigned pos)const;
+		JCaseEParmsItem GetParm(unsigned pos)const;
+		void LoadFileXml(const std::string &file, const std::string &path);
+		void SaveFileXml(const std::string &file, const std::string &path, bool newfile=true)const;
+		void LoadXml(const JXml *sxml, const std::string &place);
+		void SaveXml(JXml *sxml, const std::string &place)const;
 };
 
 #endif

@@ -51,55 +51,58 @@
 
 class JNormalsMarrone : protected JObject
 {
-protected:
-  std::string CaseDir;
-  std::string CaseName;
-  std::string DirOut;
+	protected:
+		std::string CaseDir;
+		std::string CaseName;
+		std::string DirOut;
 
-  bool ExternalData;
+		bool ExternalData;
 
-  //-Particle data.
-  bool Data2D;           ///<Indicates 2D data.
-  double Data2DPosY;     ///<Y value in 2D data.
-  double H;
-  double Dp;
-  unsigned SizePart;
-  tdouble3 *PartPos;
-  tdouble3 *PartNor;
+		//-Particle data.
+		bool Data2D;           ///<Indicates 2D data.
+		double Data2DPosY;     ///<Y value in 2D data.
+		double H;
+		double Dp;
+		unsigned SizePart;
+		tdouble3 *PartPos;
+		tdouble3 *PartNor;
 
-  //-Normal data.
-  double Dist;           ///<Distance used for calculating normal data (tipically KernelSize).
-  unsigned SizeNor;
-  unsigned *NormalBegin; ///<Normals for each particle [SizePart+1]
-  tdouble3 *Normals;     ///<Unitary normal to shape [SizeNor]
-  double   *NormalsDist; ///<Distance to shape [SizeNor]
-  tdouble3 *OutVecs;     ///<Vector to limit of shape [SizeNor]
-  double   *OutVecsDist; ///<Distance to limit of shape [SizeNor]
+		//-Normal data.
+		double Dist;           ///<Distance used for calculating normal data (tipically KernelSize).
+		unsigned SizeNor;
+		unsigned *NormalBegin; ///<Normals for each particle [SizePart+1]
+		tdouble3 *Normals;     ///<Unitary normal to shape [SizeNor]
+		double   *NormalsDist; ///<Distance to shape [SizeNor]
+		tdouble3 *OutVecs;     ///<Vector to limit of shape [SizeNor]
+		double   *OutVecsDist; ///<Distance to limit of shape [SizeNor]
 
-  void ResetParts();
-  void ResetNormals();
-  void AllocParts(unsigned size);
-  void AllocNormals(unsigned size);
-  void LoadBoundParticles();
-  void LoadNormalData();
-  void SaveVtkNormalData();
-  unsigned MaxNormalsByPart()const;
-  void ComputeNormalsMarrone();
-  void SaveVtkNormalFinal(std::string file);
-public:
-  JNormalsMarrone();
-  ~JNormalsMarrone();
-  void Reset();
+		void ResetParts();
+		void ResetNormals();
+		void AllocParts(unsigned size);
+		void AllocNormals(unsigned size);
+		void LoadBoundParticles();
+		void LoadNormalData();
+		void SaveVtkNormalData();
+		unsigned MaxNormalsByPart()const;
+		void ComputeNormalsMarrone();
+		void SaveVtkNormalFinal(std::string file);
+	public:
+		JNormalsMarrone();
+		~JNormalsMarrone();
+		void Reset();
 
-  static std::string GetNormalDataFile(std::string casename);
-  void RunCase(std::string casename,std::string dirout,bool savevtk);
-  void RunData(std::string casename,std::string dirout,bool savevtk
-    ,bool data2d,double data2dposy,double h,double dp,unsigned sizepart,tdouble3 *partpos
-    ,double dist,unsigned sizenor,unsigned *norbegin,tdouble3 *normals,double *normalsdist
-    ,tdouble3 *outvecs,double *outvecsdist,tdouble3 *partnor);
+		static std::string GetNormalDataFile(std::string casename);
+		void RunCase(std::string casename, std::string dirout, bool savevtk);
+		void RunData(std::string casename, std::string dirout, bool savevtk, bool data2d, double data2dposy, double h,
+			double dp, unsigned sizepart, tdouble3 *partpos, double dist, unsigned sizenor, unsigned *norbegin,
+			tdouble3 *normals, double *normalsdist, tdouble3 *outvecs, double *outvecsdist, tdouble3 *partnor);
 
-  const tdouble3* GetPartNor()const{ return(PartNor); }
-  unsigned GetPartNorSize()const{ return(SizePart); }
+		const tdouble3* GetPartNor()const{
+			return(PartNor);
+		}
+		unsigned GetPartNorSize()const{
+			return(SizePart);
+		}
 
 };
 

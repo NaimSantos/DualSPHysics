@@ -31,13 +31,13 @@
 
 /// Types of particles. Order must be maintained although specific values can be changed.
 /// Tipos de particulas. Se tiene que mantener el orden aunque se pueden cambiar los valores concretos.
-typedef enum{ 
-  TpPartFixed=0       ///<Fixed boundary particles.
- ,TpPartMoving=1      ///<Moving boundary particles.
- ,TpPartFloating=2    ///<Floating boundary particles.
- ,TpPartFluid=3       ///<Fluid particles.
- ,TpPartUnknown=9     ///<Unknown or undefined type of particles.
-}TpParticles; 
+typedef enum{
+	TpPartFixed=0       ///<Fixed boundary particles.
+	,TpPartMoving=1      ///<Moving boundary particles.
+	,TpPartFloating=2    ///<Floating boundary particles.
+	,TpPartFluid=3       ///<Fluid particles.
+	,TpPartUnknown=9     ///<Unknown or undefined type of particles.
+}TpParticles;
 
 
 #define TPPARTICLES_COUNT 4   ///<Number of valid particle types.
@@ -51,22 +51,30 @@ inline bool IsFluid(const TpParticles type){ return(type==TpPartFluid); }
 
 /// Returns the string code of particle type.
 inline const char* TpPartGetStrCode(const TpParticles type){
-  switch(type){
-    case TpPartFixed:     return("Fixed");
-    case TpPartMoving:    return("Moving");
-    case TpPartFloating:  return("Floating");
-    case TpPartFluid:     return("Fluid");
-  }
-  return("???");
+	switch(type){
+		case TpPartFixed:
+			return("Fixed");
+		case TpPartMoving:
+			return("Moving");
+		case TpPartFloating:
+			return("Floating");
+		case TpPartFluid:
+			return("Fluid");
+	}
+	return("???");
 }
 
 /// Returns particle type according the string code of particle type.
 inline TpParticles TpPartGetType(std::string strcode){
-  if(strcode=="Fixed")   return(TpPartFixed);
-  if(strcode=="Moving")  return(TpPartMoving);
-  if(strcode=="Floating")return(TpPartFloating);
-  if(strcode=="Fluid")   return(TpPartFluid);
-  return(TpPartUnknown);
+	if(strcode=="Fixed")
+		return(TpPartFixed);
+	if(strcode=="Moving")
+		return(TpPartMoving);
+	if(strcode=="Floating")
+		return(TpPartFloating);
+	if(strcode=="Fluid")
+		return(TpPartFluid);
+	return(TpPartUnknown);
 }
 
 

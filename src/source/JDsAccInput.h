@@ -35,7 +35,7 @@
 #include "JObject.h"
 #include "DualSphDef.h"
 #ifdef _WITHGPU
-  #include <cuda_runtime_api.h>
+	#include <cuda_runtime_api.h>
 #endif
 
 #include <string>
@@ -58,47 +58,45 @@ class JSphMk;
 
 class JDsAccInputMk : protected JObject
 {
-public:
-  const unsigned Idx;     ///<Index of configuration.
-  const bool Bound;       ///<Type of target particles (boundary floating or fluid).
-  const word MkType1;     ///<The MK bound or fluid to select the target particles.
-  const word MkType2;     ///<Final range of MK values to select the target particles.
-  const double TimeIni;   ///<Initial time of activation (default=0).
-  const double TimeEnd;   ///<Final time of activation (default=DBL_MAX).
-  const bool GravityEnabled;  ///<Determines whether global gravity is enabled or disabled for this particle set SL
-  const tfloat3 AccCoG;       ///<The centre of gravity that will be used for angular acceleration calculations.
+	public:
+		const unsigned Idx;     ///<Index of configuration.
+		const bool Bound;       ///<Type of target particles (boundary floating or fluid).
+		const word MkType1;     ///<The MK bound or fluid to select the target particles.
+		const word MkType2;     ///<Final range of MK values to select the target particles.
+		const double TimeIni;   ///<Initial time of activation (default=0).
+		const double TimeEnd;   ///<Final time of activation (default=DBL_MAX).
+		const bool GravityEnabled;  ///<Determines whether global gravity is enabled or disabled for this particle set SL
+		const tfloat3 AccCoG;       ///<The centre of gravity that will be used for angular acceleration calculations.
 
-protected:
-  JLog2* Log;
+	protected:
+		JLog2* Log;
 
-  typecode CodeSel1; ///<First code of target particles (TypeAndValue).
-  typecode CodeSel2; ///<Last code of target particles (TypeAndValue).
+		typecode CodeSel1; ///<First code of target particles (TypeAndValue).
+		typecode CodeSel2; ///<Last code of target particles (TypeAndValue).
 
-  JLinearValue *AceData; ///<Input acceleration data.
-  JLinearValue *VelData; ///<Input velocity data.
+		JLinearValue *AceData; ///<Input acceleration data.
+		JLinearValue *VelData; ///<Input velocity data.
 
-  double LastTimestepInput; ///<Saves the last value used with GetAccValues().
-  StAceInput LastOutput;    ///<Saves the last value returned by GetAccValues().
+		double LastTimestepInput; ///<Saves the last value used with GetAccValues().
+		StAceInput LastOutput;    ///<Saves the last value returned by GetAccValues().
 
-  void Reset();
+		void Reset();
 
-public:
-  JDsAccInputMk(JLog2* log,unsigned idx,bool bound,word mktype1,word mktype2
-    ,double tini,double tend,bool genabled,tfloat3 acccentre
-    ,const JLinearValue &acedata,const JLinearValue &veldata);
-  ~JDsAccInputMk();
-  long long GetAllocMemory()const;
+	public:
+		JDsAccInputMk(JLog2* log, unsigned idx, bool bound, word mktype1, word mktype2, double tini, double tend, bool genabled, tfloat3 acccentre, const JLinearValue &acedata, const JLinearValue &veldata);
+		~JDsAccInputMk();
+		long long GetAllocMemory()const;
 
-  void ConfigCodeSel(typecode codesel1,typecode codesel2){ 
-    CodeSel1=codesel1; CodeSel2=codesel2; 
-  }
-  typecode GetCodeSel1()const{ return(CodeSel1); };
-  typecode GetCodeSel2()const{ return(CodeSel2); };
+		void ConfigCodeSel(typecode codesel1, typecode codesel2){
+			CodeSel1=codesel1; CodeSel2=codesel2;
+		}
+		typecode GetCodeSel1()const{ return(CodeSel1); };
+		typecode GetCodeSel2()const{ return(CodeSel2); };
 
-  void GetConfig(std::vector<std::string> &lines)const;
+		void GetConfig(std::vector<std::string> &lines)const;
 
-  //word GetMkFluid()const{ return(MkFluid); }
-  const StAceInput& GetAccValues(double timestep); //SL: Added linear and angular velocity and set gravity flag
+		//word GetMkFluid()const{ return(MkFluid); }
+		const StAceInput& GetAccValues(double timestep); //SL: Added linear and angular velocity and set gravity flag
 };
 
 //##############################################################################
@@ -108,36 +106,34 @@ public:
 
 class JDsAccInput : protected JObject
 {
-protected:
-  JLog2* Log;
-  std::string DirData;
-  std::vector<JDsAccInputMk*> Inputs;
-  long long MemSize;
+	protected:
+		JLog2* Log;
+		std::string DirData;
+		std::vector<JDsAccInputMk*> Inputs;
+		long long MemSize;
 
-  void Reset();
-  bool ExistMk(bool bound,word mktype)const;
-  void LoadXml(const JXml *sxml,const std::string &place);
-  void ReadXml(const JXml *sxml,TiXmlElement* lis);
-  void ComputeVelocity(const JLinearValue &acedata,JLinearValue &veldata)const;
+		void Reset();
+		bool ExistMk(bool bound, word mktype)const;
+		void LoadXml(const JXml *sxml, const std::string &place);
+		void ReadXml(const JXml *sxml, TiXmlElement* lis);
+		void ComputeVelocity(const JLinearValue &acedata, JLinearValue &veldata)const;
 
-public:
-  JDsAccInput(JLog2* log,const std::string &dirdata,const JXml *sxml,const std::string &place);
-  ~JDsAccInput();
-  long long GetAllocMemory()const{ return(MemSize); }
+	public:
+		JDsAccInput(JLog2* log, const std::string &dirdata, const JXml *sxml, const std::string &place);
+		~JDsAccInput();
+		long long GetAllocMemory()const{ return(MemSize); }
 
-  void VisuConfig(std::string txhead,std::string txfoot)const;
-  void Init(const JSphMk *mkinfo);
+		void VisuConfig(std::string txhead, std::string txfoot)const;
+		void Init(const JSphMk *mkinfo);
 
-  unsigned GetCount()const{ return(unsigned(Inputs.size())); };
-  const StAceInput& GetAccValues(unsigned cinput,double timestep); //SL: Added linear and angular velocity and set gravity flag
+		unsigned GetCount()const{ return(unsigned(Inputs.size())); };
+		const StAceInput& GetAccValues(unsigned cinput, double timestep); //SL: Added linear and angular velocity and set gravity flag
 
-  void RunCpu(double timestep,tfloat3 gravity,unsigned n,unsigned pini
-    ,const typecode *code,const tdouble3 *pos,const tfloat4 *velrhop,tfloat3 *ace);
+		void RunCpu(double timestep, tfloat3 gravity, unsigned n, unsigned pini, const typecode *code, const tdouble3 *pos, const tfloat4 *velrhop, tfloat3 *ace);
 
-#ifdef _WITHGPU
-  void RunGpu(double timestep,tfloat3 gravity,unsigned n,unsigned pini
-    ,const typecode *code,const double2 *posxy,const double *posz,const float4 *velrhop,float3 *ace);
-#endif
+		#ifdef _WITHGPU
+			void RunGpu(double timestep, tfloat3 gravity, unsigned n, unsigned pini, const typecode *code, const double2 *posxy, const double *posz, const float4 *velrhop, float3 *ace);
+		#endif
 };
 
 #endif

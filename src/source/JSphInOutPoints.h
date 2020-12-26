@@ -51,78 +51,91 @@ class JDsPartsInit;
 /// \brief Defines the position of inlet points.
 class JSphInOutPoints : protected JObject
 {
-public:
-  /// Defines structure to store particle information. 
-  typedef struct StrPartData{
-    const JSphMk* mkinfo;
-    unsigned np;
-    const tdouble3 *pos;
-    const typecode *code;
+	public:
+		/// Defines structure to store particle information. 
+		typedef struct StrPartData{
+		const JSphMk* mkinfo;
+		unsigned np;
+		const tdouble3 *pos;
+		const typecode *code;
 
-    StrPartData(){ Clear(); }
-    StrPartData(const JSphMk* vmkinfo,unsigned vnp,const tdouble3 *vpos,const typecode *vcode){
-      mkinfo=vmkinfo; np=vnp; pos=vpos; code=vcode;
-    }
-    void Clear(){ 
-      mkinfo=NULL; np=0; pos=NULL; code=NULL;
-    }
-  }StPartData;
+		StrPartData(){ Clear(); }
+		StrPartData(const JSphMk* vmkinfo, unsigned vnp, const tdouble3 *vpos, const typecode *vcode){
+			mkinfo=vmkinfo;
+			np=vnp;
+			pos=vpos;
+			code=vcode;
+		}
+		void Clear(){ 
+			mkinfo=NULL;
+			np=0;
+			pos=NULL;
+			code=NULL;
+		}
+		}StPartData;
 
-private:
-  JLog2 *Log;
+	private:
+		JLog2 *Log;
 
-  //-Basic simulation parameters.
-  const bool Simulate2D;        ///<Indicates 2D simulation.
-  const double Simulate2DPosY;  ///<Y value in 2D simulations.
-  const byte Layers;            ///<Number of inlet particle layers.
-  const double Dp;              ///<Distance between particles.
-  const tdouble3 MapRealPosMin;
-  const tdouble3 MapRealPosMax;
-  const double InitialMove;     ///<Initial movement applied to points according Direction.
+		//-Basic simulation parameters.
+		const bool Simulate2D;        ///<Indicates 2D simulation.
+		const double Simulate2DPosY;  ///<Y value in 2D simulations.
+		const byte Layers;            ///<Number of inlet particle layers.
+		const double Dp;              ///<Distance between particles.
+		const tdouble3 MapRealPosMin;
+		const tdouble3 MapRealPosMax;
+		const double InitialMove;     ///<Initial movement applied to points according Direction.
 
-  std::vector<std::string> ConfigInfo;
+		std::vector<std::string> ConfigInfo;
 
-  tdouble3 Direction;    ///<Inflow direction.
+		tdouble3 Direction;    ///<Inflow direction.
 
-  unsigned Size;      ///<Size of allocated memory for Points[].
-  unsigned Count;     ///<Number of valid points.
-  tdouble3* Points;   ///<Position of points [Size].
+		unsigned Size;      ///<Size of allocated memory for Points[].
+		unsigned Count;     ///<Number of valid points.
+		tdouble3* Points;   ///<Position of points [Size].
 
-  //-Domain data. PtDom[8] is the reference point in inout plane.
-  tdouble3 PtDom[10]; 
+		//-Domain data. PtDom[8] is the reference point in inout plane.
+		tdouble3 PtDom[10];
 
-  void ResizeMemory(unsigned newnpt);
-  JMatrix4d ReadRotate2D(const JXml *sxml,TiXmlElement* ele,const tdouble3 &pt);
-  JMatrix4d ReadRotate3D(const JXml *sxml,TiXmlElement* ele);
+		void ResizeMemory(unsigned newnpt);
+		JMatrix4d ReadRotate2D(const JXml *sxml, TiXmlElement* ele, const tdouble3 &pt);
+		JMatrix4d ReadRotate3D(const JXml *sxml, TiXmlElement* ele);
 
-  tdouble3 DirectionFromStr(const std::string &strdir)const;
-  std::string CheckParticlesDirection(const JSphMkBlock *pmk,const tdouble3 &dir)const;
+		tdouble3 DirectionFromStr(const std::string &strdir)const;
+		std::string CheckParticlesDirection(const JSphMkBlock *pmk, const tdouble3 &dir)const;
 
 
-  void Create2d3d_Particles(const JXml *sxml,TiXmlElement* ele,const JDsPartsInit *partsdata);
-  void Create2d_Line(const JXml *sxml,TiXmlElement* ele);
-  void Create3d_Box(const JXml *sxml,TiXmlElement* ele);
-  void Create3d_Circle(const JXml *sxml,TiXmlElement* ele);
-  void CheckPoints(const std::string &xmlrow);
-  void ComputeDomainFromPoints();
+		void Create2d3d_Particles(const JXml *sxml, TiXmlElement* ele, const JDsPartsInit *partsdata);
+		void Create2d_Line(const JXml *sxml, TiXmlElement* ele);
+		void Create3d_Box(const JXml *sxml, TiXmlElement* ele);
+		void Create3d_Circle(const JXml *sxml, TiXmlElement* ele);
+		void CheckPoints(const std::string &xmlrow);
+		void ComputeDomainFromPoints();
 
-public:
-  JSphInOutPoints(JLog2 *log,bool simulate2d,double simulate2dposy,byte layers
-    ,double dp,double initialmove,tdouble3 posmin,tdouble3 posmax);
-  ~JSphInOutPoints();
-  void Reset();
-  void ResetPoints();
+		public:
+		JSphInOutPoints(JLog2 *log, bool simulate2d, double simulate2dposy, byte layers, double dp, double initialmove, tdouble3 posmin, tdouble3 posmax);
+		~JSphInOutPoints();
+		void Reset();
+		void ResetPoints();
 
-  void CreatePoints(const JXml *sxml,TiXmlElement* ele,const JDsPartsInit *partsdata);
+		void CreatePoints(const JXml *sxml, TiXmlElement* ele, const JDsPartsInit *partsdata);
 
-  void GetConfig(std::vector<std::string> &lines)const;
+		void GetConfig(std::vector<std::string> &lines)const;
 
-  tdouble3 GetDirection()const{ return(Direction); }
-  unsigned GetCount()const{ return(Count); }
-  tdouble3* GetPoints()const{ return(Points); }
-  unsigned GetCountZmax(float zsurf)const;
+		tdouble3 GetDirection()const{
+			return(Direction);
+		}
+		unsigned GetCount()const{
+			return(Count);
+		}
+		tdouble3* GetPoints()const{
+			return(Points);
+		}
+		unsigned GetCountZmax(float zsurf)const;
 
-  const tdouble3* GetPtDomain()const{ return(PtDom); };
+		const tdouble3* GetPtDomain()const{
+			return(PtDom);
+		};
 
 };
 

@@ -38,26 +38,30 @@
 
 class JWaveSpectrumGpu : protected JObject
 {
-private:
+	private:
+		llong MemGpuFixed;
+		tdouble4 *Order2CoefsEtag;  ///<Coefficients on GPU for elevation of each wave combination {dnm,dkl,aagnm,bbgnm} [SizeWaveCoefs].
+		double *Order2CoefsDnmg;    ///<Coefficients on GPU for position of each wave combination {dnm} [SizeWaveCoefs].
+		tdouble2 *Order2CoefsPosg;  ///<Coefficients on GPU for position of each wave combination {aaf1,bbf1} [SizeWaveCoefs].
+		double *Order2Auxg;         ///<Auxiliary memory for reductions. [SizeWaveCoefs].
 
-  llong MemGpuFixed;
-  tdouble4 *Order2CoefsEtag;  ///<Coefficients on GPU for elevation of each wave combination {dnm,dkl,aagnm,bbgnm} [SizeWaveCoefs].
-  double *Order2CoefsDnmg;    ///<Coefficients on GPU for position of each wave combination {dnm} [SizeWaveCoefs].
-  tdouble2 *Order2CoefsPosg;  ///<Coefficients on GPU for position of each wave combination {aaf1,bbf1} [SizeWaveCoefs].
-  double *Order2Auxg;         ///<Auxiliary memory for reductions. [SizeWaveCoefs].
+	public:
+		JWaveSpectrumGpu();
+		~JWaveSpectrumGpu(){
+			DestructorActive=true;
+			FreeMemoryGpu();
+		}
 
-public:
-  JWaveSpectrumGpu();
-  ~JWaveSpectrumGpu(){ DestructorActive=true; FreeMemoryGpu(); }
+		void AllocMemoryGpu(unsigned sizewavecoefs);
+		void FreeMemoryGpu();
+		void CopyCoefs(unsigned sizewavecoefs, const tdouble4 *d4, const double *d1, const tdouble2 *d2);
 
-  void AllocMemoryGpu(unsigned sizewavecoefs);
-  void FreeMemoryGpu();
-  void CopyCoefs(unsigned sizewavecoefs,const tdouble4 *d4,const double *d1,const tdouble2 *d2);
+		double CalcPosition(double time, unsigned sizewavecoefs);
+		double CalcElevation(double time, double x, unsigned sizewavecoefs);
 
-  double CalcPosition(double time,unsigned sizewavecoefs);
-  double CalcElevation(double time,double x,unsigned sizewavecoefs);
-
-  llong GetMemGpuFixed()const{ return(MemGpuFixed); }
+		llong GetMemGpuFixed()const{
+			return(MemGpuFixed);
+		}
 };
 
 #endif
